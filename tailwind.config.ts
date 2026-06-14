@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '400px',
+      },
       fontFamily: {
         sans: ['var(--font-noto-thai)', 'system-ui', 'sans-serif'],
       },
@@ -20,6 +23,8 @@ const config: Config = {
         'ink-soft': 'rgb(var(--ink-soft) / <alpha-value>)',
         line: 'rgb(var(--line) / <alpha-value>)',
         brand: 'rgb(var(--brand) / <alpha-value>)',
+        'brand-2': 'rgb(var(--brand-2) / <alpha-value>)',
+        accent: 'rgb(var(--accent) / <alpha-value>)',
       },
       borderRadius: {
         xl: '0.9rem',

@@ -42,13 +42,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh flex flex-col">
       {/* top bar */}
-      <header className="sticky top-0 z-30 border-b border-line bg-surface/80 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-line bg-surface/70 backdrop-blur-xl">
         <div className="mx-auto max-w-5xl px-4 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <span className="grid place-items-center h-8 w-8 rounded-xl bg-brand text-white">
+            <span className="grid place-items-center h-8 w-8 rounded-xl text-white shadow-sm"
+              style={{ backgroundImage: 'linear-gradient(135deg, rgb(var(--brand)), rgb(var(--brand-2)))' }}>
               <Wallet2 size={18} />
             </span>
-            <span>วางแผนค่าใช้จ่าย</span>
+            <span className="tracking-tight">วางแผนค่าใช้จ่าย</span>
           </Link>
           <div className="flex items-center gap-2">
             {/* desktop nav */}
@@ -74,20 +75,25 @@ export function AppShell({ children }: { children: ReactNode }) {
       </main>
 
       {/* mobile bottom nav */}
-      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface/95 backdrop-blur">
+      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface/90 backdrop-blur-xl"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <div className="mx-auto max-w-5xl grid grid-cols-6">
-          {NAV.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`flex flex-col items-center gap-0.5 py-2.5 text-[11px] ${
-                isActive(href) ? 'text-brand' : 'text-ink-soft'
-              }`}
-            >
-              <Icon size={20} />
-              {label}
-            </Link>
-          ))}
+          {NAV.map(({ href, label, icon: Icon }) => {
+            const on = isActive(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`relative flex flex-col items-center gap-0.5 py-2.5 text-[11px] transition-colors ${
+                  on ? 'text-brand' : 'text-ink-soft'
+                }`}
+              >
+                {on && <span className="absolute top-0 h-0.5 w-7 rounded-full bg-brand" />}
+                <Icon size={20} strokeWidth={on ? 2.5 : 2} />
+                {label}
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </div>
