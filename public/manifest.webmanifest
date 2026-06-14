@@ -1,0 +1,15 @@
+{
+  "name": "วางแผนค่าใช้จ่าย",
+  "short_name": "ค่าใช้จ่าย",
+  "description": "แอพวางแผนและวิเคราะห์ค่าใช้จ่ายส่วนตัว — ข้อมูลเก็บในเครื่องเท่านั้น",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1117",
+  "theme_color": "#4f46e5",
+  "lang": "th",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -13,9 +13,14 @@ const notoThai = Noto_Sans_Thai({
   display: 'swap',
 });
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export const metadata: Metadata = {
   title: 'วางแผนค่าใช้จ่าย',
   description: 'แอพวางแผนและวิเคราะห์ค่าใช้จ่ายส่วนตัว — ข้อมูลเก็บในเครื่องเท่านั้น',
+  manifest: `${basePath}/manifest.webmanifest`,
+  icons: { icon: `${basePath}/icon.svg`, apple: `${basePath}/icon.svg` },
+  appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'ค่าใช้จ่าย' },
 };
 
 export const viewport: Viewport = {
