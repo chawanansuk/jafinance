@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --surface: 255 255 255;
+  --surface-2: 247 248 250;
+  --ink: 17 24 39;
+  --ink-soft: 100 116 139;
+  --line: 226 232 240;
+  --brand: 79 70 229;
+  --bg: 244 245 248;
+}
+
+.dark {
+  --surface: 22 27 34;
+  --surface-2: 30 36 45;
+  --ink: 237 241 247;
+  --ink-soft: 148 161 178;
+  --line: 45 53 64;
+  --brand: 129 140 248;
+  --bg: 13 17 23;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--ink));
+  font-feature-settings: 'tnum' 1; /* tabular numerals for money columns */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* number-heavy bits look better tabular */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl bg-surface border border-line shadow-soft;
+  }
+  .card-pad {
+    @apply p-4 sm:p-5;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-medium
+           transition-colors disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white hover:opacity-90;
+  }
+  .btn-ghost {
+    @apply btn bg-surface-2 text-ink hover:bg-line/60;
+  }
+  .seg {
+    @apply text-xs font-medium px-3 py-1.5 rounded-lg transition-colors;
+  }
+  .seg-on {
+    @apply bg-surface text-ink shadow-soft;
+  }
+  .seg-off {
+    @apply text-ink-soft hover:text-ink;
+  }
+  .input {
+    @apply rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink
+           outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 w-full;
+  }
+}
+
+/* Recharts: make focus outlines and text inherit theme */
+.recharts-text {
+  fill: rgb(var(--ink-soft));
+}
+.recharts-cartesian-grid line {
+  stroke: rgb(var(--line));
+}
+.recharts-default-tooltip {
+  border-radius: 0.75rem !important;
+  border: 1px solid rgb(var(--line)) !important;
+  background: rgb(var(--surface)) !important;
+}
+
+/* hide scrollbars on horizontal scrollers but keep function */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
