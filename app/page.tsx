@@ -130,7 +130,7 @@ export default function Dashboard() {
 
       {/* hero summary */}
       <div className="rounded-2xl p-5 relative overflow-hidden animate-rise text-white shadow-lg"
-        style={{ backgroundImage: 'linear-gradient(135deg, #6d5bff 0%, #9333ea 45%, #ec4899 78%, #f97316 100%)' }}>
+        style={{ backgroundImage: 'linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%)' }}>
         <div className="absolute -top-10 -right-8 h-40 w-40 rounded-full bg-white/15 blur-2xl pointer-events-none" />
         <div className="absolute -bottom-12 -left-6 h-40 w-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
         <div className="relative flex items-end justify-between gap-4">
@@ -162,9 +162,9 @@ export default function Dashboard() {
 
       {/* stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="เฉลี่ยต่อวัน" value={<Money value={avgPerDay} />} icon={CalendarDays} accent="#0ea5e9"
+        <StatCard label="เฉลี่ยต่อวัน" value={<Money value={avgPerDay} />} icon={CalendarDays} accent="#06b6d4"
           sub={`${daysWithData} วันที่มีข้อมูล`} />
-        <StatCard label="จำนวนรายการ" value={String(count)} icon={Receipt} accent="#8b5cf6" />
+        <StatCard label="จำนวนรายการ" value={String(count)} icon={Receipt} accent="#14b8a6" />
         <StatCard label="ลดได้ (discretionary)" value={<Money value={discretionary} />} icon={TrendingDown} accent="#f97316"
           sub={total ? `${Math.round((discretionary / total) * 100)}% ของยอด` : undefined} />
         <StatCard label="จำเป็น (essential)" value={<Money value={events.filter((e) => e.group === 'essential').reduce((s, e) => s + e.signed, 0)} />}

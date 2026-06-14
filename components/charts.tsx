@@ -117,18 +117,3 @@ export function TrendLineChart({ data }: { data: { month: string; total: number 
     </ResponsiveContainer>
   );
 }
-
-export function GroupBars({ data }: { data: { name: string; value: number; color: string }[] }) {
-  return (
-    <ResponsiveContainer width="100%" height={180}>
-      <BarChart data={data} layout="vertical" margin={{ top: 0, right: 12, left: 8, bottom: 0 }}>
-        <XAxis type="number" hide />
-        <YAxis type="category" dataKey="name" tickLine={false} axisLine={false} width={64} fontSize={12} />
-        <Tooltip content={<MoneyTooltip />} cursor={{ fill: 'rgb(var(--surface-2))', radius: 8 }} />
-        <Bar dataKey="value" radius={[0, 6, 6, 0]}>
-          {data.map((d) => <Cell key={d.name} fill={d.color} />)}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
-  );
-}
