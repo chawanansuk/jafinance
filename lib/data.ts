@@ -1,6 +1,6 @@
 import raw from '@/data/transactions.json';
 import { categoryGroup } from './categories';
-import type { RawTransaction, Transaction, UserOverrides } from './types';
+import type { RawTransaction, Transaction, UserOverrides, RulesState } from './types';
 
 /** Stable id from immutable fields so overrides survive re-ordering/import. */
 export function makeId(t: RawTransaction): string {
@@ -31,23 +31,43 @@ export function baseTransactions(): Transaction[] {
 const EMPTY_OVERRIDES: UserOverrides = { categoryById: {}, realIncomeById: {} };
 
 /**
- * Apply user overrides on top of a base list. Returns a new array; group is
- * re-derived from the (possibly overridden) category.
+ * Materialize the working transaction list from base + imports, then layer:
+ *   1. merchant rules  (apply to ALL matching rows, incl. future imports)
+ *   2. per-id overrides (more specific — win over rules)
+ * Group is re-derived from the resulting category; transferKind is attached
+ * from the matching merchant rule.
  */
+export function materialize(
+  base: Transaction[],
+  imported: Transaction[] = [],
+  overrides: UserOverrides = EMPTY_OVERRIDES,
+  rules: RulesState = {},
+): Transaction[] {
+  const all = imported.length ? [...base, ...imported] : base;
+  return all.map((t) => {
+    const rule = rules[t.merchant];
+    const idCat = overrides.categoryById[t.id];
+    const category = idCat ?? rule?.category ?? t.category;
+    const isRealIncome = overrides.realIncomeById[t.id] ?? false;
+    const transferKind = rule?.transferKind;
+    if (category === t.category && !isRealIncome && !transferKind) return t;
+    return {
+      ...t,
+      category,
+      group: category === t.category ? t.group : categoryGroup(category),
+      isRealIncome,
+      transferKind,
+    };
+  });
+}
+
+/** @deprecated use materialize — kept for callers that only pass overrides. */
 export function applyOverrides(
   base: Transaction[],
   overrides: UserOverrides = EMPTY_OVERRIDES,
   imported: Transaction[] = [],
 ): Transaction[] {
-  const all = imported.length ? [...base, ...imported] : base;
-  return all.map((t) => {
-    const newCat = overrides.categoryById[t.id];
-    const category = newCat ?? t.category;
-    const group = newCat ? categoryGroup(category) : t.group;
-    const isRealIncome = overrides.realIncomeById[t.id] ?? false;
-    if (!newCat && !isRealIncome) return t;
-    return { ...t, category, group, isRealIncome };
-  });
+  return materialize(base, imported, overrides, {});
 }
 
 export function allMonths(txns: Transaction[]): string[] {

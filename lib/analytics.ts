@@ -16,6 +16,9 @@ import type {
 // exclude it for "รายจ่ายจริง" views.
 export const SPENDING_GROUPS: Group[] = ['essential', 'discretionary', 'transfer'];
 
+// Large/irregular categories treated as one-off for burn-rate purposes.
+export const ONE_OFF_CATEGORIES = new Set(['ที่พัก/ท่องเที่ยว', 'โรงพยาบาล/สุขภาพ']);
+
 // Known travel platforms whose refunds must route back to ที่พัก/ท่องเที่ยว.
 // (Bug #1: refund rows carry category "คืนเงิน (refund)", not their source.)
 const REFUND_STATIC: Record<string, string> = {
@@ -61,6 +64,10 @@ export interface EventOptions {
   /** keep transfer-group spend (default true). */
   includeTransfer?: boolean;
   account?: 'all' | string;
+  /** drop transfers the user classified as "moving" (own money). */
+  excludeMovingTransfers?: boolean;
+  /** drop large one-off categories (travel, hospital) for burn-rate views. */
+  excludeOneOff?: boolean;
 }
 
 /**
@@ -70,7 +77,7 @@ export interface EventOptions {
  *   - income / other in  -> excluded (funding, not spending)
  */
 export function toSpendingEvents(txns: Transaction[], opts: EventOptions = {}): SpendingEvent[] {
-  const { includeTransfer = true, account = 'all' } = opts;
+  const { includeTransfer = true, account = 'all', excludeMovingTransfers = false, excludeOneOff = false } = opts;
   const merchantCat = buildMerchantCategory(txns);
   const events: SpendingEvent[] = [];
 
@@ -79,6 +86,8 @@ export function toSpendingEvents(txns: Transaction[], opts: EventOptions = {}): 
 
     if (t.direction === 'out') {
       if (!includeTransfer && t.group === 'transfer') continue;
+      if (excludeMovingTransfers && t.group === 'transfer' && t.transferKind === 'moving') continue;
+      if (excludeOneOff && ONE_OFF_CATEGORIES.has(t.category)) continue;
       events.push({
         id: t.id,
         date: t.date,
@@ -89,11 +98,14 @@ export function toSpendingEvents(txns: Transaction[], opts: EventOptions = {}): 
         merchant: t.merchant,
         signed: t.amount,
         isRefundAdjustment: false,
+        transferKind: t.transferKind,
+        oneOff: ONE_OFF_CATEGORIES.has(t.category),
       });
     } else if (t.group === 'refund') {
       const cat = resolveRefundCategory(t, merchantCat);
       const grp = categoryGroup(cat);
       if (!includeTransfer && grp === 'transfer') continue;
+      if (excludeOneOff && ONE_OFF_CATEGORIES.has(cat)) continue;
       events.push({
         id: t.id,
         date: t.date,
@@ -104,11 +116,36 @@ export function toSpendingEvents(txns: Transaction[], opts: EventOptions = {}): 
         merchant: t.merchant,
         signed: -t.amount,
         isRefundAdjustment: true,
+        oneOff: ONE_OFF_CATEGORIES.has(cat),
       });
     }
     // income / non-refund `in` rows are funding -> skipped here on purpose.
   }
   return events;
+}
+
+/**
+ * Estimate fixed (recurring) monthly cost vs variable spend, over the complete
+ * months. Recurring monthly-equivalent = total of a recurring series / #months.
+ */
+export function fixedVsVariable(txns: Transaction[]): { fixed: number; variable: number; items: RecurringItem[] } {
+  const months = aggregateByMonth(txns);
+  const complete = months.filter((m) => !m.incomplete);
+  const nMonths = Math.max(1, complete.length);
+  const completeSet = new Set(complete.map((m) => m.month));
+
+  const recurring = detectRecurring(txns).filter((r) => r.cadence !== 'ไม่แน่นอน');
+  const recurringKeys = new Set(recurring.map((r) => `${r.merchant}|||${r.category}`));
+
+  let fixed = 0;
+  let variable = 0;
+  for (const e of toSpendingEvents(txns)) {
+    if (!completeSet.has(e.month)) continue;
+    const key = `${e.merchant}|||${e.category}`;
+    if (recurringKeys.has(key)) fixed += e.signed;
+    else variable += e.signed;
+  }
+  return { fixed: fixed / nMonths, variable: variable / nMonths, items: recurring };
 }
 
 export function aggregateByCategory(events: SpendingEvent[]): CategoryAgg[] {

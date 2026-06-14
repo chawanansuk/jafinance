@@ -11,6 +11,8 @@ export const KEYS = {
   overrides: `${PREFIX}overrides`,
   budget: `${PREFIX}budget`,
   imported: `${PREFIX}imported`,
+  rules: `${PREFIX}rules`,
+  settings: `${PREFIX}settings`,
   theme: `${PREFIX}theme`,
 } as const;
 

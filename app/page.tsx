@@ -18,20 +18,26 @@ function prevMonthOf(months: string[], m: string): string | null {
 }
 
 export default function Dashboard() {
-  const { txns, months, defaultMonth, hydrated } = useData();
+  const { txns, months, defaultMonth, hydrated, settings, setSettings } = useData();
   const [account, setAccount] = useState<AccountFilter>('all');
   const [month, setMonth] = useState<string>('');
 
   const selected = month || defaultMonth || months[months.length - 1] || '';
 
+  const evOpts = {
+    account,
+    excludeMovingTransfers: settings.excludeMovingTransfers,
+    excludeOneOff: settings.excludeOneOff,
+  };
+
   const monthAggs = useMemo(
-    () => aggregateByMonth(txns, { account }),
-    [txns, account],
+    () => aggregateByMonth(txns, evOpts),
+    [txns, account, settings.excludeMovingTransfers, settings.excludeOneOff],
   );
 
   const monthEvents = useMemo(
-    () => toSpendingEvents(txns, { account }).filter((e) => e.month === selected),
-    [txns, account, selected],
+    () => toSpendingEvents(txns, evOpts).filter((e) => e.month === selected),
+    [txns, account, selected, settings.excludeMovingTransfers, settings.excludeOneOff],
   );
 
   const cur = monthAggs.find((m) => m.month === selected);
@@ -72,7 +78,21 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <AccountToggle value={account} onChange={setAccount} />
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-between">
+        <AccountToggle value={account} onChange={setAccount} />
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={settings.excludeMovingTransfers}
+              onChange={(e) => setSettings((s) => ({ ...s, excludeMovingTransfers: e.target.checked }))} />
+            <span className="text-ink-soft">ตัด “ย้ายเงิน” ออก</span>
+          </label>
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={settings.excludeOneOff}
+              onChange={(e) => setSettings((s) => ({ ...s, excludeOneOff: e.target.checked }))} />
+            <span className="text-ink-soft">ตัดก้อนใหญ่/ไม่ประจำ</span>
+          </label>
+        </div>
+      </div>
 
       {/* stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">

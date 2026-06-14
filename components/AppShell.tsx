@@ -4,16 +4,17 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 import {
-  LayoutDashboard, PieChart, Wallet, ListOrdered, Lightbulb, Moon, Sun, Wallet2,
+  LayoutDashboard, PieChart, Wallet, ListOrdered, Lightbulb, SlidersHorizontal, Moon, Sun, Wallet2,
 } from 'lucide-react';
 import { KEYS } from '@/lib/storage';
 
 const NAV = [
   { href: '/', label: 'ภาพรวม', icon: LayoutDashboard },
   { href: '/categories', label: 'หมวดหมู่', icon: PieChart },
-  { href: '/budget', label: 'งบประมาณ', icon: Wallet },
+  { href: '/budget', label: 'งบ', icon: Wallet },
   { href: '/transactions', label: 'รายการ', icon: ListOrdered },
   { href: '/insights', label: 'อินไซต์', icon: Lightbulb },
+  { href: '/manage', label: 'จัดการ', icon: SlidersHorizontal },
 ];
 
 function ThemeToggle() {
@@ -74,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* mobile bottom nav */}
       <nav className="sm:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface/95 backdrop-blur">
-        <div className="mx-auto max-w-5xl grid grid-cols-5">
+        <div className="mx-auto max-w-5xl grid grid-cols-6">
           {NAV.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}

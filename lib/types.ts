@@ -24,7 +24,16 @@ export interface RawTransaction {
   desc: string;
 }
 
-/** Transaction after assigning a stable id + applying user overrides */
+/**
+ * How a transfer-group row should be treated once the user reviews it.
+ *   unknown  = not yet reviewed (counts as spending, shown as "ต้องตรวจสอบ")
+ *   spending = a real expense
+ *   moving   = moving own money / topping up a wallet (NOT spending)
+ *   supplier = paying a supplier (a real business expense)
+ */
+export type TransferKind = 'unknown' | 'spending' | 'moving' | 'supplier';
+
+/** Transaction after assigning a stable id + applying user overrides/rules */
 export interface Transaction extends RawTransaction {
   id: string;
   /** category after any user override (falls back to raw category) */
@@ -33,6 +42,28 @@ export interface Transaction extends RawTransaction {
   group: Group;
   /** true when the user flagged this `in` row as real income (vs. funding) */
   isRealIncome?: boolean;
+  /** classification applied to transfer-group rows (by merchant rule) */
+  transferKind?: TransferKind;
+}
+
+/** A per-merchant rule applied to every matching row (existing + future imports). */
+export interface MerchantRule {
+  merchant: string;
+  /** recategorize matching rows to this category */
+  category?: string;
+  /** classify transfer-group rows */
+  transferKind?: TransferKind;
+}
+
+/** merchant -> rule */
+export type RulesState = Record<string, MerchantRule>;
+
+/** UI-level toggles that change how spending is summed (persisted). */
+export interface Settings {
+  /** drop transfers classified as "moving" from spending totals */
+  excludeMovingTransfers: boolean;
+  /** drop large one-off categories (travel, hospital) to see normal burn-rate */
+  excludeOneOff: boolean;
 }
 
 // ───────────────────────────────────────────────────────────────────────────
@@ -74,6 +105,9 @@ export interface SpendingEvent {
   /** +amount for spending, -amount for a refund netted into the category */
   signed: number;
   isRefundAdjustment: boolean;
+  transferKind?: TransferKind;
+  /** large/irregular spend (travel, hospital) — excluded by the burn-rate toggle */
+  oneOff: boolean;
 }
 
 export interface CategoryAgg {

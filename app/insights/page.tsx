@@ -5,7 +5,7 @@ import { TrendingUp, Repeat, AlertCircle, Store, Plane, Calendar } from 'lucide-
 import { useData } from '@/components/DataProvider';
 import { SectionTitle, CategoryChip, Money, Skeleton } from '@/components/ui';
 import {
-  detectRecurring, detectOutliers, topMerchants, toSpendingEvents,
+  detectRecurring, detectOutliers, topMerchants, toSpendingEvents, fixedVsVariable,
 } from '@/lib/analytics';
 import { formatDate, formatMonth, formatTHB } from '@/lib/format';
 
@@ -50,6 +50,8 @@ export default function InsightsPage() {
   const merchants = useMemo(() => topMerchants(txns, { limit: 5 }), [txns]);
   const recurring = useMemo(() => detectRecurring(txns).filter((r) => r.cadence !== 'ไม่แน่นอน').slice(0, 6), [txns]);
   const outliers = useMemo(() => detectOutliers(txns).slice(0, 5), [txns]);
+  const fv = useMemo(() => fixedVsVariable(txns), [txns]);
+  const fvTotal = fv.fixed + fv.variable;
 
   const bigItems = useMemo(() => {
     const list = txns
@@ -133,6 +135,18 @@ export default function InsightsPage() {
           ) : <p className="text-sm text-ink-soft">ไม่มีวันที่ผิดปกติชัดเจน</p>}
         </InsightCard>
       </div>
+
+      <InsightCard icon={Repeat} title="ค่าใช้จ่ายคงที่ vs แปรผัน (ต่อเดือน)">
+        <p className="text-sm text-ink-soft mb-3">ประเมินจากเดือนข้อมูลครบ — “คงที่” = รายการที่เกิดซ้ำสม่ำเสมอ</p>
+        <div className="flex h-3 rounded-full overflow-hidden bg-surface-2 mb-2">
+          <div className="bg-indigo-500" style={{ width: `${fvTotal > 0 ? (fv.fixed / fvTotal) * 100 : 0}%` }} />
+          <div className="bg-sky-400" style={{ width: `${fvTotal > 0 ? (fv.variable / fvTotal) * 100 : 0}%` }} />
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full bg-indigo-500 inline-block" /> คงที่ <b className="tnum">{formatTHB(fv.fixed)}</b>/เดือน</span>
+          <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full bg-sky-400 inline-block" /> แปรผัน <b className="tnum">{formatTHB(fv.variable)}</b>/เดือน</span>
+        </div>
+      </InsightCard>
 
       <InsightCard icon={Plane} title="รายจ่ายก้อนใหญ่/ไม่ประจำ">
         <p className="text-sm text-ink-soft mb-3">
