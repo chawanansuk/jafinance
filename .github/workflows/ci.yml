@@ -19,6 +19,8 @@ jobs:
         run: npm run reconcile
       - name: Logic tests (analytics / budget / io)
         run: npm test
+      - name: Component smoke test (render every page in jsdom)
+        run: npm run smoke
       - name: Build static export
         run: npm run build
         env:
