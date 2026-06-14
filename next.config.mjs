@@ -11,6 +11,12 @@ const nextConfig = {
   assetPrefix: basePath || undefined,
   images: { unoptimized: true },
   trailingSlash: true,
+  webpack: (config) => {
+    // pdf.js optionally pulls in the Node-only `canvas` package; we only use it
+    // in the browser, so stub it out to keep the bundle clean.
+    config.resolve.alias = { ...config.resolve.alias, canvas: false };
+    return config;
+  },
 };
 
 export default nextConfig;

@@ -1,11 +1,12 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Search, Upload, Download, ArrowUpDown, Wand2, Check, ClipboardPaste } from 'lucide-react';
+import { Search, Upload, Download, ArrowUpDown, Wand2, Check, ClipboardPaste, FileText } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
 import { SectionTitle, Money, Skeleton, Notice, GroupBadge } from '@/components/ui';
 import { AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
 import { SmartImport } from '@/components/SmartImport';
+import { PdfImport } from '@/components/PdfImport';
 import { CATEGORIES } from '@/lib/categories';
 import { formatDate } from '@/lib/format';
 import { parseImport, toCSV, downloadFile } from '@/lib/io';
@@ -43,6 +44,7 @@ export default function TransactionsPage() {
   const [bulkMsg, setBulkMsg] = useState('');
   const [importMsg, setImportMsg] = useState('');
   const [smartOpen, setSmartOpen] = useState(false);
+  const [pdfOpen, setPdfOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -95,6 +97,7 @@ export default function TransactionsPage() {
         <div className="flex gap-2">
           <input ref={fileRef} type="file" accept=".csv,.json,application/json,text/csv" hidden
             onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
+          <button onClick={() => setPdfOpen(true)} className="btn-ghost !py-1.5 !px-3 text-xs"><FileText size={14} /> PDF บิล</button>
           <button onClick={() => setSmartOpen(true)} className="btn-ghost !py-1.5 !px-3 text-xs"><ClipboardPaste size={14} /> วางข้อความ</button>
           <button onClick={() => fileRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-xs"><Upload size={14} /> ไฟล์</button>
           <button onClick={() => downloadFile('transactions.csv', toCSV(filtered), 'text/csv')} className="btn-ghost !py-1.5 !px-3 text-xs"><Download size={14} /> CSV</button>
@@ -197,6 +200,7 @@ export default function TransactionsPage() {
       )}
 
       <SmartImport open={smartOpen} onClose={() => setSmartOpen(false)} />
+      <PdfImport open={pdfOpen} onClose={() => setPdfOpen(false)} />
     </div>
   );
 }

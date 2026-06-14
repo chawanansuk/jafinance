@@ -16,6 +16,7 @@ import {
   parseImport, toCSV, splitPasted, parseDateLoose, parseAmountLoose, rowsFromMapping, dedupe,
 } from '@/lib/io';
 import { autoCategorize } from '@/lib/autocat';
+import { parseUobStatement } from '@/lib/pdf/uob';
 import { categoryGroup } from '@/lib/categories';
 import type { Transaction, BudgetState } from '@/lib/types';
 
@@ -199,6 +200,43 @@ ok('parseAmountLoose detects negative', parseAmountLoose('-120').negative === tr
   const raws = rowsFromMapping(grid, { date: 0, amount: 1, merchant: 2, desc: null, account: 'x', directionMode: 'sign' }, () => 'ค่าใช้จ่ายอื่น');
   ok('sign mode: negative=out', raws[0].direction === 'out');
   ok('sign mode: positive=in', raws[1].direction === 'in');
+}
+
+console.log('\n── UOB PDF parser ──');
+{
+  // synthetic fixture in the real statement's line format (no real data)
+  const lines = [
+    '24 MAY 2026',
+    'CARD NUMBER (S) TOTAL BALANCE MINIMUM PAYMENT',
+    '5271 73XX XXXX 4020 1,300.00 200.00',
+    'TOTAL 1,300.00 200.00',
+    'PREVIOUS BALANCE 1,000.00',
+    '15 MAY 15 MAY PAYMENT THANK YOU - UOBT TMRW APP 1,000.00 CR',
+    '23 APR 22 APR WWW.GRAB.COM BANGKOK 138.00',
+    '24 APR 23 APR TMN 7-11 BANGKOK 62.00',
+    '05 MAY 03 MAY SUSHIRO GH BANGKOK 1,200.00',
+    '06 MAY 05 MAY SOME REFUND 100.00 CR',
+  ];
+  const r = parseUobStatement(lines);
+  ok('uob: excludes payment, parses 4 txns', r.transactions.length === 4);
+  ok('uob: statement date', r.summary.statementDate === '2026-05-24');
+  ok('uob: previous/total/min balances', r.summary.previousBalance === 1000 && r.summary.totalBalance === 1300 && r.summary.minPayment === 200);
+  ok('uob: payments summed', r.summary.payments === 1000);
+  eq('uob: parsedNet (debit-credit)', r.summary.parsedNet, 1300);
+  eq('uob: expectedNet', r.summary.expectedNet ?? -1, 1300);
+  ok('uob: reconciled', r.summary.reconciled === true);
+  ok('uob: account from card no.', r.account === '5271 73XX XXXX 4020');
+  const grab = r.transactions.find((t) => t.desc.includes('GRAB'))!;
+  ok('uob: Grab normalized + categorized', grab.merchant === 'Grab' && grab.category === 'Grab/เดลิเวอรี่/แท็กซี่');
+  ok('uob: 7-11 normalized', r.transactions.find((t) => t.desc.includes('7-11'))!.merchant === '7-Eleven');
+  const ref = r.transactions.find((t) => t.direction === 'in')!;
+  ok('uob: refund -> refund group/category', ref.group === 'refund' && ref.category === 'คืนเงิน (refund)');
+  ok('uob: trans-date used, APR=2026-04', grab.date === '2026-04-22');
+}
+{
+  // year rollback: a DEC transaction on a MAY-2026 statement is 2025
+  const r = parseUobStatement(['24 MAY 2026', '10 JAN 28 DEC OLD THING BANGKOK 50.00']);
+  ok('uob: year rolls back across Dec', r.transactions[0].date === '2025-12-28');
 }
 
 console.log(`\n${fail === 0 ? '✓' : '✗'} ${pass} passed, ${fail} failed`);

@@ -25,3 +25,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated: pdf.js worker copied from node_modules at build time
+/public/pdf.worker.min.mjs
