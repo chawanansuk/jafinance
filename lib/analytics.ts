@@ -345,3 +345,26 @@ export function detectOutliers(txns: Transaction[], opts: EventOptions = {}): Ou
 export function grandTotal(events: SpendingEvent[]): number {
   return events.reduce((s, e) => s + e.signed, 0);
 }
+
+/** Net spending per day (for the calendar heatmap). */
+export function dailySpending(txns: Transaction[], opts: EventOptions = {}): { date: string; total: number }[] {
+  const map = new Map<string, number>();
+  for (const e of toSpendingEvents(txns, opts)) map.set(e.date, (map.get(e.date) ?? 0) + e.signed);
+  return [...map.entries()].map(([date, total]) => ({ date, total })).sort((a, b) => a.date.localeCompare(b.date));
+}
+
+/** Average net monthly spend per category over the complete months (for what-if). */
+export function avgMonthlyByCategory(txns: Transaction[]): Record<string, number> {
+  const months = aggregateByMonth(txns);
+  const complete = months.filter((m) => !m.incomplete).map((m) => m.month);
+  const usable = complete.length ? complete : months.map((m) => m.month);
+  const n = Math.max(1, usable.length);
+  const per = new Map<string, number>();
+  for (const e of toSpendingEvents(txns)) {
+    if (!usable.includes(e.month)) continue;
+    per.set(e.category, (per.get(e.category) ?? 0) + e.signed);
+  }
+  const out: Record<string, number> = {};
+  for (const [cat, sum] of per) out[cat] = sum / n;
+  return out;
+}
