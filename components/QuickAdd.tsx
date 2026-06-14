@@ -31,11 +31,11 @@ export function QuickAdd() {
   const [catTouched, setCatTouched] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // auto-suggest category from merchant/desc until the user picks one
+  // auto-suggest category from merchant/desc/amount until the user picks one
   useEffect(() => {
     if (catTouched) return;
-    setCategory(autoCategorize(merchant, desc, rules));
-  }, [merchant, desc, rules, catTouched]);
+    setCategory(autoCategorize(merchant, desc, rules, Number(amount) || undefined));
+  }, [merchant, desc, amount, rules, catTouched]);
 
   const existingIds = useMemo(() => new Set(txns.map((t) => t.id)), [txns]);
   // guards against id collisions when saving several rows before a re-render
