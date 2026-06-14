@@ -19,6 +19,11 @@ export const SPENDING_GROUPS: Group[] = ['essential', 'discretionary', 'transfer
 // Large/irregular categories treated as one-off for burn-rate purposes.
 export const ONE_OFF_CATEGORIES = new Set(['ที่พัก/ท่องเที่ยว', 'โรงพยาบาล/สุขภาพ']);
 
+// Debt-settlement categories that are NEVER spending — paying a credit-card
+// bill just settles purchases already counted from the card statement, so
+// counting it again would double-count. Always excluded from spending events.
+export const SETTLEMENT_CATEGORIES = new Set(['ชำระบัตรเครดิต']);
+
 // Known travel platforms whose refunds must route back to ที่พัก/ท่องเที่ยว.
 // (Bug #1: refund rows carry category "คืนเงิน (refund)", not their source.)
 const REFUND_STATIC: Record<string, string> = {
@@ -85,6 +90,7 @@ export function toSpendingEvents(txns: Transaction[], opts: EventOptions = {}): 
     if (account !== 'all' && t.account !== account) continue;
 
     if (t.direction === 'out') {
+      if (SETTLEMENT_CATEGORIES.has(t.category)) continue; // debt settlement, never spending
       if (!includeTransfer && t.group === 'transfer') continue;
       if (excludeMovingTransfers && t.group === 'transfer' && t.transferKind === 'moving') continue;
       if (excludeOneOff && ONE_OFF_CATEGORIES.has(t.category)) continue;
