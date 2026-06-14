@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, X, Check, Camera, Loader2 } from 'lucide-react';
+import { Plus, X, Check, Camera, Loader2, Image as ImageIcon } from 'lucide-react';
 import { useData } from './DataProvider';
 import { CATEGORIES, categoryGroup } from '@/lib/categories';
 import { makeId } from '@/lib/data';
@@ -33,6 +33,7 @@ export function QuickAdd() {
   const [catTouched, setCatTouched] = useState(false);
   const [saved, setSaved] = useState(false);
   const photoRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
   const [scan, setScan] = useState<{ busy: boolean; pct: number; msg: string }>({ busy: false, pct: 0, msg: '' });
 
   const onPhoto = async (file?: File) => {
@@ -114,15 +115,27 @@ export function QuickAdd() {
               <button aria-label="ปิด" onClick={() => setOpen(false)} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
             </div>
             <div className="p-4 space-y-3">
-              {/* scan a receipt / slip photo */}
+              {/* scan a receipt / slip — from camera or an existing photo file */}
               <input ref={photoRef} type="file" accept="image/*" capture="environment" hidden
-                onChange={(e) => onPhoto(e.target.files?.[0])} />
-              <button onClick={() => photoRef.current?.click()} disabled={scan.busy}
-                className="w-full btn-ghost !py-2.5 border border-dashed border-line">
-                {scan.busy
-                  ? <><Loader2 size={16} className="animate-spin" /> {scan.msg} {scan.pct ? `${scan.pct}%` : ''}</>
-                  : <><Camera size={16} /> สแกนรูปใบเสร็จ / สลิป</>}
-              </button>
+                onChange={(e) => { onPhoto(e.target.files?.[0]); e.target.value = ''; }} />
+              <input ref={galleryRef} type="file" accept="image/*" hidden
+                onChange={(e) => { onPhoto(e.target.files?.[0]); e.target.value = ''; }} />
+              {scan.busy ? (
+                <button disabled className="w-full btn-ghost !py-2.5 border border-dashed border-line">
+                  <Loader2 size={16} className="animate-spin" /> {scan.msg} {scan.pct ? `${scan.pct}%` : ''}
+                </button>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  <button onClick={() => photoRef.current?.click()}
+                    className="btn-ghost !py-2.5 border border-dashed border-line">
+                    <Camera size={16} /> ถ่ายรูป
+                  </button>
+                  <button onClick={() => galleryRef.current?.click()}
+                    className="btn-ghost !py-2.5 border border-dashed border-line">
+                    <ImageIcon size={16} /> เลือกรูป
+                  </button>
+                </div>
+              )}
               {!scan.busy && scan.msg && <p className="text-xs text-ink-soft -mt-1">{scan.msg}</p>}
 
               <div className="inline-flex rounded-xl bg-surface-2 p-1 w-full">
