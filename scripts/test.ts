@@ -16,7 +16,7 @@ import {
   parseImport, toCSV, splitPasted, parseDateLoose, parseAmountLoose, rowsFromMapping, dedupe,
 } from '@/lib/io';
 import { autoCategorize, refineCategory } from '@/lib/autocat';
-import { parseUobStatement } from '@/lib/pdf/uob';
+import { parseUobStatement, summarizeBill } from '@/lib/pdf/uob';
 import { categoryGroup } from '@/lib/categories';
 import type { Transaction, BudgetState } from '@/lib/types';
 
@@ -173,6 +173,18 @@ console.log('\n── import / export (io) ──');
   const back = parseImport(csv, []);
   ok('CSV roundtrip parses 10 rows', back.added.length === 10);
 }
+{
+  // regression: PDF importer normalizes merchant differently than the base data
+  // (base "Shell" vs PDF "SHELL 1078F CO UDOMPOR") — dedup must still match via
+  // the raw desc so re-importing an already-present statement adds nothing.
+  const raw = {
+    date: '2026-05-18', time: '', account: 'UOB บัตรเครดิต', direction: 'out' as const,
+    amount: 1130, category: 'น้ำมัน/ปั๊ม', group: 'essential' as const,
+    merchant: 'SHELL 1078F CO UDOMPOR', desc: 'SHELL 1078F CO UDOMPOR BANGKOK',
+  };
+  const res = dedupe([raw], materialize(base));
+  ok('dedup ignores merchant normalization (Shell case)', res.added.length === 0 && res.duplicates === 1);
+}
 
 console.log('\n── autocat & pasted import ──');
 ok('autocat: Grab', autoCategorize('Grab', 'WWW.GRAB.COM') === 'Grab/เดลิเวอรี่/แท็กซี่');
@@ -239,6 +251,20 @@ console.log('\n── UOB PDF parser ──');
   // year rollback: a DEC transaction on a MAY-2026 statement is 2025
   const r = parseUobStatement(['24 MAY 2026', '10 JAN 28 DEC OLD THING BANGKOK 50.00']);
   ok('uob: year rolls back across Dec', r.transactions[0].date === '2025-12-28');
+}
+{
+  // bill summary groups purchases by category, nets in-bill refunds aside
+  const r = parseUobStatement([
+    '24 MAY 2026', 'TOTAL 300.00 50.00', 'PREVIOUS BALANCE 0.00',
+    '23 APR 22 APR WWW.GRAB.COM BANGKOK 200.00',
+    '24 APR 23 APR TMN 7-11 BANGKOK 100.00',
+    '25 APR 24 APR REFUND 50.00 CR',
+  ]);
+  const sm = summarizeBill(r.transactions);
+  ok('summarizeBill purchases = 300', sm.purchases === 300);
+  ok('summarizeBill refunds = 50', sm.refunds === 50);
+  ok('summarizeBill sorted desc + grouped', sm.byCategory[0].total === 200 && sm.byCategory.length === 2);
+  ok('summarizeBill date range', sm.dateFrom === '2026-04-22' && sm.dateTo === '2026-04-24');
 }
 
 console.log('\n── Grab ride rule (< ฿120 = transport) ──');

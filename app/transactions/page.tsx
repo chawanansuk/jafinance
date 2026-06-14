@@ -7,6 +7,7 @@ import { SectionTitle, Money, Skeleton, Notice, GroupBadge } from '@/components/
 import { AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
 import { SmartImport } from '@/components/SmartImport';
 import { PdfImport } from '@/components/PdfImport';
+import { BillsPanel } from '@/components/BillsPanel';
 import { CATEGORIES } from '@/lib/categories';
 import { formatDate } from '@/lib/format';
 import { parseImport, toCSV, downloadFile } from '@/lib/io';
@@ -106,6 +107,8 @@ export default function TransactionsPage() {
       </div>
 
       {importMsg && <Notice>{importMsg}</Notice>}
+
+      <BillsPanel />
 
       {/* filters */}
       <div className="card card-pad space-y-3">

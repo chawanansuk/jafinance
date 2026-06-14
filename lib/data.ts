@@ -11,6 +11,16 @@ export function makeId(t: RawTransaction): string {
   return 't' + (h >>> 0).toString(36);
 }
 
+/**
+ * Key for de-duplication across import sources. Deliberately EXCLUDES the
+ * `merchant` field, which is a derived/normalized value that can differ between
+ * import paths (e.g. base data normalizes "SHELL 1078F..." to "Shell" while the
+ * PDF importer keeps the raw text). `desc` is the stable raw statement text.
+ */
+export function dedupKey(t: RawTransaction): string {
+  return `${t.date}|${t.time}|${t.account}|${t.direction}|${t.amount}|${t.desc}`;
+}
+
 let cachedBase: Transaction[] | null = null;
 
 /** The canonical, reconciled dataset with ids assigned. Never mutated. */

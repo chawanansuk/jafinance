@@ -1,5 +1,5 @@
 import { categoryGroup } from './categories';
-import { makeId } from './data';
+import { makeId, dedupKey } from './data';
 import type { RawTransaction, Transaction, Direction, Group } from './types';
 
 const COLUMNS = ['date', 'time', 'account', 'direction', 'amount', 'category', 'group', 'merchant', 'desc'];
@@ -73,30 +73,34 @@ function dateRange(rows: { account: string; date: string }[]): Map<string, [stri
 
 /**
  * De-dup a batch of parsed rows against the existing set and assign ids.
- * Compares the FULL row (date+time+account+direction+amount+merchant+desc)
- * — NOT just date+amount+desc — so genuine same-day repeats (Bug #2) are kept.
+ * Matching uses dedupKey (date+time+account+direction+amount+desc) so it is
+ * stable across import sources even when the derived `merchant` differs; ids
+ * are still minted from makeId. Genuine same-key repeats (Bug #2) are kept.
  */
 export function dedupe(raws: RawTransaction[], existing: Transaction[]): ImportResult {
-  // count existing ids (with their duplicate-suffix collisions resolved)
-  const existingKeys = new Map<string, number>();
+  const existingKeys = new Map<string, number>(); // dedupKey -> count in existing
   for (const t of existing) {
-    const k = makeId(t);
+    const k = dedupKey(t);
     existingKeys.set(k, (existingKeys.get(k) ?? 0) + 1);
   }
   const existingIds = new Set(existing.map((e) => e.id));
-  const incomingSeen = new Map<string, number>();
+  const seenKey = new Map<string, number>();   // dedupKey -> seen so far this batch
+  const seenId = new Map<string, number>();    // makeId -> ordinal for id suffixing
   const added: Transaction[] = [];
   let duplicates = 0;
   for (const r of raws) {
-    const base = makeId(r);
-    const already = existingKeys.get(base) ?? 0;
-    const seenNow = incomingSeen.get(base) ?? 0;
-    incomingSeen.set(base, seenNow + 1);
+    const dk = dedupKey(r);
+    const already = existingKeys.get(dk) ?? 0;
+    const seenNow = seenKey.get(dk) ?? 0;
+    seenKey.set(dk, seenNow + 1);
     // the first `already` incoming copies match existing copies -> duplicates
     if (seenNow < already) { duplicates++; continue; }
-    // otherwise it's new; pick the next free ordinal id (seenNow >= already)
-    const id = seenNow > 0 ? `${base}_${seenNow}` : base;
-    if (existingIds.has(id)) { duplicates++; continue; }
+    // new row: mint a collision-free id from makeId
+    const mk = makeId(r);
+    let n = seenId.get(mk) ?? 0;
+    let id = n > 0 ? `${mk}_${n}` : mk;
+    while (existingIds.has(id)) { n += 1; id = `${mk}_${n}`; }
+    seenId.set(mk, n + 1);
     existingIds.add(id);
     added.push({ ...r, id });
   }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Trash2, Plus, ArrowRightLeft, Wand2, Info, Download, Upload, RotateCcw } from 'lucide-react';
+import { Trash2, Plus, ArrowRightLeft, Wand2, Info, Download, Upload, RotateCcw, Eraser } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
 import { SectionTitle, CategoryChip, Money, Skeleton, Notice } from '@/components/ui';
 import { Segmented } from '@/components/Controls';
@@ -24,7 +24,7 @@ const KIND_LABEL: Record<TransferKind, string> = {
 export default function ManagePage() {
   const {
     txns, rules, setRule, hydrated,
-    overrides, setOverrides, budget, setBudget, setRulesAll, settings, setSettings, imported, setImported, resetAll,
+    overrides, setOverrides, budget, setBudget, setRulesAll, settings, setSettings, imported, setImported, resetAll, dedupeImported,
   } = useData();
   const [addMerchant, setAddMerchant] = useState('');
   const [addCat, setAddCat] = useState(CAT_NAMES[0]);
@@ -93,6 +93,9 @@ export default function ManagePage() {
           <input ref={backupRef} type="file" accept=".json,application/json" hidden
             onChange={(e) => e.target.files?.[0] && restoreBackup(e.target.files[0])} />
           <button onClick={() => backupRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-sm"><Upload size={14} /> กู้คืน</button>
+          <button
+            onClick={() => { const n = dedupeImported(); setBackupMsg(n > 0 ? `ลบรายการซ้ำ ${n} รายการแล้ว` : 'ไม่พบรายการซ้ำกับข้อมูลเดิม'); }}
+            className="btn-ghost !py-1.5 !px-3 text-sm"><Eraser size={14} /> ลบรายการซ้ำที่นำเข้า</button>
           <button
             onClick={() => { if (confirm('ล้างงบ/กฎ/การแก้หมวด/รายการที่ import ทั้งหมด? (ข้อมูลธุรกรรมต้นฉบับไม่หาย)')) { resetAll(); setBackupMsg('ล้างการตั้งค่าทั้งหมดแล้ว'); } }}
             className="btn-ghost !py-1.5 !px-3 text-sm text-rose-500"><RotateCcw size={14} /> รีเซ็ตทั้งหมด</button>
