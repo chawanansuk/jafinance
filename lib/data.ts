@@ -21,6 +21,20 @@ export function dedupKey(t: RawTransaction): string {
   return `${t.date}|${t.time}|${t.account}|${t.direction}|${t.amount}|${t.desc}`;
 }
 
+/**
+ * Cleanup for imported rows that re-state transactions already present in the
+ * base dataset (e.g. importing a statement for a month the seed data already
+ * covers). Matches on the HARD fields only (date+time+account+direction+amount)
+ * — ignoring desc and the derived merchant — and removes ANY imported row whose
+ * key exists in base. Imported rows with no base match (genuinely new months)
+ * are kept.
+ */
+export function dropBaseDuplicates(imported: Transaction[], base: Transaction[]): Transaction[] {
+  const hk = (t: RawTransaction) => `${t.date}|${t.time}|${t.account}|${t.direction}|${t.amount}`;
+  const baseKeys = new Set(base.map(hk));
+  return imported.filter((t) => !baseKeys.has(hk(t)));
+}
+
 let cachedBase: Transaction[] | null = null;
 
 /** The canonical, reconciled dataset with ids assigned. Never mutated. */
