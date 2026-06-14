@@ -22,6 +22,7 @@ import {
   CircleEllipsis,
   ArrowDownCircle,
   Undo2,
+  CreditCard,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -56,6 +57,7 @@ export const CATEGORIES: CategoryMeta[] = [
   { name: 'ถอนเงินสด', group: 'transfer', color: '#a8a29e', icon: Banknote },
   { name: 'ธุรกิจ/บริการ', group: 'transfer', color: '#737373', icon: Briefcase },
   { name: 'ค่าใช้จ่ายอื่น', group: 'transfer', color: '#9ca3af', icon: CircleEllipsis },
+  { name: 'ชำระบัตรเครดิต', group: 'transfer', color: '#0d9488', icon: CreditCard },
   { name: 'รายรับ (เงินเข้า)', group: 'income', color: '#10b981', icon: ArrowDownCircle },
   { name: 'คืนเงิน (refund)', group: 'refund', color: '#34d399', icon: Undo2 },
 ];

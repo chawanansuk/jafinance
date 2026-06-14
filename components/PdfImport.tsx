@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { X, FileText, Check, AlertTriangle, Lock, Loader2 } from 'lucide-react';
 import { useData } from './DataProvider';
-import { CATEGORIES } from '@/lib/categories';
+import { CATEGORIES, categoryColor } from '@/lib/categories';
 import { formatTHB, formatDate } from '@/lib/format';
 import { dedupe } from '@/lib/io';
 import { extractPdfLines, PdfPasswordError } from '@/lib/pdf/extract';
@@ -47,6 +47,19 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
     [result, catOverrides],
   );
   const ded = useMemo(() => dedupe(previewRaws, txns), [previewRaws, txns]);
+
+  // bill summary: purchases grouped by category (net of in-bill refunds)
+  const bill = useMemo(() => {
+    const map = new Map<string, number>();
+    let refunds = 0;
+    for (const t of previewRaws) {
+      if (t.direction === 'in') { refunds += t.amount; continue; }
+      map.set(t.category, (map.get(t.category) ?? 0) + t.amount);
+    }
+    const rows = [...map.entries()].map(([category, total]) => ({ category, total })).sort((a, b) => b.total - a.total);
+    const purchases = rows.reduce((s, r) => s + r.total, 0);
+    return { rows, purchases, refunds };
+  }, [previewRaws]);
 
   const commit = () => {
     if (ded.added.length === 0) { setDone('ไม่มีรายการใหม่ (อาจนำเข้าไปแล้ว)'); return; }
@@ -107,6 +120,36 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
                   <div><div className="text-ink-soft">รูดสุทธิ (แกะได้)</div><div className="font-semibold tnum">{formatTHB(s.parsedNet)}</div></div>
                   <div><div className="text-ink-soft">ส่วนต่าง</div><div className={`font-semibold tnum ${s.reconciled ? '' : 'text-amber-600'}`}>{s.diff != null ? formatTHB(s.diff) : '—'}</div></div>
                 </div>
+              </div>
+
+              {/* bill summary */}
+              <div className="rounded-xl border border-line p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-semibold">สรุปบิล (ก่อนชำระ)</span>
+                  <div className="text-right">
+                    <div className="text-xs text-ink-soft">ยอดที่ต้องชำระ</div>
+                    <div className="text-lg font-bold tnum text-rose-500">{s.totalBalance != null ? formatTHB(s.totalBalance) : formatTHB(bill.purchases)}</div>
+                    {s.minPayment != null && <div className="text-[11px] text-ink-soft">ขั้นต่ำ {formatTHB(s.minPayment)}</div>}
+                  </div>
+                </div>
+                <ul className="space-y-1.5">
+                  {bill.rows.slice(0, 6).map((r) => (
+                    <li key={r.category}>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="flex items-center gap-2 min-w-0"><span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: categoryColor(r.category) }} /><span className="truncate">{r.category}</span></span>
+                        <span className="tnum font-medium shrink-0">{formatTHB(r.total)}</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-surface-2 overflow-hidden mt-1">
+                        <div className="h-full rounded-full" style={{ width: `${bill.purchases ? Math.max(3, (r.total / bill.purchases) * 100) : 0}%`, background: categoryColor(r.category) }} />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                {bill.refunds > 0 && <p className="text-xs text-emerald-600 mt-2">มีเงินคืนในบิล {formatTHB(bill.refunds)} (หักออกแล้ว)</p>}
+                <p className="text-[11px] text-ink-soft mt-2 flex gap-1.5 items-start">
+                  <AlertTriangle size={12} className="mt-0.5 shrink-0" />
+                  เมื่อจ่ายบิลนี้จาก KBank รายการ “จ่ายค่าบัตร” จะถูกตั้งเป็นหมวด “ชำระบัตรเครดิต” อัตโนมัติ และ<b>ไม่ถูกนับซ้ำ</b>กับรายการในบิล
+                </p>
               </div>
 
               {/* preview */}

@@ -239,5 +239,17 @@ console.log('\n── UOB PDF parser ──');
   ok('uob: year rolls back across Dec', r.transactions[0].date === '2025-12-28');
 }
 
+console.log('\n── card-bill settlement (no double-count) ──');
+ok('autocat: KBank card payment', autoCategorize('', 'ชำระค่าบัตรเครดิต UOB') === 'ชำระบัตรเครดิต');
+ok('autocat: UOB Premier -> settlement', autoCategorize('UOB PREMIER', '') === 'ชำระบัตรเครดิต');
+ok('settlement is transfer group', categoryGroup('ชำระบัตรเครดิต') === 'transfer');
+{
+  const settle = { date: '2026-07-05', time: '', account: 'KBank ออมทรัพย์', direction: 'out' as const,
+    amount: 40000, category: 'ชำระบัตรเครดิต', group: 'transfer' as const, merchant: 'UOB', desc: 'ชำระบัตร', id: 'settle1' };
+  const m = materialize(base, [settle as any]);
+  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 170575.98, 1);
+  ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
+}
+
 console.log(`\n${fail === 0 ? '✓' : '✗'} ${pass} passed, ${fail} failed`);
 if (fail) { console.error('FAILED:', fails.join(' | ')); process.exit(1); }

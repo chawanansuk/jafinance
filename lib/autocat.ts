@@ -7,6 +7,8 @@ import type { RulesState } from './types';
  * over "merchant + desc". Purely local — no network.
  */
 const KEYWORD_TABLE: { kw: string[]; category: string }[] = [
+  // debt settlement — must come first so it isn't caught by generic bank/transfer keywords
+  { kw: ['ชำระบัตร', 'ชำระค่าบัตร', 'จ่ายบัตร', 'ชำระยอดบัตร', 'บัตรเครดิต', 'credit card payment', 'cc payment', 'uob premier', 'card payment'], category: 'ชำระบัตรเครดิต' },
   { kw: ['grab', 'lineman', 'foodpanda', 'gojek', 'bolt'], category: 'Grab/เดลิเวอรี่/แท็กซี่' },
   { kw: ['7-eleven', '7-11', '7 11', 'seven', 'เซเว่น', 'cj more', 'lawson', 'familymart'], category: 'ร้านสะดวกซื้อ' },
   { kw: ['lotus', 'โลตัส', 'tops', 'big c', 'bigc', 'makro', 'แม็คโคร', 'villa market', 'gourmet', 'foodland', 'tesco', 'grocery', 'supermarket', 'ซูเปอร์'], category: 'ห้าง/ซูเปอร์มาร์เก็ต' },
