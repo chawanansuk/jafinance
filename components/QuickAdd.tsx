@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, X, Check } from 'lucide-react';
 import { useData } from './DataProvider';
-import { CATEGORIES } from '@/lib/categories';
+import { CATEGORIES, categoryGroup } from '@/lib/categories';
 import { makeId } from '@/lib/data';
 import { autoCategorize } from '@/lib/autocat';
 import { formatTHB } from '@/lib/format';
@@ -38,6 +38,8 @@ export function QuickAdd() {
   }, [merchant, desc, rules, catTouched]);
 
   const existingIds = useMemo(() => new Set(txns.map((t) => t.id)), [txns]);
+  // guards against id collisions when saving several rows before a re-render
+  const sessionIds = useRef<Set<string>>(new Set());
 
   const reset = () => {
     setDate(todayISO()); setAccount(ACCOUNTS[0]); setDirection('out');
@@ -49,12 +51,13 @@ export function QuickAdd() {
     if (!amt) return;
     const raw = {
       date, time: '', account, direction,
-      amount: amt, category, group: 'discretionary' as const, merchant: merchant.trim() || '—', desc: desc.trim(),
+      amount: amt, category, group: categoryGroup(category), merchant: merchant.trim() || '—', desc: desc.trim(),
     };
-    // unique id (keep genuine repeats)
-    let base = makeId(raw);
+    // unique id (keep genuine repeats); sessionIds closes the same-tick gap
+    const base = makeId(raw);
     let id = base; let n = 1;
-    while (existingIds.has(id)) id = `${base}_${n++}`;
+    while (existingIds.has(id) || sessionIds.current.has(id)) id = `${base}_${n++}`;
+    sessionIds.current.add(id);
     const tx = { ...raw, id } as Transaction;
     setImported((p) => [...p, tx]);
     setSaved(true);

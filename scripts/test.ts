@@ -58,6 +58,16 @@ ok('all ids unique', new Set(base.map((t) => t.id)).size === 635);
   const m = materialize(base, [], { categoryById: {}, realIncomeById: {} }, { 'ปรารถนา': { merchant: 'ปรารถนา', transferKind: 'moving' } });
   ok('transferKind attached', m.some((t) => t.merchant === 'ปรารถนา' && t.transferKind === 'moving'));
 }
+{
+  // regression: a manually-added essential row must keep its essential group
+  // (Quick-add must set group from category; materialize trusts it when the
+  // category is unchanged, so a wrong group would silently persist).
+  ok('categoryGroup essential mapping', categoryGroup('ร้านสะดวกซื้อ') === 'essential' && categoryGroup('น้ำมัน/ปั๊ม') === 'essential');
+  const added = { date: '2026-07-01', time: '', account: 'KBank ออมทรัพย์', direction: 'out' as const,
+    amount: 50, category: 'ร้านสะดวกซื้อ', group: categoryGroup('ร้านสะดวกซื้อ'), merchant: '7-Eleven', desc: '', id: 'qa1' };
+  const m = materialize(base, [added as any]);
+  ok('manual essential row stays essential', m.find((t) => t.id === 'qa1')!.group === 'essential');
+}
 
 console.log('\n── analytics ──');
 eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 170575.98, 0.5);
@@ -170,6 +180,7 @@ ok('autocat: rule beats keyword', autoCategorize('Grab', '', { Grab: { merchant:
 ok('parseDateLoose ISO', parseDateLoose('2026-06-10') === '2026-06-10');
 ok('parseDateLoose DD/MM/YYYY', parseDateLoose('10/06/2026') === '2026-06-10');
 ok('parseDateLoose Buddhist year', parseDateLoose('10/06/2569') === '2026-06-10');
+ok('parseDateLoose ISO Buddhist year', parseDateLoose('2569-06-10') === '2026-06-10');
 ok('parseAmountLoose strips ฿/commas', parseAmountLoose('฿1,234.50').value === 1234.5);
 ok('parseAmountLoose detects negative', parseAmountLoose('-120').negative === true);
 {
