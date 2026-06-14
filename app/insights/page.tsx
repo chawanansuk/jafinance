@@ -1,12 +1,15 @@
 'use client';
 
-import { useMemo } from 'react';
-import { TrendingUp, Repeat, AlertCircle, Store, Plane, Calendar } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { TrendingUp, Repeat, AlertCircle, Store, Plane, Calendar, CalendarDays, Sparkles } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
 import { SectionTitle, CategoryChip, Money, Skeleton } from '@/components/ui';
+import { CalendarHeatmap } from '@/components/CalendarHeatmap';
 import {
   detectRecurring, detectOutliers, topMerchants, toSpendingEvents, fixedVsVariable,
+  dailySpending, avgMonthlyByCategory,
 } from '@/lib/analytics';
+import { categoryGroup, categoryColor } from '@/lib/categories';
 import { formatDate, formatMonth, formatTHB } from '@/lib/format';
 
 const BIG_CATEGORIES = ['ที่พัก/ท่องเที่ยว', 'โรงพยาบาล/สุขภาพ'];
@@ -53,6 +56,18 @@ export default function InsightsPage() {
   const outliers = useMemo(() => detectOutliers(txns).slice(0, 5), [txns]);
   const fv = useMemo(() => fixedVsVariable(txns), [txns]);
   const fvTotal = fv.fixed + fv.variable;
+
+  const daily = useMemo(() => dailySpending(txns), [txns]);
+  const avgByCat = useMemo(() => avgMonthlyByCategory(txns), [txns]);
+  const discCats = useMemo(
+    () => Object.entries(avgByCat).filter(([c, v]) => categoryGroup(c) === 'discretionary' && v > 0).sort((a, b) => b[1] - a[1]),
+    [avgByCat],
+  );
+  const [wiCat, setWiCat] = useState('');
+  const [wiPct, setWiPct] = useState(30);
+  const activeWiCat = wiCat || discCats[0]?.[0] || '';
+  const wiAvg = avgByCat[activeWiCat] ?? 0;
+  const wiSaveMonth = wiAvg * (wiPct / 100);
 
   const bigItems = useMemo(() => {
     const list = txns
@@ -147,6 +162,37 @@ export default function InsightsPage() {
           <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full bg-indigo-500 inline-block" /> คงที่ <b className="tnum">{formatTHB(fv.fixed)}</b>/เดือน</span>
           <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full bg-sky-400 inline-block" /> แปรผัน <b className="tnum">{formatTHB(fv.variable)}</b>/เดือน</span>
         </div>
+      </InsightCard>
+
+      <InsightCard accent="#14b8a6" icon={CalendarDays} title="ปฏิทินการใช้จ่ายรายวัน">
+        <CalendarHeatmap data={daily} />
+      </InsightCard>
+
+      <InsightCard accent="#6366f1" icon={Sparkles} title="What-if: ถ้าลดรายจ่ายหมวดนี้">
+        {discCats.length ? (
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <select className="input !w-auto !py-1.5 text-sm" value={activeWiCat} onChange={(e) => setWiCat(e.target.value)}>
+                {discCats.map(([c]) => <option key={c} value={c}>{c}</option>)}
+              </select>
+              <span className="text-sm text-ink-soft">ลดลง</span>
+              <span className="font-bold tnum text-base" style={{ color: categoryColor(activeWiCat) }}>{wiPct}%</span>
+            </div>
+            <input type="range" min={0} max={100} step={5} value={wiPct} onChange={(e) => setWiPct(Number(e.target.value))}
+              className="w-full accent-indigo-500" />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl bg-surface-2 px-3 py-2">
+                <div className="text-xs text-ink-soft">เก็บเพิ่มได้/เดือน</div>
+                <div className="text-lg font-bold tnum text-emerald-500">{formatTHB(wiSaveMonth)}</div>
+              </div>
+              <div className="rounded-xl bg-surface-2 px-3 py-2">
+                <div className="text-xs text-ink-soft">ต่อปี (×12)</div>
+                <div className="text-lg font-bold tnum text-emerald-500">{formatTHB(wiSaveMonth * 12)}</div>
+              </div>
+            </div>
+            <p className="text-xs text-ink-soft">อิงค่าเฉลี่ยจริง {formatTHB(wiAvg)}/เดือน (เฉพาะเดือนข้อมูลครบ)</p>
+          </div>
+        ) : <p className="text-sm text-ink-soft">ยังไม่มีข้อมูลหมวดที่ลดได้พอ</p>}
       </InsightCard>
 
       <InsightCard accent="#ec4899" icon={Plane} title="รายจ่ายก้อนใหญ่/ไม่ประจำ">

@@ -7,7 +7,7 @@ import { baseTransactions, materialize, makeId } from '@/lib/data';
 import {
   toSpendingEvents, grandTotal, aggregateByGroup, aggregateByCategory,
   aggregateByMonth, defaultMonth, projectMonth, topMerchants,
-  detectRecurring, detectOutliers, fixedVsVariable,
+  detectRecurring, detectOutliers, fixedVsVariable, dailySpending, avgMonthlyByCategory,
 } from '@/lib/analytics';
 import {
   suggestBudgets, categoryBudgetRows, monthSummary, cumulativeSavings, EMPTY_BUDGET,
@@ -101,6 +101,14 @@ ok('outliers found', detectOutliers(txns).length > 0);
 {
   const fv = fixedVsVariable(txns);
   ok('fixedVsVariable positive', fv.fixed > 0 && fv.variable > 0);
+}
+{
+  const ds = dailySpending(txns);
+  ok('dailySpending sorted & non-empty', ds.length > 30 && ds[0].date <= ds[ds.length - 1].date);
+  const sum = ds.reduce((s, d) => s + d.total, 0);
+  eq('dailySpending sums to net total', sum, 170575.98, 1);
+  const avg = avgMonthlyByCategory(txns);
+  ok('avgMonthlyByCategory has Grab', (avg['Grab/เดลิเวอรี่/แท็กซี่'] ?? 0) > 0);
 }
 
 console.log('\n── budget ──');
