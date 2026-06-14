@@ -3,7 +3,7 @@
  * (data.materialize -> analytics -> budget -> io). Run: `npm test`.
  * Complements reconcile.ts (which is an independent oracle on the raw data).
  */
-import { baseTransactions, materialize, makeId } from '@/lib/data';
+import { baseTransactions, materialize, makeId, dropBaseDuplicates } from '@/lib/data';
 import {
   toSpendingEvents, grandTotal, aggregateByGroup, aggregateByCategory,
   aggregateByMonth, defaultMonth, projectMonth, topMerchants,
@@ -184,6 +184,16 @@ console.log('\n── import / export (io) ──');
   };
   const res = dedupe([raw], materialize(base));
   ok('dedup ignores merchant normalization (Shell case)', res.added.length === 0 && res.duplicates === 1);
+}
+{
+  // cleanup: imported rows that restate base transactions are dropped even when
+  // merchant AND desc differ, as long as date+account+amount match a base row.
+  const bm = base.find((t) => t.account.startsWith('UOB') && t.amount === 652 && t.date === '2026-05-20')!;
+  const importedDup = { ...bm, merchant: 'DIFFERENT', desc: 'DIFFERENT TEXT', category: 'ค่าใช้จ่ายอื่น', id: 'dup1' };
+  const importedNew = { ...bm, date: '2026-07-09', amount: 99, merchant: 'NEWJUNE', desc: 'NEW', id: 'new1' };
+  const kept = dropBaseDuplicates([importedDup as any, importedNew as any], base);
+  ok('dropBaseDuplicates removes base-overlap row', !kept.some((t) => t.id === 'dup1'));
+  ok('dropBaseDuplicates keeps genuinely new row', kept.some((t) => t.id === 'new1'));
 }
 
 console.log('\n── autocat & pasted import ──');

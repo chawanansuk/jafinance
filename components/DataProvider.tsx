@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import { materialize, baseTransactions, allMonths, dedupKey } from '@/lib/data';
+import { materialize, baseTransactions, allMonths, dropBaseDuplicates } from '@/lib/data';
 import { aggregateByMonth, defaultMonth } from '@/lib/analytics';
 import { useLocalStorage, KEYS } from '@/lib/storage';
 import { EMPTY_BUDGET } from '@/lib/budget';
@@ -119,16 +119,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     dedupeImported: () => {
       let removed = 0;
       setImported((prev) => {
-        const allow = new Map<string, number>(); // dedupKey -> base copies
-        for (const t of base) allow.set(dedupKey(t), (allow.get(dedupKey(t)) ?? 0) + 1);
-        const seen = new Map<string, number>();
-        const kept = prev.filter((t) => {
-          const k = dedupKey(t);
-          const already = allow.get(k) ?? 0;
-          const s = seen.get(k) ?? 0;
-          seen.set(k, s + 1);
-          return s >= already; // drop the copies that match a base row
-        });
+        const kept = dropBaseDuplicates(prev, base);
         removed = prev.length - kept.length;
         return kept;
       });
