@@ -107,7 +107,7 @@ export default function CategoriesPage() {
           <div className="card w-full max-w-lg max-h-[85dvh] overflow-y-auto rounded-b-none sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="sticky top-0 bg-surface border-b border-line px-4 py-3 flex items-center justify-between">
               <CategoryChip name={open} size={18} />
-              <button onClick={() => setOpen(null)} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
+              <button aria-label="ปิด" onClick={() => setOpen(null)} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
             </div>
             <div className="p-4 space-y-5">
               <div>
