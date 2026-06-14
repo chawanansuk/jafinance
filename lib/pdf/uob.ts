@@ -35,6 +35,33 @@ export interface UobParseResult {
 
 const num = (s: string) => Number(s.replace(/,/g, ''));
 
+/** Group parsed transactions into a per-category purchase summary (net of in-bill refunds). */
+export function summarizeBill(transactions: RawTransaction[]): {
+  byCategory: { category: string; total: number }[];
+  purchases: number;
+  refunds: number;
+  dateFrom: string;
+  dateTo: string;
+} {
+  const map = new Map<string, number>();
+  let refunds = 0;
+  const dates: string[] = [];
+  for (const t of transactions) {
+    if (t.date) dates.push(t.date);
+    if (t.direction === 'in') { refunds += t.amount; continue; }
+    map.set(t.category, (map.get(t.category) ?? 0) + t.amount);
+  }
+  dates.sort();
+  const byCategory = [...map.entries()].map(([category, total]) => ({ category, total })).sort((a, b) => b.total - a.total);
+  return {
+    byCategory,
+    purchases: byCategory.reduce((s, r) => s + r.total, 0),
+    refunds,
+    dateFrom: dates[0] ?? '',
+    dateTo: dates[dates.length - 1] ?? '',
+  };
+}
+
 /** Map a raw UOB description to a normalized merchant name. */
 export function normalizeUobMerchant(descRaw: string): string {
   const d = descRaw.toUpperCase();

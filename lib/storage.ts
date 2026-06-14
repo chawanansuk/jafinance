@@ -13,6 +13,7 @@ export const KEYS = {
   imported: `${PREFIX}imported`,
   rules: `${PREFIX}rules`,
   settings: `${PREFIX}settings`,
+  statements: `${PREFIX}statements`,
   theme: `${PREFIX}theme`,
 } as const;
 

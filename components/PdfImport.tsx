@@ -7,12 +7,13 @@ import { CATEGORIES, categoryColor } from '@/lib/categories';
 import { formatTHB, formatDate } from '@/lib/format';
 import { dedupe } from '@/lib/io';
 import { extractPdfLines, PdfPasswordError } from '@/lib/pdf/extract';
-import { parseUobStatement, type UobParseResult } from '@/lib/pdf/uob';
+import { parseUobStatement, summarizeBill, type UobParseResult } from '@/lib/pdf/uob';
+import type { Statement } from '@/lib/types';
 
 const CAT_NAMES = CATEGORIES.map((c) => c.name);
 
 export function PdfImport({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { txns, setImported } = useData();
+  const { txns, setImported, addStatement } = useData();
   const fileRef = useRef<HTMLInputElement>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [password, setPassword] = useState('');
@@ -62,9 +63,25 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
   }, [previewRaws]);
 
   const commit = () => {
+    if (!result) return;
     if (ded.added.length === 0) { setDone('ไม่มีรายการใหม่ (อาจนำเข้าไปแล้ว)'); return; }
     setImported((p) => [...p, ...ded.added]);
-    setDone(`เพิ่ม ${ded.added.length} รายการ · ข้ามซ้ำ ${ded.duplicates}`);
+    // save a persistent, categorized summary of this statement
+    const sm = summarizeBill(previewRaws);
+    const sum = result.summary;
+    addStatement({
+      id: `${sum.statementDate}|${result.account}`,
+      account: result.account,
+      statementDate: sum.statementDate,
+      dateFrom: sm.dateFrom, dateTo: sm.dateTo,
+      totalBalance: sum.totalBalance, minPayment: sum.minPayment,
+      purchases: sm.purchases, refunds: sm.refunds,
+      parsedNet: sum.parsedNet, reconciled: sum.reconciled,
+      count: result.transactions.length,
+      byCategory: sm.byCategory,
+      importedAt: new Date().toISOString(),
+    } as Statement);
+    setDone(`เพิ่ม ${ded.added.length} รายการ · บันทึกสรุปบิลแล้ว`);
     setResult(null);
   };
 

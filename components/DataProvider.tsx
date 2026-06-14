@@ -5,7 +5,7 @@ import { materialize, baseTransactions, allMonths } from '@/lib/data';
 import { aggregateByMonth, defaultMonth } from '@/lib/analytics';
 import { useLocalStorage, KEYS } from '@/lib/storage';
 import { EMPTY_BUDGET } from '@/lib/budget';
-import type { Transaction, UserOverrides, BudgetState, RulesState, MerchantRule, Settings } from '@/lib/types';
+import type { Transaction, UserOverrides, BudgetState, RulesState, MerchantRule, Settings, Statement } from '@/lib/types';
 
 interface DataCtx {
   /** all transactions after overrides + imports applied */
@@ -34,6 +34,10 @@ interface DataCtx {
   settings: Settings;
   setSettings: (s: Settings | ((p: Settings) => Settings)) => void;
 
+  statements: Statement[];
+  addStatement: (s: Statement) => void;
+  removeStatement: (id: string) => void;
+
   /** wipe all user-configured state back to defaults */
   resetAll: () => void;
 }
@@ -49,6 +53,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [budget, setBudget, h3] = useLocalStorage<BudgetState>(KEYS.budget, EMPTY_BUDGET);
   const [rules, setRules, h4] = useLocalStorage<RulesState>(KEYS.rules, {});
   const [settings, setSettings, h5] = useLocalStorage<Settings>(KEYS.settings, DEFAULT_SETTINGS);
+  const [statements, setStatements, h6] = useLocalStorage<Statement[]>(KEYS.statements, []);
 
   const base = useMemo(() => baseTransactions(), []);
   const txns = useMemo(
@@ -101,7 +106,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     txns,
     months,
     defaultMonth: dMonth,
-    hydrated: h1 && h2 && h3 && h4 && h5,
+    hydrated: h1 && h2 && h3 && h4 && h5 && h6,
     overrides,
     setOverrides,
     setCategory,
@@ -116,12 +121,16 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setRulesAll: (r: RulesState) => setRules(r),
     settings,
     setSettings,
+    statements,
+    addStatement: (st: Statement) => setStatements((p) => [st, ...p.filter((x) => x.id !== st.id)]),
+    removeStatement: (id: string) => setStatements((p) => p.filter((x) => x.id !== id)),
     resetAll: () => {
       setOverrides(EMPTY_OVERRIDES);
       setBudget(EMPTY_BUDGET);
       setRules({});
       setSettings(DEFAULT_SETTINGS);
       setImported([]);
+      setStatements([]);
     },
   };
 

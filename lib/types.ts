@@ -58,6 +58,24 @@ export interface MerchantRule {
 /** merchant -> rule */
 export type RulesState = Record<string, MerchantRule>;
 
+/** A saved summary of an imported statement/bill (persisted). */
+export interface Statement {
+  id: string; // statementDate|account
+  account: string;
+  statementDate: string;
+  dateFrom: string;
+  dateTo: string;
+  totalBalance: number | null;
+  minPayment: number | null;
+  purchases: number;
+  refunds: number;
+  parsedNet: number;
+  reconciled: boolean;
+  count: number;
+  byCategory: { category: string; total: number }[];
+  importedAt: string; // ISO
+}
+
 /** UI-level toggles that change how spending is summed (persisted). */
 export interface Settings {
   /** drop transfers classified as "moving" from spending totals */
