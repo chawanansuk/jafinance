@@ -11,11 +11,12 @@ import { formatDate, formatMonth, formatTHB } from '@/lib/format';
 
 const BIG_CATEGORIES = ['ที่พัก/ท่องเที่ยว', 'โรงพยาบาล/สุขภาพ'];
 
-function InsightCard({ icon: Icon, title, children }: any) {
+function InsightCard({ icon: Icon, title, children, accent = '#635bff' }: any) {
   return (
-    <div className="card card-pad">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="grid place-items-center h-8 w-8 rounded-xl bg-brand/12 text-brand"><Icon size={17} /></span>
+    <div className="card card-pad card-hover relative overflow-hidden"
+      style={{ background: `linear-gradient(165deg, color-mix(in srgb, ${accent} 8%, rgb(var(--surface))), rgb(var(--surface)) 65%)` }}>
+      <div className="flex items-center gap-2.5 mb-3">
+        <span className="grid place-items-center h-9 w-9 rounded-xl text-white shadow-sm shrink-0" style={{ background: accent }}><Icon size={18} /></span>
         <h2 className="font-semibold">{title}</h2>
       </div>
       {children}
@@ -68,7 +69,7 @@ export default function InsightsPage() {
       <h1 className="text-xl font-bold">อินไซต์อัตโนมัติ</h1>
 
       <div className="grid lg:grid-cols-2 gap-4">
-        <InsightCard icon={TrendingUp} title={`หมวดที่โตเร็วสุด (เทียบ ${prev ? formatMonth(prev) : '—'})`}>
+        <InsightCard accent="#f43f5e" icon={TrendingUp} title={`หมวดที่โตเร็วสุด (เทียบ ${prev ? formatMonth(prev) : '—'})`}>
           {growth.length ? (
             <ul className="space-y-2.5">
               {growth.map((g) => (
@@ -86,7 +87,7 @@ export default function InsightsPage() {
           ) : <p className="text-sm text-ink-soft">ต้องมีอย่างน้อย 2 เดือนเพื่อเทียบ</p>}
         </InsightCard>
 
-        <InsightCard icon={Store} title="ร้านที่จ่ายบ่อย/เยอะสุด">
+        <InsightCard accent="#0ea5e9" icon={Store} title="ร้านที่จ่ายบ่อย/เยอะสุด">
           <ul className="space-y-2.5">
             {merchants.map((m, i) => (
               <li key={m.merchant} className="flex items-center gap-3">
@@ -101,7 +102,7 @@ export default function InsightsPage() {
           </ul>
         </InsightCard>
 
-        <InsightCard icon={Repeat} title="ค่าใช้จ่ายที่เกิดซ้ำ (recurring)">
+        <InsightCard accent="#8b5cf6" icon={Repeat} title="ค่าใช้จ่ายที่เกิดซ้ำ (recurring)">
           {recurring.length ? (
             <ul className="space-y-2.5">
               {recurring.map((r) => (
@@ -120,7 +121,7 @@ export default function InsightsPage() {
           ) : <p className="text-sm text-ink-soft">ยังตรวจไม่พบรายการที่เกิดซ้ำสม่ำเสมอ</p>}
         </InsightCard>
 
-        <InsightCard icon={AlertCircle} title="วันที่ใช้จ่ายผิดปกติ (outliers)">
+        <InsightCard accent="#f59e0b" icon={AlertCircle} title="วันที่ใช้จ่ายผิดปกติ (outliers)">
           {outliers.length ? (
             <ul className="space-y-2.5">
               {outliers.map((o) => (
@@ -136,7 +137,7 @@ export default function InsightsPage() {
         </InsightCard>
       </div>
 
-      <InsightCard icon={Repeat} title="ค่าใช้จ่ายคงที่ vs แปรผัน (ต่อเดือน)">
+      <InsightCard accent="#10b981" icon={Repeat} title="ค่าใช้จ่ายคงที่ vs แปรผัน (ต่อเดือน)">
         <p className="text-sm text-ink-soft mb-3">ประเมินจากเดือนข้อมูลครบ — “คงที่” = รายการที่เกิดซ้ำสม่ำเสมอ</p>
         <div className="flex h-3 rounded-full overflow-hidden bg-surface-2 mb-2">
           <div className="bg-indigo-500" style={{ width: `${fvTotal > 0 ? (fv.fixed / fvTotal) * 100 : 0}%` }} />
@@ -148,7 +149,7 @@ export default function InsightsPage() {
         </div>
       </InsightCard>
 
-      <InsightCard icon={Plane} title="รายจ่ายก้อนใหญ่/ไม่ประจำ">
+      <InsightCard accent="#ec4899" icon={Plane} title="รายจ่ายก้อนใหญ่/ไม่ประจำ">
         <p className="text-sm text-ink-soft mb-3">
           ที่พัก/ท่องเที่ยว + โรงพยาบาล รวม <b className="text-ink tnum">{formatTHB(bigItems.total)}</b> —
           แยกออกจากค่าใช้จ่ายประจำเพื่อให้วางแผน burn-rate ปกติได้แม่นขึ้น

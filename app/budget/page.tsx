@@ -144,11 +144,11 @@ export default function BudgetPage() {
 
       {/* summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="งบรวมทั้งเดือน" value={<Money value={summary.totalBudget} />} icon={Target} />
-        <StatCard label="ใช้ไปแล้ว" value={<Money value={summary.totalActual} />} icon={TrendingUp} />
-        <StatCard label="คงเหลือ" value={<Money value={summary.remaining} />} icon={PiggyBank}
+        <StatCard label="งบรวมทั้งเดือน" value={<Money value={summary.totalBudget} />} icon={Target} accent="#8b5cf6" />
+        <StatCard label="ใช้ไปแล้ว" value={<Money value={summary.totalActual} />} icon={TrendingUp} accent="#0ea5e9" />
+        <StatCard label="คงเหลือ" value={<Money value={summary.remaining} />} icon={PiggyBank} accent="#10b981"
           tone={summary.remaining < 0 ? 'bad' : 'good'} />
-        <StatCard label="หมวดที่เกินงบ" value={String(rows.filter((r) => r.tone === 'over' && r.budget).length)} icon={AlertTriangle} />
+        <StatCard label="หมวดที่เกินงบ" value={String(rows.filter((r) => r.tone === 'over' && r.budget).length)} icon={AlertTriangle} accent="#f43f5e" />
       </div>
 
       {/* essential vs discretionary */}

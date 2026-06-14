@@ -21,12 +21,14 @@ export function StatCard({
 }) {
   const d = delta != null ? formatDelta(delta) : null;
   return (
-    <div className="card card-pad card-hover relative overflow-hidden">
+    <div className="card card-pad card-hover relative overflow-hidden"
+      style={{ background: `linear-gradient(165deg, color-mix(in srgb, ${accent} 10%, rgb(var(--surface))), rgb(var(--surface)) 70%)` }}>
+      <span className="absolute inset-x-0 top-0 h-1" style={{ backgroundImage: `linear-gradient(90deg, ${accent}, color-mix(in srgb, ${accent} 45%, transparent))` }} />
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs text-ink-soft font-medium">{label}</span>
         {Icon && (
-          <span className="grid place-items-center h-7 w-7 rounded-lg shrink-0"
-            style={{ background: `color-mix(in srgb, ${accent} 14%, transparent)`, color: accent }}>
+          <span className="grid place-items-center h-7 w-7 rounded-lg shrink-0 shadow-sm"
+            style={{ background: accent, color: '#fff' }}>
             <Icon size={15} />
           </span>
         )}
@@ -96,8 +98,11 @@ export function CategoryChip({ name, size = 16 }: { name: string; size?: number 
 
 export function SectionTitle({ children, action }: { children: ReactNode; action?: ReactNode }) {
   return (
-    <div className="flex items-center justify-between mb-3">
-      <h2 className="text-base font-semibold">{children}</h2>
+    <div className="flex items-center justify-between mb-3 gap-2">
+      <h2 className="text-base font-semibold flex items-center gap-2">
+        <span className="h-4 w-1.5 rounded-full" style={{ backgroundImage: 'linear-gradient(to bottom, rgb(var(--brand)), rgb(var(--brand-2)))' }} />
+        {children}
+      </h2>
       {action}
     </div>
   );
