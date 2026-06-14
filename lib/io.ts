@@ -72,21 +72,11 @@ function dateRange(rows: { account: string; date: string }[]): Map<string, [stri
 }
 
 /**
- * Parse a CSV/JSON file and return rows that are NOT already present.
- * De-dup compares the FULL row (date+time+account+direction+amount+merchant+desc)
+ * De-dup a batch of parsed rows against the existing set and assign ids.
+ * Compares the FULL row (date+time+account+direction+amount+merchant+desc)
  * — NOT just date+amount+desc — so genuine same-day repeats (Bug #2) are kept.
  */
-export function parseImport(text: string, existing: Transaction[]): ImportResult {
-  let records: Record<string, any>[];
-  const trimmed = text.trim();
-  if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
-    const json = JSON.parse(trimmed);
-    records = Array.isArray(json) ? json : [json];
-  } else {
-    records = parseCSV(text);
-  }
-  const raws = records.map(normalize).filter((r): r is RawTransaction => r != null);
-
+export function dedupe(raws: RawTransaction[], existing: Transaction[]): ImportResult {
   // count existing ids (with their duplicate-suffix collisions resolved)
   const existingKeys = new Map<string, number>();
   for (const t of existing) {
@@ -123,6 +113,95 @@ export function parseImport(text: string, existing: Transaction[]): ImportResult
     }
   }
   return { added, duplicates, parsed: raws.length, overlaps };
+}
+
+/** Parse a CSV/JSON file then de-dup against existing rows. */
+export function parseImport(text: string, existing: Transaction[]): ImportResult {
+  let records: Record<string, any>[];
+  const trimmed = text.trim();
+  if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+    const json = JSON.parse(trimmed);
+    records = Array.isArray(json) ? json : [json];
+  } else {
+    records = parseCSV(text);
+  }
+  const raws = records.map(normalize).filter((r): r is RawTransaction => r != null);
+  return dedupe(raws, existing);
+}
+
+// ── pasted-text importer ────────────────────────────────────────────────────
+
+export type PasteDelimiter = 'auto' | 'comma' | 'tab' | 'space';
+
+/** Split pasted text into a grid of cells using the chosen delimiter. */
+export function splitPasted(text: string, delim: PasteDelimiter = 'auto'): string[][] {
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  if (lines.length === 0) return [];
+  let d = delim;
+  if (d === 'auto') {
+    const first = lines[0];
+    if (first.includes('\t')) d = 'tab';
+    else if (first.includes(',')) d = 'comma';
+    else d = 'space';
+  }
+  const sep = d === 'comma' ? /\s*,\s*/ : d === 'tab' ? /\t/ : /\s{2,}|\t/;
+  return lines.map((l) => l.split(sep).map((c) => c.trim()));
+}
+
+/** Loosely parse a date in common TH/EN formats to YYYY-MM-DD ('' if unknown). */
+export function parseDateLoose(s: string): string {
+  const t = s.trim();
+  let m = t.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+  if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+  m = t.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})/); // DD/MM/YYYY
+  if (m) {
+    let y = Number(m[3]);
+    if (y < 100) y += 2000;
+    if (y > 2400) y -= 543; // Buddhist year typed in
+    return `${y}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+  }
+  return '';
+}
+
+/** Parse an amount, stripping ฿, commas, spaces. Returns {value, negative}. */
+export function parseAmountLoose(s: string): { value: number; negative: boolean } {
+  const neg = /^\(.*\)$/.test(s.trim()) || /-/.test(s);
+  const n = Math.abs(Number(s.replace(/[฿,\s()]/g, '').replace(/-/g, ''))) || 0;
+  return { value: n, negative: neg };
+}
+
+export interface PasteMapping {
+  date: number;
+  amount: number;
+  merchant: number | null;
+  desc: number | null;
+  account: string;
+  /** 'sign' = negative amount means money out; 'out'/'in' = force a direction */
+  directionMode: 'sign' | 'out' | 'in';
+}
+
+/** Build RawTransactions from a parsed grid + a column mapping. */
+export function rowsFromMapping(
+  grid: string[][],
+  map: PasteMapping,
+  categorize: (merchant: string, desc: string) => string,
+): RawTransaction[] {
+  const out: RawTransaction[] = [];
+  for (const cells of grid) {
+    const date = parseDateLoose(cells[map.date] ?? '');
+    const { value, negative } = parseAmountLoose(cells[map.amount] ?? '');
+    if (!date || !value) continue;
+    const merchant = (map.merchant != null ? cells[map.merchant] : '') ?? '';
+    const desc = (map.desc != null ? cells[map.desc] : '') ?? '';
+    const direction = map.directionMode === 'sign' ? (negative ? 'out' : 'in') : map.directionMode;
+    const category = categorize(merchant, desc);
+    out.push({
+      date, time: '', account: map.account, direction,
+      amount: value, category, group: categoryGroup(category),
+      merchant: merchant || '—', desc,
+    });
+  }
+  return out;
 }
 
 export function toCSV(txns: Transaction[]): string {

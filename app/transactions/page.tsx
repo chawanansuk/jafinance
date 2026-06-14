@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Search, Upload, Download, ArrowUpDown, Wand2, Check } from 'lucide-react';
+import { Search, Upload, Download, ArrowUpDown, Wand2, Check, ClipboardPaste } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
 import { SectionTitle, Money, Skeleton, Notice, GroupBadge } from '@/components/ui';
 import { AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
+import { SmartImport } from '@/components/SmartImport';
 import { CATEGORIES } from '@/lib/categories';
 import { formatDate } from '@/lib/format';
 import { parseImport, toCSV, downloadFile } from '@/lib/io';
@@ -41,6 +42,7 @@ export default function TransactionsPage() {
   const [bulkCat, setBulkCat] = useState(CAT_NAMES[0]);
   const [bulkMsg, setBulkMsg] = useState('');
   const [importMsg, setImportMsg] = useState('');
+  const [smartOpen, setSmartOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -93,7 +95,8 @@ export default function TransactionsPage() {
         <div className="flex gap-2">
           <input ref={fileRef} type="file" accept=".csv,.json,application/json,text/csv" hidden
             onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
-          <button onClick={() => fileRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-xs"><Upload size={14} /> นำเข้า</button>
+          <button onClick={() => setSmartOpen(true)} className="btn-ghost !py-1.5 !px-3 text-xs"><ClipboardPaste size={14} /> วางข้อความ</button>
+          <button onClick={() => fileRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-xs"><Upload size={14} /> ไฟล์</button>
           <button onClick={() => downloadFile('transactions.csv', toCSV(filtered), 'text/csv')} className="btn-ghost !py-1.5 !px-3 text-xs"><Download size={14} /> CSV</button>
           <button onClick={() => downloadFile('jafinance-backup.json', JSON.stringify(txns, null, 2), 'application/json')} className="btn-ghost !py-1.5 !px-3 text-xs"><Download size={14} /> JSON</button>
         </div>
@@ -192,6 +195,8 @@ export default function TransactionsPage() {
       {filtered.length > limit && (
         <button onClick={() => setLimit((l) => l + 200)} className="btn-ghost w-full">โหลดเพิ่ม ({filtered.length - limit} รายการ)</button>
       )}
+
+      <SmartImport open={smartOpen} onClose={() => setSmartOpen(false)} />
     </div>
   );
 }

@@ -12,7 +12,10 @@ import {
 import {
   suggestBudgets, categoryBudgetRows, monthSummary, cumulativeSavings, EMPTY_BUDGET,
 } from '@/lib/budget';
-import { parseImport, toCSV } from '@/lib/io';
+import {
+  parseImport, toCSV, splitPasted, parseDateLoose, parseAmountLoose, rowsFromMapping, dedupe,
+} from '@/lib/io';
+import { autoCategorize } from '@/lib/autocat';
 import { categoryGroup } from '@/lib/categories';
 import type { Transaction, BudgetState } from '@/lib/types';
 
@@ -148,6 +151,35 @@ console.log('\n── import / export (io) ──');
   const csv = toCSV(base.slice(0, 10) as Transaction[]);
   const back = parseImport(csv, []);
   ok('CSV roundtrip parses 10 rows', back.added.length === 10);
+}
+
+console.log('\n── autocat & pasted import ──');
+ok('autocat: Grab', autoCategorize('Grab', 'WWW.GRAB.COM') === 'Grab/เดลิเวอรี่/แท็กซี่');
+ok('autocat: 7-Eleven', autoCategorize('7-Eleven', 'TMN 7-11') === 'ร้านสะดวกซื้อ');
+ok('autocat: Shell -> fuel', autoCategorize('Shell', '') === 'น้ำมัน/ปั๊ม');
+ok('autocat: unknown -> fallback', autoCategorize('ZZZ', 'qqq') === 'ค่าใช้จ่ายอื่น');
+ok('autocat: rule beats keyword', autoCategorize('Grab', '', { Grab: { merchant: 'Grab', category: 'คาเฟ่/ขนม' } }) === 'คาเฟ่/ขนม');
+ok('parseDateLoose ISO', parseDateLoose('2026-06-10') === '2026-06-10');
+ok('parseDateLoose DD/MM/YYYY', parseDateLoose('10/06/2026') === '2026-06-10');
+ok('parseDateLoose Buddhist year', parseDateLoose('10/06/2569') === '2026-06-10');
+ok('parseAmountLoose strips ฿/commas', parseAmountLoose('฿1,234.50').value === 1234.5);
+ok('parseAmountLoose detects negative', parseAmountLoose('-120').negative === true);
+{
+  const grid = splitPasted('2026-06-10, 120, Grab, ค่าเดินทาง\n2026-06-11, 89, 7-Eleven, ของใช้');
+  ok('splitPasted rows/cols', grid.length === 2 && grid[0].length === 4);
+  const raws = rowsFromMapping(grid, { date: 0, amount: 1, merchant: 2, desc: 3, account: 'KBank ออมทรัพย์', directionMode: 'out' },
+    (m, d) => autoCategorize(m, d));
+  ok('rowsFromMapping builds 2 rows', raws.length === 2);
+  ok('rowsFromMapping auto-categorizes', raws[0].category === 'Grab/เดลิเวอรี่/แท็กซี่');
+  const res = dedupe(raws, []);
+  ok('dedupe adds new pasted rows', res.added.length === 2);
+}
+{
+  // sign mode: negative -> out, positive -> in
+  const grid = splitPasted('2026-06-10\t-50\tA\n2026-06-10\t50\tB');
+  const raws = rowsFromMapping(grid, { date: 0, amount: 1, merchant: 2, desc: null, account: 'x', directionMode: 'sign' }, () => 'ค่าใช้จ่ายอื่น');
+  ok('sign mode: negative=out', raws[0].direction === 'out');
+  ok('sign mode: positive=in', raws[1].direction === 'in');
 }
 
 console.log(`\n${fail === 0 ? '✓' : '✗'} ${pass} passed, ${fail} failed`);
