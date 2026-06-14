@@ -2,17 +2,19 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Receipt, CalendarDays, TrendingUp, Wallet } from 'lucide-react';
+import { Receipt, CalendarDays, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
 import { StatCard, SectionTitle, IncompleteBadge, Notice, Money, CategoryChip, Skeleton } from '@/components/ui';
 import { MonthSelect, AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
-
-type RangeMode = 'month' | '3m' | 'custom';
 import { MonthlyBarChart, CategoryDonut } from '@/components/charts';
+import { Sparkline } from '@/components/Sparkline';
 import {
   aggregateByMonth, aggregateByCategory, toSpendingEvents,
 } from '@/lib/analytics';
-import { formatMonth } from '@/lib/format';
+import { formatMonth, formatTHB } from '@/lib/format';
+import { categoryColor } from '@/lib/categories';
+
+type RangeMode = 'month' | '3m' | 'custom';
 
 function prevMonthOf(months: string[], m: string): string | null {
   const i = months.indexOf(m);
@@ -76,6 +78,8 @@ export default function Dashboard() {
     : range === '3m' ? `${rangeMonths.length} เดือน`
     : 'ช่วงที่เลือก';
 
+  const monthlySeries = monthAggs.map((m) => m.total);
+
   if (!hydrated) {
     return (
       <div className="space-y-4">
@@ -124,20 +128,46 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* hero summary */}
+      <div className="card card-pad relative overflow-hidden animate-rise">
+        <div className="absolute inset-0 opacity-[0.9] pointer-events-none"
+          style={{ background: 'radial-gradient(120% 140% at 100% 0%, rgb(var(--brand) / 0.14), transparent 55%), radial-gradient(120% 120% at 0% 100%, rgb(var(--brand-2) / 0.10), transparent 50%)' }} />
+        <div className="relative flex items-end justify-between gap-4">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 text-sm text-ink-soft">
+              <Wallet size={15} /> รายจ่าย{range === 'month' ? '' : 'รวม'} {rangeLabel}
+            </div>
+            <div className="mt-1 text-4xl sm:text-5xl font-extrabold tnum text-gradient leading-none">
+              {formatTHB(total)}
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-soft">
+              {delta != null && delta !== 0 && (
+                <span className={`inline-flex items-center gap-0.5 font-semibold ${delta > 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+                  {delta > 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
+                  {delta > 0 ? '+' : ''}{Math.round(delta * 100)}%
+                  <span className="text-ink-soft font-normal">เทียบ {prevM ? formatMonth(prevM) : 'ก่อนหน้า'}</span>
+                </span>
+              )}
+              <span>{count} รายการ</span>
+              <span>เฉลี่ย {formatTHB(avgPerDay)}/วัน</span>
+            </div>
+          </div>
+          <div className="hidden xs:block shrink-0 self-center">
+            <Sparkline data={monthlySeries.length ? monthlySeries : [0, 0]} width={130} height={48} strokeWidth={2.25} />
+          </div>
+        </div>
+      </div>
+
       {/* stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard
-          label={`รายจ่าย ${rangeLabel}`}
-          value={<Money value={total} />}
-          icon={Wallet}
-          delta={delta}
-          sub={range === 'month' ? (prev ? `เทียบ ${formatMonth(prevM!)}` : 'ไม่มีเดือนก่อนหน้า') : `${rangeMonths.length} เดือน`}
-        />
-        <StatCard label="เฉลี่ยต่อวัน" value={<Money value={avgPerDay} />} icon={CalendarDays}
+        <StatCard label="เฉลี่ยต่อวัน" value={<Money value={avgPerDay} />} icon={CalendarDays} accent="#0ea5e9"
           sub={`${daysWithData} วันที่มีข้อมูล`} />
-        <StatCard label="จำนวนรายการ" value={String(count)} icon={Receipt} />
-        <StatCard label="ลดได้ (discretionary)" value={<Money value={discretionary} />} icon={TrendingUp}
+        <StatCard label="จำนวนรายการ" value={String(count)} icon={Receipt} accent="#8b5cf6" />
+        <StatCard label="ลดได้ (discretionary)" value={<Money value={discretionary} />} icon={TrendingDown} accent="#f97316"
           sub={total ? `${Math.round((discretionary / total) * 100)}% ของยอด` : undefined} />
+        <StatCard label="จำเป็น (essential)" value={<Money value={events.filter((e) => e.group === 'essential').reduce((s, e) => s + e.signed, 0)} />}
+          icon={TrendingUp} accent="#10b981"
+          sub={total ? `${Math.round((events.filter((e) => e.group === 'essential').reduce((s, e) => s + e.signed, 0) / total) * 100)}% ของยอด` : undefined} />
       </div>
 
       {incomplete && (
@@ -164,7 +194,8 @@ export default function Dashboard() {
         <div className="card card-pad">
           <SectionTitle>แยกตามหมวด</SectionTitle>
           {catAggs.length ? (
-            <CategoryDonut data={catAggs.map((c) => ({ category: c.category, total: c.total }))} />
+            <CategoryDonut data={catAggs.map((c) => ({ category: c.category, total: c.total }))}
+              centerLabel="รวม" centerValue={formatTHB(total)} />
           ) : (
             <p className="text-sm text-ink-soft py-10 text-center">ไม่มีข้อมูลในเดือนนี้</p>
           )}
@@ -173,13 +204,19 @@ export default function Dashboard() {
           <SectionTitle action={<Link href="/categories" className="text-xs text-brand">ดูทั้งหมด →</Link>}>
             หมวดที่จ่ายมากสุด
           </SectionTitle>
-          <ul className="space-y-2.5">
+          <ul className="space-y-3">
             {catAggs.slice(0, 6).map((c) => (
-              <li key={c.category} className="flex items-center gap-3">
-                <CategoryChip name={c.category} />
-                <div className="ml-auto text-right">
-                  <div className="font-semibold tnum"><Money value={c.total} /></div>
-                  <div className="text-xs text-ink-soft">{Math.round(c.share * 100)}% · {c.count} รายการ</div>
+              <li key={c.category}>
+                <div className="flex items-center gap-3">
+                  <CategoryChip name={c.category} />
+                  <div className="ml-auto text-right">
+                    <div className="font-semibold tnum"><Money value={c.total} /></div>
+                    <div className="text-xs text-ink-soft">{Math.round(c.share * 100)}% · {c.count} รายการ</div>
+                  </div>
+                </div>
+                <div className="mt-1.5 h-1.5 rounded-full bg-surface-2 overflow-hidden">
+                  <div className="h-full rounded-full transition-all duration-500"
+                    style={{ width: `${Math.max(3, Math.round(c.share * 100))}%`, background: categoryColor(c.category) }} />
                 </div>
               </li>
             ))}

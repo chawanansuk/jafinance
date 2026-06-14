@@ -4,10 +4,11 @@ import { type ReactNode } from 'react';
 import { TrendingUp, TrendingDown, AlertTriangle, type LucideIcon } from 'lucide-react';
 import { formatTHB, formatDelta } from '@/lib/format';
 import { GROUP_LABEL, GROUP_COLOR, categoryMeta } from '@/lib/categories';
+import { Sparkline } from './Sparkline';
 import type { Group } from '@/lib/types';
 
 export function StatCard({
-  label, value, sub, delta, icon: Icon, tone = 'default',
+  label, value, sub, delta, icon: Icon, tone = 'default', accent = 'rgb(var(--brand))', spark,
 }: {
   label: string;
   value: ReactNode;
@@ -15,30 +16,41 @@ export function StatCard({
   delta?: number; // fraction
   icon?: LucideIcon;
   tone?: 'default' | 'good' | 'bad';
+  accent?: string;
+  spark?: number[];
 }) {
   const d = delta != null ? formatDelta(delta) : null;
   return (
-    <div className="card card-pad">
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-ink-soft">{label}</span>
-        {Icon && <Icon size={16} className="text-ink-soft" />}
+    <div className="card card-pad card-hover relative overflow-hidden">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs text-ink-soft font-medium">{label}</span>
+        {Icon && (
+          <span className="grid place-items-center h-7 w-7 rounded-lg shrink-0"
+            style={{ background: `color-mix(in srgb, ${accent} 14%, transparent)`, color: accent }}>
+            <Icon size={15} />
+          </span>
+        )}
       </div>
-      <div className={`mt-1.5 text-2xl font-bold tnum ${
+      <div className={`mt-2 text-[1.6rem] leading-tight font-bold tnum ${
         tone === 'good' ? 'text-emerald-500' : tone === 'bad' ? 'text-rose-500' : ''
       }`}>{value}</div>
-      {(sub || d) && (
-        <div className="mt-1 flex items-center gap-1.5 text-xs text-ink-soft">
+      <div className="mt-1 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-xs text-ink-soft min-w-0">
           {d && d.dir !== 'flat' && (
-            <span className={`inline-flex items-center gap-0.5 font-medium ${
+            <span className={`inline-flex items-center gap-0.5 font-semibold ${
               d.dir === 'up' ? 'text-rose-500' : 'text-emerald-500'
             }`}>
               {d.dir === 'up' ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
               {d.text}
             </span>
           )}
-          {sub}
+          {sub && <span className="truncate">{sub}</span>}
         </div>
-      )}
+        {spark && spark.length > 1 && (
+          <Sparkline data={spark} width={64} height={24} stroke={accent}
+            fill={`color-mix(in srgb, ${accent} 16%, transparent)`} />
+        )}
+      </div>
     </div>
   );
 }
@@ -46,13 +58,13 @@ export function StatCard({
 export function ProgressBar({ value, max, tone }: { value: number; max: number; tone?: 'safe' | 'warn' | 'over' }) {
   const pct = max > 0 ? Math.min(100, (value / max) * 100) : 0;
   const over = max > 0 && value > max;
-  const color =
-    tone === 'over' || over ? 'bg-rose-500'
-    : tone === 'warn' ? 'bg-amber-500'
-    : 'bg-emerald-500';
+  const grad =
+    tone === 'over' || over ? 'linear-gradient(90deg, #f43f5e, #fb7185)'
+    : tone === 'warn' ? 'linear-gradient(90deg, #f59e0b, #fbbf24)'
+    : 'linear-gradient(90deg, #10b981, #34d399)';
   return (
     <div className="h-2 w-full rounded-full bg-surface-2 overflow-hidden">
-      <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${pct}%` }} />
+      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, backgroundImage: grad }} />
     </div>
   );
 }

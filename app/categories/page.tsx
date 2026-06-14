@@ -10,6 +10,7 @@ import {
   aggregateByCategory, toSpendingEvents, categoryMonthlyTrend,
 } from '@/lib/analytics';
 import { formatMonth, formatDate } from '@/lib/format';
+import { categoryColor } from '@/lib/categories';
 
 type Scope = 'month' | 'all';
 
@@ -84,7 +85,8 @@ export default function CategoriesPage() {
           <button
             key={c.category}
             onClick={() => setOpen(c.category)}
-            className="w-full grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_repeat(4,auto)] gap-x-4 items-center px-4 py-3 border-b border-line/60 last:border-0 hover:bg-surface-2 text-left"
+            style={{ backgroundImage: `linear-gradient(to right, ${categoryColor(c.category)}1f ${Math.max(2, Math.round(c.share * 100))}%, transparent ${Math.max(2, Math.round(c.share * 100))}%)` }}
+            className="w-full grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_repeat(4,auto)] gap-x-4 items-center px-4 py-3 border-b border-line/60 last:border-0 hover:brightness-[0.98] dark:hover:brightness-110 text-left transition"
           >
             <span className="min-w-0 flex items-center gap-2">
               <CategoryChip name={c.category} />
