@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import { materialize, baseTransactions, allMonths } from '@/lib/data';
+import { materialize, baseTransactions, allMonths, dedupKey } from '@/lib/data';
 import { aggregateByMonth, defaultMonth } from '@/lib/analytics';
 import { useLocalStorage, KEYS } from '@/lib/storage';
 import { EMPTY_BUDGET } from '@/lib/budget';
@@ -23,6 +23,8 @@ interface DataCtx {
 
   imported: Transaction[];
   setImported: (t: Transaction[] | ((p: Transaction[]) => Transaction[])) => void;
+  /** drop imported rows that duplicate the base data; returns count removed */
+  dedupeImported: () => number;
 
   budget: BudgetState;
   setBudget: (b: BudgetState | ((p: BudgetState) => BudgetState)) => void;
@@ -114,6 +116,24 @@ export function DataProvider({ children }: { children: ReactNode }) {
     toggleRealIncome,
     imported,
     setImported,
+    dedupeImported: () => {
+      let removed = 0;
+      setImported((prev) => {
+        const allow = new Map<string, number>(); // dedupKey -> base copies
+        for (const t of base) allow.set(dedupKey(t), (allow.get(dedupKey(t)) ?? 0) + 1);
+        const seen = new Map<string, number>();
+        const kept = prev.filter((t) => {
+          const k = dedupKey(t);
+          const already = allow.get(k) ?? 0;
+          const s = seen.get(k) ?? 0;
+          seen.set(k, s + 1);
+          return s >= already; // drop the copies that match a base row
+        });
+        removed = prev.length - kept.length;
+        return kept;
+      });
+      return removed;
+    },
     budget,
     setBudget,
     rules,

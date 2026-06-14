@@ -173,6 +173,18 @@ console.log('\n── import / export (io) ──');
   const back = parseImport(csv, []);
   ok('CSV roundtrip parses 10 rows', back.added.length === 10);
 }
+{
+  // regression: PDF importer normalizes merchant differently than the base data
+  // (base "Shell" vs PDF "SHELL 1078F CO UDOMPOR") — dedup must still match via
+  // the raw desc so re-importing an already-present statement adds nothing.
+  const raw = {
+    date: '2026-05-18', time: '', account: 'UOB บัตรเครดิต', direction: 'out' as const,
+    amount: 1130, category: 'น้ำมัน/ปั๊ม', group: 'essential' as const,
+    merchant: 'SHELL 1078F CO UDOMPOR', desc: 'SHELL 1078F CO UDOMPOR BANGKOK',
+  };
+  const res = dedupe([raw], materialize(base));
+  ok('dedup ignores merchant normalization (Shell case)', res.added.length === 0 && res.duplicates === 1);
+}
 
 console.log('\n── autocat & pasted import ──');
 ok('autocat: Grab', autoCategorize('Grab', 'WWW.GRAB.COM') === 'Grab/เดลิเวอรี่/แท็กซี่');
