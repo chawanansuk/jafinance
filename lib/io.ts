@@ -93,6 +93,7 @@ export function parseImport(text: string, existing: Transaction[]): ImportResult
     const k = makeId(t);
     existingKeys.set(k, (existingKeys.get(k) ?? 0) + 1);
   }
+  const existingIds = new Set(existing.map((e) => e.id));
   const incomingSeen = new Map<string, number>();
   const added: Transaction[] = [];
   let duplicates = 0;
@@ -100,15 +101,13 @@ export function parseImport(text: string, existing: Transaction[]): ImportResult
     const base = makeId(r);
     const already = existingKeys.get(base) ?? 0;
     const seenNow = incomingSeen.get(base) ?? 0;
-    const ordinal = already + seenNow;
     incomingSeen.set(base, seenNow + 1);
-    if (ordinal < already) {
-      // there is room within existing copies -> treat as duplicate
-      duplicates++;
-      continue;
-    }
-    const id = ordinal > 0 ? `${base}_${ordinal}` : base;
-    if (existing.some((e) => e.id === id)) { duplicates++; continue; }
+    // the first `already` incoming copies match existing copies -> duplicates
+    if (seenNow < already) { duplicates++; continue; }
+    // otherwise it's new; pick the next free ordinal id (seenNow >= already)
+    const id = seenNow > 0 ? `${base}_${seenNow}` : base;
+    if (existingIds.has(id)) { duplicates++; continue; }
+    existingIds.add(id);
     added.push({ ...r, id });
   }
 

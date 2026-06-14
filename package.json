@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "reconcile": "tsx scripts/reconcile.ts"
+    "reconcile": "tsx scripts/reconcile.ts",
+    "test": "tsx --tsconfig ./tsconfig.json scripts/test.ts"
   },
   "dependencies": {
     "lucide-react": "^0.456.0",
