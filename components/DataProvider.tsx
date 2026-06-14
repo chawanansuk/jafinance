@@ -29,9 +29,13 @@ interface DataCtx {
 
   rules: RulesState;
   setRule: (merchant: string, rule: Partial<MerchantRule> | null) => void;
+  setRulesAll: (r: RulesState) => void;
 
   settings: Settings;
   setSettings: (s: Settings | ((p: Settings) => Settings)) => void;
+
+  /** wipe all user-configured state back to defaults */
+  resetAll: () => void;
 }
 
 const Ctx = createContext<DataCtx | null>(null);
@@ -109,8 +113,16 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setBudget,
     rules,
     setRule,
+    setRulesAll: (r: RulesState) => setRules(r),
     settings,
     setSettings,
+    resetAll: () => {
+      setOverrides(EMPTY_OVERRIDES);
+      setBudget(EMPTY_BUDGET);
+      setRules({});
+      setSettings(DEFAULT_SETTINGS);
+      setImported([]);
+    },
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

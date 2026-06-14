@@ -1,13 +1,16 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Trash2, Plus, ArrowRightLeft, Wand2, Info } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import { Trash2, Plus, ArrowRightLeft, Wand2, Info, Download, Upload, RotateCcw } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
 import { SectionTitle, CategoryChip, Money, Skeleton, Notice } from '@/components/ui';
 import { Segmented } from '@/components/Controls';
 import { CATEGORIES } from '@/lib/categories';
+import { downloadFile } from '@/lib/io';
 import { formatTHB } from '@/lib/format';
 import type { TransferKind } from '@/lib/types';
+
+const BACKUP_VERSION = 1;
 
 const CAT_NAMES = CATEGORIES.map((c) => c.name);
 
@@ -19,9 +22,33 @@ const KIND_LABEL: Record<TransferKind, string> = {
 };
 
 export default function ManagePage() {
-  const { txns, rules, setRule, hydrated } = useData();
+  const {
+    txns, rules, setRule, hydrated,
+    overrides, setOverrides, budget, setBudget, setRulesAll, settings, setSettings, imported, setImported, resetAll,
+  } = useData();
   const [addMerchant, setAddMerchant] = useState('');
   const [addCat, setAddCat] = useState(CAT_NAMES[0]);
+  const [backupMsg, setBackupMsg] = useState('');
+  const backupRef = useRef<HTMLInputElement>(null);
+
+  const exportBackup = () => {
+    const payload = { version: BACKUP_VERSION, exportedAt: new Date().toISOString(), overrides, budget, rules, settings, imported };
+    downloadFile('jafinance-backup.json', JSON.stringify(payload, null, 2), 'application/json');
+  };
+
+  const restoreBackup = async (file: File) => {
+    try {
+      const data = JSON.parse(await file.text());
+      if (data.overrides) setOverrides(data.overrides);
+      if (data.budget) setBudget(data.budget);
+      if (data.rules) setRulesAll(data.rules);
+      if (data.settings) setSettings(data.settings);
+      if (Array.isArray(data.imported)) setImported(data.imported);
+      setBackupMsg('กู้คืนข้อมูลสำเร็จ');
+    } catch {
+      setBackupMsg('กู้คืนไม่สำเร็จ: ไฟล์ต้องเป็น backup JSON ของแอพนี้');
+    }
+  };
 
   // transfer-group merchants, biggest first
   const transferMerchants = useMemo(() => {
@@ -56,6 +83,22 @@ export default function ManagePage() {
   return (
     <div className="space-y-5">
       <h1 className="text-xl font-bold">จัดการ & กฎ</h1>
+
+      {/* backup / restore / reset */}
+      <div className="card card-pad">
+        <SectionTitle>สำรอง & กู้คืนข้อมูล</SectionTitle>
+        <p className="text-xs text-ink-soft mb-3">สำรองงบ + กฎ + การแก้หมวด + รายการที่ import ทั้งหมดเป็นไฟล์เดียว (เก็บในเครื่อง)</p>
+        <div className="flex flex-wrap gap-2 items-center">
+          <button onClick={exportBackup} className="btn-ghost !py-1.5 !px-3 text-sm"><Download size={14} /> ส่งออกสำรอง</button>
+          <input ref={backupRef} type="file" accept=".json,application/json" hidden
+            onChange={(e) => e.target.files?.[0] && restoreBackup(e.target.files[0])} />
+          <button onClick={() => backupRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-sm"><Upload size={14} /> กู้คืน</button>
+          <button
+            onClick={() => { if (confirm('ล้างงบ/กฎ/การแก้หมวด/รายการที่ import ทั้งหมด? (ข้อมูลธุรกรรมต้นฉบับไม่หาย)')) { resetAll(); setBackupMsg('ล้างการตั้งค่าทั้งหมดแล้ว'); } }}
+            className="btn-ghost !py-1.5 !px-3 text-sm text-rose-500"><RotateCcw size={14} /> รีเซ็ตทั้งหมด</button>
+          {backupMsg && <span className="text-xs text-ink-soft">{backupMsg}</span>}
+        </div>
+      </div>
 
       {/* transfer review */}
       <div className="card card-pad">
