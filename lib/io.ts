@@ -57,6 +57,18 @@ export interface ImportResult {
   added: Transaction[];
   duplicates: number;
   parsed: number;
+  /** human-readable warnings about date-range overlap per account */
+  overlaps: string[];
+}
+
+function dateRange(rows: { account: string; date: string }[]): Map<string, [string, string]> {
+  const out = new Map<string, [string, string]>();
+  for (const r of rows) {
+    const cur = out.get(r.account);
+    if (!cur) out.set(r.account, [r.date, r.date]);
+    else out.set(r.account, [r.date < cur[0] ? r.date : cur[0], r.date > cur[1] ? r.date : cur[1]]);
+  }
+  return out;
 }
 
 /**
@@ -99,7 +111,19 @@ export function parseImport(text: string, existing: Transaction[]): ImportResult
     if (existing.some((e) => e.id === id)) { duplicates++; continue; }
     added.push({ ...r, id });
   }
-  return { added, duplicates, parsed: raws.length };
+
+  // warn when incoming data overlaps an existing date range for the same
+  // account (a frequent source of accidental double-counting).
+  const overlaps: string[] = [];
+  const exRange = dateRange(existing);
+  const inRange = dateRange(raws);
+  for (const [account, [inLo, inHi]] of inRange) {
+    const ex = exRange.get(account);
+    if (ex && inLo <= ex[1] && inHi >= ex[0]) {
+      overlaps.push(`${account}: ช่วง ${inLo}–${inHi} คาบเกี่ยวกับข้อมูลเดิม (${ex[0]}–${ex[1]}) — ตรวจรายการซ้ำ`);
+    }
+  }
+  return { added, duplicates, parsed: raws.length, overlaps };
 }
 
 export function toCSV(txns: Transaction[]): string {

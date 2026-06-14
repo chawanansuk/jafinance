@@ -77,7 +77,8 @@ export default function TransactionsPage() {
       const text = await file.text();
       const res = parseImport(text, txns);
       if (res.added.length) setImported((p) => [...p, ...res.added]);
-      setImportMsg(`นำเข้า ${res.added.length} รายการใหม่ · ข้ามซ้ำ ${res.duplicates} · อ่านได้ ${res.parsed}`);
+      const overlap = res.overlaps.length ? ` ⚠️ ${res.overlaps.join(' · ')}` : '';
+      setImportMsg(`นำเข้า ${res.added.length} รายการใหม่ · ข้ามซ้ำ ${res.duplicates} · อ่านได้ ${res.parsed}${overlap}`);
     } catch (e) {
       setImportMsg('นำเข้าไม่สำเร็จ: ไฟล์ต้องเป็น CSV/JSON ตาม schema');
     }

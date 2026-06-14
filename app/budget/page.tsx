@@ -6,9 +6,10 @@ import { useData } from '@/components/DataProvider';
 import { StatCard, SectionTitle, ProgressBar, CategoryChip, Money, Notice, Skeleton, IncompleteBadge } from '@/components/ui';
 import { MonthSelect } from '@/components/Controls';
 import {
-  categoryBudgetRows, suggestBudgets, monthSummary, getIncome, getCeiling,
+  categoryBudgetRows, suggestBudgets, monthSummary, getIncome, getCeiling, cumulativeSavings,
 } from '@/lib/budget';
 import { projectMonth, aggregateByMonth, aggregateByGroup, toSpendingEvents } from '@/lib/analytics';
+import { TrendLineChart } from '@/components/charts';
 import { formatTHB, formatMonth, formatPct } from '@/lib/format';
 
 export default function BudgetPage() {
@@ -31,6 +32,7 @@ export default function BudgetPage() {
 
   const income = getIncome(budget, selected);
   const ceiling = getCeiling(budget, selected);
+  const savings = useMemo(() => cumulativeSavings(txns, budget), [txns, budget]);
 
   const setCatBudget = (category: string, value: number) =>
     setBudget((p) => ({
@@ -40,6 +42,8 @@ export default function BudgetPage() {
 
   const setIncome = (value: number) =>
     setBudget((p) => ({ ...p, income: { ...p.income, [selected]: value } }));
+  const setSavingsGoal = (value: number) =>
+    setBudget((p) => ({ ...p, savingsGoal: value || undefined }));
   const setCeiling = (value: number) =>
     setBudget((p) => ({ ...p, ceiling: { ...p.ceiling, [selected]: value } }));
 
@@ -162,6 +166,43 @@ export default function BudgetPage() {
           <Notice>
             ถ้าลดรายจ่าย “ลดได้” ลง 20% เดือนนี้ จะเก็บเพิ่มได้ราว <b>{formatTHB(saveIfCut)}</b>
           </Notice>
+        )}
+      </div>
+
+      {/* cross-month savings goal */}
+      <div className="card card-pad space-y-3">
+        <SectionTitle action={<PiggyBank size={16} className="text-ink-soft" />}>เป้าหมายเงินเก็บสะสม (ข้ามเดือน)</SectionTitle>
+        <div className="flex flex-wrap items-end gap-4">
+          <label className="block text-sm">
+            <span className="text-ink-soft">ตั้งเป้าเก็บรวม</span>
+            <input type="number" inputMode="numeric" className="input mt-1 !w-40"
+              placeholder="เช่น 100000"
+              value={budget.savingsGoal || ''}
+              onChange={(e) => setSavingsGoal(Number(e.target.value) || 0)} />
+          </label>
+          <div>
+            <div className="text-xs text-ink-soft">เก็บได้แล้ว (เดือนที่กรอกรายได้)</div>
+            <div className={`text-xl font-bold tnum ${savings.totalSaved >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+              {formatTHB(savings.totalSaved)}
+            </div>
+          </div>
+        </div>
+        {budget.savingsGoal ? (
+          <div className="flex items-center gap-2">
+            <ProgressBar value={Math.max(0, savings.totalSaved)} max={budget.savingsGoal}
+              tone={savings.totalSaved >= budget.savingsGoal ? 'safe' : 'warn'} />
+            <span className="text-xs tnum w-12 text-right text-ink-soft">
+              {Math.round((savings.totalSaved / budget.savingsGoal) * 100)}%
+            </span>
+          </div>
+        ) : (
+          <p className="text-xs text-ink-soft">ตั้งเป้าหมายเพื่อดูความคืบหน้า · กรอกรายได้ในแต่ละเดือนเพื่อให้คำนวณได้</p>
+        )}
+        {savings.points.length > 0 && (
+          <TrendLineChart data={savings.points.map((p) => ({ month: p.month, total: p.cumulative }))} />
+        )}
+        {savings.points.length === 0 && (
+          <p className="text-xs text-ink-soft">ยังไม่มีเดือนที่กรอกรายได้ — กรอกรายได้ด้านบนก่อน</p>
         )}
       </div>
 

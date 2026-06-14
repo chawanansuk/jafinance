@@ -84,6 +84,8 @@ export interface BudgetState {
   income: Record<string, number>;
   /** optional overall monthly spending ceiling: "YYYY-MM" -> amount ("*" default) */
   ceiling: Record<string, number>;
+  /** cross-month savings target the user wants to accumulate */
+  savingsGoal?: number;
 }
 
 // ───────────────────────────────────────────────────────────────────────────

@@ -143,4 +143,34 @@ export function monthSummary(
   };
 }
 
+export interface SavingsPoint {
+  month: string;
+  income: number;
+  spending: number;
+  net: number;
+  cumulative: number;
+}
+
+/**
+ * Cross-month savings progress. Only months where the user entered income are
+ * counted (otherwise "savings" would be a meaningless negative of spend).
+ */
+export function cumulativeSavings(txns: Transaction[], state: BudgetState): {
+  points: SavingsPoint[];
+  totalSaved: number;
+  goal: number | undefined;
+} {
+  const months = aggregateByMonth(txns);
+  let cumulative = 0;
+  const points: SavingsPoint[] = [];
+  for (const m of months) {
+    const income = getIncome(state, m.month);
+    if (!income) continue;
+    const net = income - m.total;
+    cumulative += net;
+    points.push({ month: m.month, income, spending: m.total, net, cumulative });
+  }
+  return { points, totalSaved: cumulative, goal: state.savingsGoal };
+}
+
 export { SPENDING_GROUPS };
