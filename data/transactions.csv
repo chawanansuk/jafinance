@@ -1,0 +1,636 @@
+date,time,account,direction,amount,category,group,merchant,desc
+2026-02-20,,UOB บัตรเครดิต,out,31.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-20,,UOB บัตรเครดิต,out,42.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-20,,UOB บัตรเครดิต,out,125.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-02-20,,UOB บัตรเครดิต,out,167.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-20,,UOB บัตรเครดิต,out,179.0,ซับสคริปชั่น/ดิจิทัล,discretionary,Google/YouTube,Google YouTube Mountain View
+2026-02-21,,UOB บัตรเครดิต,out,104.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-21,,UOB บัตรเครดิต,out,127.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-21,,UOB บัตรเครดิต,out,178.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-21,,UOB บัตรเครดิต,out,774.75,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-02-21,,UOB บัตรเครดิต,out,1072.0,อาหาร/ร้านอาหาร,discretionary,Yayoi,YAYOI(Y217)-I'M CHINAT BANGKOK
+2026-02-22,,UOB บัตรเครดิต,out,29.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-02-22,,UOB บัตรเครดิต,out,48.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-22,,UOB บัตรเครดิต,out,239.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-22,,UOB บัตรเครดิต,out,279.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-22,,UOB บัตรเครดิต,out,682.5,ร้านสะดวกซื้อ,essential,Tops,TOPS-PATTAYA BEACH CHONBURI
+2026-02-22,,UOB บัตรเครดิต,out,703.0,อาหาร/ร้านอาหาร,discretionary,OISHI RAMEN C.PATTAYA CHONBU,OISHI RAMEN C.PATTAYA CHONBURI
+2026-02-22,,UOB บัตรเครดิต,out,900.0,ที่พัก/ท่องเที่ยว,discretionary,Somerset,SOMERSET PATTAYA CHONBURI
+2026-02-23,,UOB บัตรเครดิต,out,56.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-23,,UOB บัตรเครดิต,out,148.0,ร้านสะดวกซื้อ,essential,Tops,TOPS-PATTAYA BEACH CHONBURI
+2026-02-23,,UOB บัตรเครดิต,out,154.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-23,,UOB บัตรเครดิต,out,193.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-23,,UOB บัตรเครดิต,out,209.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-02-23,,UOB บัตรเครดิต,out,359.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-24,,UOB บัตรเครดิต,out,109.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-24,,UOB บัตรเครดิต,out,961.93,โรงพยาบาล/สุขภาพ,essential,iServiceCCP,TMN ISERVICECCP BANGKOK
+2026-02-25,,UOB บัตรเครดิต,out,66.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-02-25,,UOB บัตรเครดิต,out,282.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-25,,UOB บัตรเครดิต,out,694.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-02-25,,UOB บัตรเครดิต,out,2037.52,ที่พัก/ท่องเที่ยว,discretionary,Traveloka,Traveloka3DS*133306766 Bangkok
+2026-02-26,,UOB บัตรเครดิต,out,49.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-26,,UOB บัตรเครดิต,out,125.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-02-26,,UOB บัตรเครดิต,out,578.0,ค่าใช้จ่ายอื่น,transfer,HCB00152-IMCN BANGKOK,HCB00152-IMCN BANGKOK
+2026-02-27,,UOB บัตรเครดิต,out,24.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-27,,UOB บัตรเครดิต,out,25.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-27,,UOB บัตรเครดิต,out,29.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-02-27,,UOB บัตรเครดิต,out,46.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-27,,UOB บัตรเครดิต,out,65.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-28,,UOB บัตรเครดิต,out,50.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-02-28,,UOB บัตรเครดิต,out,110.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-02-28,,UOB บัตรเครดิต,out,380.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-02-28,,UOB บัตรเครดิต,out,980.0,ค่าใช้จ่ายอื่น,transfer,"P.PHETTHANAWAN CO.,LTD BANGK","P.PHETTHANAWAN CO.,LTD BANGKOK"
+2026-03-01,,UOB บัตรเครดิต,out,95.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-01,,UOB บัตรเครดิต,out,108.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-01,,UOB บัตรเครดิต,out,224.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-01,,UOB บัตรเครดิต,out,370.62,เสื้อผ้า/แฟชั่น,discretionary,Design Village,DESIGN VILLAGE PHUTTAMONTBANGKOK
+2026-03-01,,UOB บัตรเครดิต,out,583.0,ร้านสะดวกซื้อ,essential,Lotus,TANA CURRY HOUSE-LOTUS NONTHABURI
+2026-03-01,,UOB บัตรเครดิต,out,916.0,เสื้อผ้า/แฟชั่น,discretionary,Design Village,SF-DESIGN VILLAGE PHUT BANGKOK
+2026-03-02,,UOB บัตรเครดิต,out,913.0,ร้านสะดวกซื้อ,essential,Makro,MAKRO_SATHORN BANGKOK
+2026-03-02,,UOB บัตรเครดิต,out,53.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-02,,UOB บัตรเครดิต,out,76.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-03,,UOB บัตรเครดิต,out,108.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-03,,UOB บัตรเครดิต,out,5525.09,ที่พัก/ท่องเที่ยว,discretionary,Airbnb,AIRBNB * HMXCYRFWZS LONDON
+2026-03-04,,UOB บัตรเครดิต,out,35.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-04,,UOB บัตรเครดิต,out,108.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-04,,UOB บัตรเครดิต,out,117.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-04,,UOB บัตรเครดิต,out,451.6,ร้านสะดวกซื้อ,essential,Tops,TOPS-LAD YA BANGKOK
+2026-03-04,,UOB บัตรเครดิต,out,931.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-04,,UOB บัตรเครดิต,out,610.2,เสื้อผ้า/แฟชั่น,discretionary,ศรีบุษณา,SRIBUSANA LIMITED PART BANGKOK
+2026-03-05,,UOB บัตรเครดิต,out,104.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-05,,UOB บัตรเครดิต,out,1386.0,อาหาร/ร้านอาหาร,discretionary,Sushiro,SUSHIRO GH (TH)-ICON S BANGKOK
+2026-03-06,,UOB บัตรเครดิต,out,20.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-06,,UOB บัตรเครดิต,out,51.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-06,,UOB บัตรเครดิต,out,1057.0,อาหาร/ร้านอาหาร,discretionary,MK สุกี้,(M556)M.K.SUKI-I'M CHI BANGKOK
+2026-03-07,,UOB บัตรเครดิต,out,212.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-07,,UOB บัตรเครดิต,out,227.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-07,,UOB บัตรเครดิต,out,416.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-03-08,,UOB บัตรเครดิต,out,155.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-08,,UOB บัตรเครดิต,out,284.0,ห้าง/ช้อปปิ้ง,discretionary,The Mall,THE MALL SUP.BANGKAE BANGKOK
+2026-03-08,,UOB บัตรเครดิต,out,417.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-08,,UOB บัตรเครดิต,out,1078.0,อาหาร/ร้านอาหาร,discretionary,Bar B Q Plaza,BAR BQ PLAZA-MALL 7 FL BANGKOK
+2026-03-08,,UOB บัตรเครดิต,out,1621.0,อาหาร/ร้านอาหาร,discretionary,Mitoki,MITOKI JAPANESE RESTAU BANGKOK
+2026-03-09,,UOB บัตรเครดิต,out,96.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-09,,UOB บัตรเครดิต,out,149.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-09,,UOB บัตรเครดิต,out,297.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-10,,UOB บัตรเครดิต,out,104.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-10,,UOB บัตรเครดิต,out,704.0,อาหาร/ร้านอาหาร,discretionary,Sushiro,SUSHIRO GH (TH) C.BANG BANGKOK
+2026-03-10,,UOB บัตรเครดิต,out,900.0,เสื้อผ้า/แฟชั่น,discretionary,ศรีบุษณา,SRIBUSANA LIMITED PART BANGKOK
+2026-03-11,,UOB บัตรเครดิต,out,10.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-11,,UOB บัตรเครดิต,out,135.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-11,,UOB บัตรเครดิต,out,529.0,ค่าใช้จ่ายอื่น,transfer,HCB00152-IMCN BANGKOK,HCB00152-IMCN BANGKOK
+2026-03-12,,UOB บัตรเครดิต,out,819.4,ห้าง/ช้อปปิ้ง,discretionary,The Mall,THE MALL-BANGKAE BANGKOK
+2026-03-12,,UOB บัตรเครดิต,out,65.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-12,,UOB บัตรเครดิต,out,89.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-12,,UOB บัตรเครดิต,out,128.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-12,,UOB บัตรเครดิต,out,428.5,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-03-12,,UOB บัตรเครดิต,out,1346.49,อาหาร/ร้านอาหาร,discretionary,Maguro,MAGURO-THE MALL BANGKA BANGKOK
+2026-03-13,,UOB บัตรเครดิต,out,30.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-13,,UOB บัตรเครดิต,out,60.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-13,,UOB บัตรเครดิต,out,69.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-03-13,,UOB บัตรเครดิต,out,141.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-13,,UOB บัตรเครดิต,out,180.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-13,,UOB บัตรเครดิต,out,512.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-03-13,,UOB บัตรเครดิต,out,800.0,โรงพยาบาล/สุขภาพ,essential,รพ.กรุงเทพคริสเตียน,BANGKOK CHRISTIAN HOS. BANGKOK
+2026-03-14,,UOB บัตรเครดิต,out,115.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-15,,UOB บัตรเครดิต,out,123.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-15,,UOB บัตรเครดิต,out,871.0,ค่าใช้จ่ายอื่น,transfer,HCB00152-IMCN BANGKOK,HCB00152-IMCN BANGKOK
+2026-03-16,,UOB บัตรเครดิต,out,43.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-16,,UOB บัตรเครดิต,out,50.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-16,,UOB บัตรเครดิต,out,104.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-16,,UOB บัตรเครดิต,out,120.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-16,,UOB บัตรเครดิต,out,174.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-16,,UOB บัตรเครดิต,out,239.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-16,,UOB บัตรเครดิต,out,283.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-16,,UOB บัตรเครดิต,out,294.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-16,,UOB บัตรเครดิต,out,346.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-17,,UOB บัตรเครดิต,out,50.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-17,,UOB บัตรเครดิต,out,149.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-17,,UOB บัตรเครดิต,out,165.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-17,,UOB บัตรเครดิต,out,179.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-17,,UOB บัตรเครดิต,out,300.0,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,TMN MRT BANGKOK
+2026-03-17,,UOB บัตรเครดิต,out,538.0,ร้านสะดวกซื้อ,essential,Makro,MAKRO_CHARANSANITWONG BANGKOK
+2026-03-17,,UOB บัตรเครดิต,out,900.0,ค่าใช้จ่ายอื่น,transfer,"BSRC-NAIPRUNG CO.,LTD( BANGK","BSRC-NAIPRUNG CO.,LTD( BANGKOK"
+2026-03-18,,UOB บัตรเครดิต,out,38.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-18,,UOB บัตรเครดิต,out,45.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-18,,UOB บัตรเครดิต,out,234.0,ค่าใช้จ่ายอื่น,transfer,LPE*KLONGDINSOR-SATHOR BANGK,LPE*KLONGDINSOR-SATHOR BANGKOK
+2026-03-19,,UOB บัตรเครดิต,out,99.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-19,,UOB บัตรเครดิต,out,1122.0,อาหาร/ร้านอาหาร,discretionary,Sushiro,SUSHIRO GH (TH) C.BANG BANGKOK
+2026-03-20,,UOB บัตรเครดิต,out,81.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-20,,UOB บัตรเครดิต,out,179.0,ซับสคริปชั่น/ดิจิทัล,discretionary,Google/YouTube,Google YouTube Mountain View
+2026-03-20,,UOB บัตรเครดิต,out,202.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-20,,UOB บัตรเครดิต,out,666.0,ร้านสะดวกซื้อ,essential,Big C,BIG C -ISSARAPHAP STOR BANGKOK
+2026-03-20,07:36,KBank ออมทรัพย์,out,24.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-03-20,16:44,KBank ออมทรัพย์,in,3000.0,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์ สุรพรรษ,รับโอน SCB ชวมันท์ สุรพรรษ
+2026-03-20,18:16,KBank ออมทรัพย์,out,635.0,อาหาร/ร้านอาหาร,discretionary,อร่อยแซ่ซัว,อร่อยแซ่ซัว
+2026-03-21,,UOB บัตรเครดิต,out,20.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-21,,UOB บัตรเครดิต,out,87.5,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-21,,UOB บัตรเครดิต,out,1011.04,อาหาร/ร้านอาหาร,discretionary,YAMACHAN-RATCHAPHRUEK BANGKO,YAMACHAN-RATCHAPHRUEK BANGKOK
+2026-03-21,11:34,KBank ออมทรัพย์,out,40.0,โอนเงิน/บุคคล,transfer,วาสนา ศรีบุญ,โอน วาสนา ศรีบุญ
+2026-03-21,11:35,KBank ออมทรัพย์,out,45.0,อาหาร/ร้านอาหาร,discretionary,ร้านอุดหนุน ศิลวสามชู ไก่ทอด,ร้านอุดหนุน ศิลวสามชู ไก่ทอด
+2026-03-21,16:13,KBank ออมทรัพย์,out,40.0,อาหาร/ร้านอาหาร,discretionary,ทุกอย่าง 20 by Apple,ทุกอย่าง 20 by Apple
+2026-03-21,16:13,KBank ออมทรัพย์,out,20.0,อาหาร/ร้านอาหาร,discretionary,ทุกอย่าง 20 by Apple,ทุกอย่าง 20 by Apple
+2026-03-21,16:17,KBank ออมทรัพย์,out,70.0,คาเฟ่/ขนม,discretionary,ร้านอุดหนุน มะพร้าวปั่นวัดถิ,ร้านอุดหนุน มะพร้าวปั่นวัดถิม
+2026-03-21,19:19,KBank ออมทรัพย์,out,150.0,อาหาร/ร้านอาหาร,discretionary,Ksher_MUEKUMHOMM,Ksher_MUEKUMHOMM
+2026-03-21,19:23,KBank ออมทรัพย์,out,75.0,อาหาร/ร้านอาหาร,discretionary,ขนมพ่อชาราเปา เตอร์ฮอร์เคิล,ขนมพ่อชาราเปา เตอร์ฮอร์เคิล
+2026-03-22,,UOB บัตรเครดิต,out,79.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-22,,UOB บัตรเครดิต,out,124.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-22,,UOB บัตรเครดิต,out,193.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-22,,UOB บัตรเครดิต,out,205.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-22,,UOB บัตรเครดิต,out,2240.69,ที่พัก/ท่องเที่ยว,discretionary,Booking.com,Booking.com Hotel Amsterdam
+2026-03-22,,UOB บัตรเครดิต,out,119.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-22,08:55,KBank ออมทรัพย์,out,11.0,เดินทาง/ขนส่ง,essential,MBC เยาวราช,MBC พีซีซี เยาวราช
+2026-03-22,11:01,KBank ออมทรัพย์,out,190.0,โอนเงิน/บุคคล,transfer,ประยงค์ศักดิ์,โอน ประยงค์ศักดิ์
+2026-03-22,11:05,KBank ออมทรัพย์,out,88.0,โอนเงิน/บุคคล,transfer,สายผม จีนา,พร้อมเพย์ สายผม จีนา
+2026-03-22,20:31,KBank ออมทรัพย์,out,94.0,ห้าง/ซูเปอร์มาร์เก็ต,essential,Tops,TOPS-C2B Bangkae
+2026-03-23,,UOB บัตรเครดิต,in,5525.09,คืนเงิน (refund),refund,Airbnb,AIRBNB * HMXCYRFWZS LONDON
+2026-03-23,,UOB บัตรเครดิต,out,15.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-23,,UOB บัตรเครดิต,out,20.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-03-23,,UOB บัตรเครดิต,out,99.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-23,,UOB บัตรเครดิต,out,130.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-23,,UOB บัตรเครดิต,out,143.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-23,,UOB บัตรเครดิต,out,1293.0,อาหาร/ร้านอาหาร,discretionary,MK สุกี้,(M556)M.K.SUKI-I'M CHI BANGKOK
+2026-03-23,07:18,KBank ออมทรัพย์,out,150.0,โอนเงิน/บุคคล,transfer,ธัญญากรณ์ ปราณ,โอน ธัญญากรณ์ ปราณ
+2026-03-23,08:21,KBank ออมทรัพย์,out,136.0,อาหาร/ร้านอาหาร,discretionary,นาเอกินี โก,นาเอกินี โก
+2026-03-23,08:21,KBank ออมทรัพย์,out,56.0,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,BTS TIM TVM
+2026-03-23,11:08,KBank ออมทรัพย์,out,50.0,โอนเงิน/บุคคล,transfer,สมนิก รวชน,พร้อมเพย์ สมนิก รวชน
+2026-03-23,11:08,KBank ออมทรัพย์,out,70.0,โอนเงิน/บุคคล,transfer,วาสนา ศรีบุญ,โอน วาสนา ศรีบุญ
+2026-03-23,17:00,KBank ออมทรัพย์,out,88.0,อาหาร/ร้านอาหาร,discretionary,Thai Hachiban,THAIHACHIBAN
+2026-03-23,18:18,KBank ออมทรัพย์,out,243.0,อาหาร/ร้านอาหาร,discretionary,เมคเกอร์ ดี-เซน แอมโรนาวาน,เมคเกอร์ ดี-เซน แอมโรนาวาน
+2026-03-24,,UOB บัตรเครดิต,in,2240.69,คืนเงิน (refund),refund,Booking.com,Booking.com Hotel Amsterdam
+2026-03-24,,UOB บัตรเครดิต,in,2916.24,คืนเงิน (refund),refund,Booking.com,Hotel at Booking.com Amsterdam
+2026-03-24,,UOB บัตรเครดิต,out,2916.24,ที่พัก/ท่องเที่ยว,discretionary,Booking.com,Hotel at Booking.com Amsterdam
+2026-03-24,,UOB บัตรเครดิต,out,25.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-24,,UOB บัตรเครดิต,out,35.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-24,,UOB บัตรเครดิต,out,40.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-24,,UOB บัตรเครดิต,out,68.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-24,,UOB บัตรเครดิต,out,90.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-24,,UOB บัตรเครดิต,out,157.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-24,,UOB บัตรเครดิต,out,220.0,ห้าง/ช้อปปิ้ง,discretionary,436 SCT-I'M CHINA TOWN BANGK,436 SCT-I'M CHINA TOWN BANGKOK
+2026-03-24,,UOB บัตรเครดิต,out,951.93,โรงพยาบาล/สุขภาพ,essential,iServiceCCP,TMN ISERVICECCP BANGKOK
+2026-03-24,,UOB บัตรเครดิต,out,2916.24,ที่พัก/ท่องเที่ยว,discretionary,Booking.com,Hotel at Booking.com Amsterdam
+2026-03-24,,UOB บัตรเครดิต,out,415.0,อาหาร/ร้านอาหาร,discretionary,Yayoi,YAYOI(Y090)-SILOM COMP BANGKOK
+2026-03-24,07:31,KBank ออมทรัพย์,out,24.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-03-24,09:21,KBank ออมทรัพย์,out,200.0,โอนเงิน/บุคคล,transfer,อังคนา ปราณีพร,พร้อมเพย์ อังคนา ปราณีพร
+2026-03-24,10:51,KBank ออมทรัพย์,out,25.0,คาเฟ่/ขนม,discretionary,Starbucks,STARBUCKS COFFEE
+2026-03-24,13:24,KBank ออมทรัพย์,out,130.0,อาหาร/ร้านอาหาร,discretionary,อุดหนุน เพิ่มกะกระเลิน,อุดหนุน เพิ่มกะกระเลิน
+2026-03-24,14:56,KBank ออมทรัพย์,out,17.0,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,BTS TIM TVM
+2026-03-24,15:06,KBank ออมทรัพย์,out,28.0,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,BTS TIM TVM
+2026-03-24,16:57,KBank ออมทรัพย์,out,25.0,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,BTS TIM TVM
+2026-03-25,,UOB บัตรเครดิต,out,76.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-25,,UOB บัตรเครดิต,out,121.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-25,,UOB บัตรเครดิต,out,850.0,น้ำมัน/ปั๊ม,essential,PTT Station,PTTST.D PETCHPRAKONG BANGKOK
+2026-03-25,,UOB บัตรเครดิต,out,1916.0,โรงพยาบาล/สุขภาพ,essential,รพ.กรุงเทพคริสเตียน,BANGKOK CHRISTIAN HOS. BANGKOK
+2026-03-25,08:41,KBank ออมทรัพย์,out,30.0,เดินทาง/ขนส่ง,essential,MBC เยาวราช,MBC พีซีซี เยาวราช
+2026-03-25,13:59,KBank ออมทรัพย์,out,200.0,โอนเงิน/บุคคล,transfer,ธัญญากรณ์ ปราณ,โอน ธัญญากรณ์ ปราณ
+2026-03-26,,UOB บัตรเครดิต,out,35.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-26,,UOB บัตรเครดิต,out,76.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-26,,UOB บัตรเครดิต,out,80.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-26,,UOB บัตรเครดิต,out,98.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-26,,UOB บัตรเครดิต,out,108.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-26,,UOB บัตรเครดิต,out,332.0,ค่าใช้จ่ายอื่น,transfer,HCB00122-SCBK BANGKOK,HCB00122-SCBK BANGKOK
+2026-03-26,,UOB บัตรเครดิต,out,517.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-03-27,,UOB บัตรเครดิต,out,63.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,12.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,26.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,42.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,92.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,97.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,100.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,100.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,127.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,146.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,149.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,165.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,194.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-28,,UOB บัตรเครดิต,out,314.0,ร้านสะดวกซื้อ,essential,7-Eleven,7-11KRUNGTHEP CHRISTIA BANGRAK BANGR
+2026-03-28,,UOB บัตรเครดิต,out,2153.0,โรงพยาบาล/สุขภาพ,essential,รพ.กรุงเทพคริสเตียน,BANGKOK CHRISTIAN HOS. BANGKOK
+2026-03-29,,UOB บัตรเครดิต,out,38.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-29,,UOB บัตรเครดิต,out,145.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-29,,UOB บัตรเครดิต,out,200.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-29,,UOB บัตรเครดิต,out,303.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-30,,UOB บัตรเครดิต,out,116.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-03-30,,UOB บัตรเครดิต,out,160.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-30,,UOB บัตรเครดิต,out,167.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-03-30,,UOB บัตรเครดิต,out,3103.0,โรงพยาบาล/สุขภาพ,essential,รพ.กรุงเทพคริสเตียน,BANGKOK CHRISTIAN HOS. BANGKOK
+2026-03-31,,UOB บัตรเครดิต,out,89.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-01,,UOB บัตรเครดิต,out,108.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-01,,UOB บัตรเครดิต,out,114.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-01,,UOB บัตรเครดิต,out,513.0,อาหาร/ร้านอาหาร,discretionary,Yayoi,YAYOI(Y217)-I'M CHINAT BANGKOK
+2026-04-01,13:43,KBank ออมทรัพย์,in,2800.0,รายรับ (เงินเข้า),income,รับโอน K PLUS ปรารถนา,รับโอน K PLUS ปรารถนา
+2026-04-01,13:45,KBank ออมทรัพย์,out,1500.0,โอนเงิน/บุคคล,transfer,KTB ปรานอมพ์ งาม,โอน KTB ปรานอมพ์ งาม
+2026-04-01,16:41,KBank ออมทรัพย์,out,200.0,โอนเงิน/บุคคล,transfer,ธัญญากรณ์ ปราณ,โอน ธัญญากรณ์ ปราณ
+2026-04-01,16:48,KBank ออมทรัพย์,out,69.0,อาหาร/ร้านอาหาร,discretionary,SWENSENS THAI,SWENSENS THAI
+2026-04-01,16:50,KBank ออมทรัพย์,out,75.0,อาหาร/ร้านอาหาร,discretionary,บางกอกดาแฟท,SCB มณี SHOP บางกอกดาแฟท
+2026-04-01,16:51,KBank ออมทรัพย์,out,65.0,อาหาร/ร้านอาหาร,discretionary,กระเพราโบราณ @เยาวราช,กระเพราโบราณ @เยาวราช
+2026-04-01,18:07,KBank ออมทรัพย์,out,500.0,โอนเงิน/บุคคล,transfer,KTB พิศณุ เทศทอง,โอน KTB พิศณุ เทศทอง
+2026-04-01,19:11,KBank ออมทรัพย์,out,537.0,ช้อปออนไลน์,discretionary,Shopee,Payment to Shopee
+2026-04-02,,UOB บัตรเครดิต,out,120.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-02,,UOB บัตรเครดิต,out,127.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-02,,UOB บัตรเครดิต,out,362.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-02,07:22,KBank ออมทรัพย์,out,12.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-04-02,15:28,KBank ออมทรัพย์,out,45.0,อาหาร/ร้านอาหาร,discretionary,แทนแก้วหน้าธร,แทนแก้วหน้าธร
+2026-04-02,16:09,KBank ออมทรัพย์,out,300.0,โอนเงิน/บุคคล,transfer,ปรารถนา,พร้อมเพย์ ปรารถนา
+2026-04-02,18:10,KBank ออมทรัพย์,out,420.0,อาหาร/ร้านอาหาร,discretionary,อร่อยแซ่ซัว,อร่อยแซ่ซัว
+2026-04-03,,UOB บัตรเครดิต,out,118.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-03,,UOB บัตรเครดิต,out,134.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-03,,UOB บัตรเครดิต,out,153.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-03,07:32,KBank ออมทรัพย์,out,24.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-04-03,09:35,KBank ออมทรัพย์,out,200.0,โอนเงิน/บุคคล,transfer,ธัญญากรณ์ ปราณ,โอน ธัญญากรณ์ ปราณ
+2026-04-03,15:18,KBank ออมทรัพย์,out,135.0,โอนเงิน/บุคคล,transfer,ธ.ออมสิน ทรัพย์สด,พร้อมเพย์ ธ.ออมสิน ทรัพย์สด
+2026-04-03,15:32,KBank ออมทรัพย์,out,16.0,อาหาร/ร้านอาหาร,discretionary,SUPER TURTLE PUBLIC,SUPER TURTLE PUBLIC
+2026-04-04,,UOB บัตรเครดิต,out,63.0,ร้านสะดวกซื้อ,essential,Mr.DIY,MR.D.I.Y.-BB01-SBKE BANGKOK
+2026-04-04,,UOB บัตรเครดิต,out,64.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-04-04,,UOB บัตรเครดิต,out,94.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-04,,UOB บัตรเครดิต,out,194.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-04,,UOB บัตรเครดิต,out,825.0,อาหาร/ร้านอาหาร,discretionary,Sushiro,SUSHIRO GH (TH)-SEACON BANGKOK
+2026-04-04,07:30,KBank ออมทรัพย์,out,12.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-04-04,10:05,KBank ออมทรัพย์,out,90.0,โอนเงิน/บุคคล,transfer,ปดิษา ปราณนฤม,โอน ปดิษา ปราณนฤม
+2026-04-05,,UOB บัตรเครดิต,out,173.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-05,,UOB บัตรเครดิต,out,736.0,เสื้อผ้า/แฟชั่น,discretionary,Design Village,SF-DESIGN VILLAGE PHUT BANGKOK
+2026-04-05,,UOB บัตรเครดิต,out,1280.0,น้ำมัน/ปั๊ม,essential,DAO AUURAI PETROLEUM BANGKOK,DAO AUURAI PETROLEUM BANGKOK
+2026-04-05,,UOB บัตรเครดิต,out,1367.59,เสื้อผ้า/แฟชั่น,discretionary,Design Village,DESIGN VILLAGE PHUTTAMONTBANGKOK
+2026-04-06,,UOB บัตรเครดิต,out,19.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-06,,UOB บัตรเครดิต,out,108.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-06,,UOB บัตรเครดิต,out,336.0,ค่าใช้จ่ายอื่น,transfer,HCB00181-BCIP BANGKOK,HCB00181-BCIP BANGKOK
+2026-04-06,08:39,KBank ออมทรัพย์,in,3000.0,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์,รับโอน SCB ชวมันท์
+2026-04-06,13:32,KBank ออมทรัพย์,in,4000.0,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์,รับโอน SCB ชวมันท์
+2026-04-06,14:05,KBank ออมทรัพย์,out,4000.0,โอนเงิน/บุคคล,transfer,BBL MR. KING WAH M,โอน BBL MR. KING WAH M
+2026-04-06,14:31,KBank ออมทรัพย์,out,100.0,การศึกษา/เด็ก,essential,ร.ร.อัสสัมชัญ,ASSUMPTION COLLEGE PRIMARY
+2026-04-06,15:03,KBank ออมทรัพย์,out,40.0,โอนเงิน/บุคคล,transfer,มัลลวีร์ อนุธิ,พร้อมเพย์ มัลลวีร์ อนุธิ
+2026-04-06,15:06,KBank ออมทรัพย์,out,60.0,โอนเงิน/บุคคล,transfer,ค่าแพง แสงสว่,โอน ค่าแพง แสงสว่
+2026-04-06,15:13,KBank ออมทรัพย์,out,80.0,โอนเงิน/บุคคล,transfer,สมฤดิ์ จิน,พร้อมเพย์ สมฤดิ์ จิน
+2026-04-06,15:17,KBank ออมทรัพย์,out,300.0,ถอนเงินสด,transfer,ถอนเงิน ATM,ATM ถอนเงินสด
+2026-04-06,15:37,KBank ออมทรัพย์,out,110.0,โอนเงิน/บุคคล,transfer,ปดิษา ปราณนฤม,โอน ปดิษา ปราณนฤม
+2026-04-07,,UOB บัตรเครดิต,out,20.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-07,,UOB บัตรเครดิต,out,35.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-07,,UOB บัตรเครดิต,out,55.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-07,,UOB บัตรเครดิต,out,60.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-07,,UOB บัตรเครดิต,out,125.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-07,07:36,KBank ออมทรัพย์,out,12.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-04-07,15:05,KBank ออมทรัพย์,out,65.0,โอนเงิน/บุคคล,transfer,อลิชา ทรัพย์สด,พร้อมเพย์ อลิชา ทรัพย์สด
+2026-04-07,15:22,KBank ออมทรัพย์,out,460.0,อาหาร/ร้านอาหาร,discretionary,โอชาว่าราเมน,โอชาว่าราเมน
+2026-04-08,,UOB บัตรเครดิต,out,24.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-08,,UOB บัตรเครดิต,out,46.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-08,,UOB บัตรเครดิต,out,56.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-08,,UOB บัตรเครดิต,out,78.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-08,07:27,KBank ออมทรัพย์,out,12.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-04-08,09:21,KBank ออมทรัพย์,out,200.0,โอนเงิน/บุคคล,transfer,อังคนา ปราณีพร,พร้อมเพย์ อังคนา ปราณีพร
+2026-04-08,15:24,KBank ออมทรัพย์,out,70.0,โอนเงิน/บุคคล,transfer,อลิชา ทรัพย์สด,พร้อมเพย์ อลิชา ทรัพย์สด
+2026-04-08,16:37,KBank ออมทรัพย์,out,420.0,อาหาร/ร้านอาหาร,discretionary,อร่อยแซ่ซัว,อร่อยแซ่ซัว
+2026-04-09,,UOB บัตรเครดิต,out,25.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-09,,UOB บัตรเครดิต,out,49.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-09,,UOB บัตรเครดิต,out,136.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-09,,UOB บัตรเครดิต,out,147.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-09,,UOB บัตรเครดิต,out,330.0,ห้าง/ช้อปปิ้ง,discretionary,RUAYMAHASAN 888-ICS BANGKOK,RUAYMAHASAN 888-ICS BANGKOK
+2026-04-09,,UOB บัตรเครดิต,out,379.0,ร้านสะดวกซื้อ,essential,Mr.DIY,MR.D.I.Y.-B077.ICSS BANGKOK
+2026-04-09,,UOB บัตรเครดิต,out,403.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-09,19:20,KBank ออมทรัพย์,out,30.0,อาหาร/ร้านอาหาร,discretionary,บิ๊งซาม พ.ศ. 2515,บิ๊งซาม พ.ศ. 2515
+2026-04-10,,UOB บัตรเครดิต,out,45.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-10,,UOB บัตรเครดิต,out,55.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-10,,UOB บัตรเครดิต,out,58.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-10,,UOB บัตรเครดิต,out,80.0,อาหาร/ร้านอาหาร,discretionary,Subway,SUBWAY-DON MUEANG AIRP BANGKOK
+2026-04-10,,UOB บัตรเครดิต,out,152.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-04-10,,UOB บัตรเครดิต,out,156.0,อาหาร/ร้านอาหาร,discretionary,DEAN & DELUCA DONMUENG BANGK,DEAN & DELUCA DONMUENG BANGKOK
+2026-04-10,,UOB บัตรเครดิต,out,159.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-10,,UOB บัตรเครดิต,out,210.31,อาหาร/ร้านอาหาร,discretionary,JASONS DELI MBS 3 Singapore ,JASONS DELI MBS 3 Singapore SGD8.10
+2026-04-10,,UOB บัตรเครดิต,out,231.07,อาหาร/ร้านอาหาร,discretionary,RASAPURA MASTERS @ MBS Singa,RASAPURA MASTERS @ MBS Singapore SGD8.90
+2026-04-10,,UOB บัตรเครดิต,out,156.4,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,BUS/MRT 834343926 SINGAPORE SGD6.00
+2026-04-11,,UOB บัตรเครดิต,out,52.07,อาหาร/ร้านอาหาร,discretionary,McDonald's,MCDONALD'S (ZOO) SINGAPORE SGD2.00
+2026-04-11,,UOB บัตรเครดิต,out,91.12,อาหาร/ร้านอาหาร,discretionary,HAPPY ICE PTE LTD Singapore ,HAPPY ICE PTE LTD Singapore SGD3.50
+2026-04-11,,UOB บัตรเครดิต,out,140.6,อาหาร/ร้านอาหาร,discretionary,SG F&B MANAGEMENT Singapore ,SG F&B MANAGEMENT Singapore SGD5.40
+2026-04-11,,UOB บัตรเครดิต,out,153.62,อาหาร/ร้านอาหาร,discretionary,SZ FNB KIDSWORLD CAFE Singap,SZ FNB KIDSWORLD CAFE Singapore SGD5.90
+2026-04-11,,UOB บัตรเครดิต,out,218.7,ร้านสะดวกซื้อ,essential,7-Eleven,7-ELEVEN-MANDAI LAKE R Singapore SGD8.40
+2026-04-11,,UOB บัตรเครดิต,out,221.31,ที่พัก/ท่องเที่ยว,discretionary,Mandai Wildlife Group Singap,Mandai Wildlife Group Singapore SGD8.50
+2026-04-11,,UOB บัตรเครดิต,out,312.44,ที่พัก/ท่องเที่ยว,discretionary,WEWA SG PTE. LTD. Singapore ,WEWA SG PTE. LTD. Singapore SGD12.00
+2026-04-12,,UOB บัตรเครดิต,out,83.31,อาหาร/ร้านอาหาร,discretionary,KOPI & TARTS SINGAPORE SGD3.,KOPI & TARTS SINGAPORE SGD3.20
+2026-04-12,,UOB บัตรเครดิต,out,96.33,อาหาร/ร้านอาหาร,discretionary,KOUFU @ MBS Singapore SGD3.7,KOUFU @ MBS Singapore SGD3.70
+2026-04-12,,UOB บัตรเครดิต,out,153.62,อาหาร/ร้านอาหาร,discretionary,FINEST FUNAN SINGAPORE SGD5.,FINEST FUNAN SINGAPORE SGD5.90
+2026-04-12,,UOB บัตรเครดิต,out,286.39,อาหาร/ร้านอาหาร,discretionary,RASAPURA MASTERS @ MBS Singa,RASAPURA MASTERS @ MBS Singapore SGD11.00
+2026-04-12,,UOB บัตรเครดิต,out,2207.88,อาหาร/ร้านอาหาร,discretionary,SHILLA-C&P T4 DFS WALK SINGA,SHILLA-C&P T4 DFS WALK SINGAPORE SGD84.80
+2026-04-13,,UOB บัตรเครดิต,out,154.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-13,,UOB บัตรเครดิต,out,271.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-13,,UOB บัตรเครดิต,out,439.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-13,,UOB บัตรเครดิต,out,908.0,อาหาร/ร้านอาหาร,discretionary,Yayoi,YAYOI(Y217)-I'M CHINAT BANGKOK
+2026-04-13,,UOB บัตรเครดิต,out,972.08,ที่พัก/ท่องเที่ยว,discretionary,Booking.com,Booking.com Hotel Amsterdam
+2026-04-13,17:30,KBank ออมทรัพย์,out,186.0,ช้อปออนไลน์,discretionary,Shopee,Payment to Shopee
+2026-04-14,,UOB บัตรเครดิต,out,55.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-14,,UOB บัตรเครดิต,out,143.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-14,,UOB บัตรเครดิต,out,340.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-14,,UOB บัตรเครดิต,out,1375.0,อาหาร/ร้านอาหาร,discretionary,Hama Sushi,HAMASUSHI-CENTRAL PINK BANGKOK
+2026-04-14,15:49,KBank ออมทรัพย์,out,30.0,โอนเงิน/บุคคล,transfer,ภาณุพงศ์ เชียง,โอน ภาณุพงศ์ เชียง
+2026-04-15,,UOB บัตรเครดิต,out,20.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-15,,UOB บัตรเครดิต,out,56.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-15,,UOB บัตรเครดิต,out,100.0,โรงพยาบาล/สุขภาพ,essential,iServiceCCP,TMN ISERVICECCP BANGKOK
+2026-04-15,,UOB บัตรเครดิต,out,111.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-15,,UOB บัตรเครดิต,out,175.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-15,,UOB บัตรเครดิต,out,1100.0,ค่าใช้จ่ายอื่น,transfer,"P.PHETTHANAWAN CO.,LTD BANGK","P.PHETTHANAWAN CO.,LTD BANGKOK"
+2026-04-15,09:58,KBank ออมทรัพย์,in,2000.0,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์,รับโอน SCB ชวมันท์
+2026-04-15,10:32,KBank ออมทรัพย์,out,1140.0,การศึกษา/เด็ก,essential,Genius Kids Cafe,SCB มณี SHOP GENIUS KIDS CAFE
+2026-04-15,16:57,KBank ออมทรัพย์,out,60.0,อาหาร/ร้านอาหาร,discretionary,ร้านตั้งตัว,ร้านตั้งตัว
+2026-04-15,17:01,KBank ออมทรัพย์,out,50.0,โอนเงิน/บุคคล,transfer,สุพิลาลัย,พร้อมเพย์ สุพิลาลัย
+2026-04-15,17:01,KBank ออมทรัพย์,out,50.0,คาเฟ่/ขนม,discretionary,อุดหนุน น้ำปั่น,อุดหนุน น้ำปั่น
+2026-04-15,17:07,KBank ออมทรัพย์,out,210.0,อาหาร/ร้านอาหาร,discretionary,นายอร่าน ทวีรีฒัพ,นายอร่าน ทวีรีฒัพ
+2026-04-15,17:13,KBank ออมทรัพย์,out,35.0,อาหาร/ร้านอาหาร,discretionary,LINE Pay Merchant QR,LINE Pay Merchant QR
+2026-04-15,17:35,KBank ออมทรัพย์,out,25.0,โอนเงิน/บุคคล,transfer,สุพิลาลัย,พร้อมเพย์ สุพิลาลัย
+2026-04-15,17:42,KBank ออมทรัพย์,out,220.0,อาหาร/ร้านอาหาร,discretionary,SODA NAMCHA CO.LTD,SODA NAMCHA CO.LTD
+2026-04-16,,UOB บัตรเครดิต,out,179.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-16,,UOB บัตรเครดิต,out,257.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-16,,UOB บัตรเครดิต,out,350.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-16,,UOB บัตรเครดิต,out,724.0,อาหาร/ร้านอาหาร,discretionary,MCD-00166PORTO CHINO ( SAMUT,MCD-00166PORTO CHINO ( SAMUTSAKHON
+2026-04-16,10:02,KBank ออมทรัพย์,out,95.0,อาหาร/ร้านอาหาร,discretionary,วราภรณ์ ซาลาเปา-ทอร์โร่ ซีโน,วราภรณ์ ซาลาเปา-ทอร์โร่ ซีโน่
+2026-04-16,12:32,KBank ออมทรัพย์,out,50.0,อาหาร/ร้านอาหาร,discretionary,บัังลีไก่ทอด ทาคใหญ่,บัังลีไก่ทอด ทาคใหญ่
+2026-04-16,16:16,KBank ออมทรัพย์,out,40.0,โอนเงิน/บุคคล,transfer,มณีวรรณ ธัญ,โอน มณีวรรณ ธัญ
+2026-04-16,16:19,KBank ออมทรัพย์,out,90.0,อาหาร/ร้านอาหาร,discretionary,ร้านค่าออมสิน มหานง,ร้านค่าออมสิน มหานง
+2026-04-16,16:22,KBank ออมทรัพย์,out,40.0,อาหาร/ร้านอาหาร,discretionary,ร้านค่าออมสิน มหานง,ร้านค่าออมสิน มหานง
+2026-04-17,,KBank ออมทรัพย์,out,20.0,ค่าใช้จ่ายอื่น,transfer,(รายการหน้า 2 อ่านจากยอดคงเห,(รายการหน้า 2 อ่านจากยอดคงเหลือ - ไม่ทราบร้าน)
+2026-04-17,,KBank ออมทรัพย์,out,60.0,ค่าใช้จ่ายอื่น,transfer,(รายการหน้า 2 อ่านจากยอดคงเห,(รายการหน้า 2 อ่านจากยอดคงเหลือ - ไม่ทราบร้าน)
+2026-04-17,,KBank ออมทรัพย์,out,100.0,ค่าใช้จ่ายอื่น,transfer,(รายการหน้า 2 อ่านจากยอดคงเห,(รายการหน้า 2 อ่านจากยอดคงเหลือ - ไม่ทราบร้าน)
+2026-04-17,,KBank ออมทรัพย์,out,30.0,ค่าใช้จ่ายอื่น,transfer,(รายการหน้า 2 อ่านจากยอดคงเห,(รายการหน้า 2 อ่านจากยอดคงเหลือ - ไม่ทราบร้าน)
+2026-04-17,,KBank ออมทรัพย์,out,20.0,ค่าใช้จ่ายอื่น,transfer,(รายการหน้า 2 อ่านจากยอดคงเห,(รายการหน้า 2 อ่านจากยอดคงเหลือ - ไม่ทราบร้าน)
+2026-04-17,,UOB บัตรเครดิต,out,80.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,GRABTAXI BANGKOK
+2026-04-17,,UOB บัตรเครดิต,out,83.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-17,,UOB บัตรเครดิต,out,88.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-17,,UOB บัตรเครดิต,out,135.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-17,,UOB บัตรเครดิต,out,172.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-17,,UOB บัตรเครดิต,out,211.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-17,,UOB บัตรเครดิต,out,243.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-17,,UOB บัตรเครดิต,out,679.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-17,,UOB บัตรเครดิต,out,914.0,อาหาร/ร้านอาหาร,discretionary,Yayoi,YAYOI(Y217)-I'M CHINAT BANGKOK
+2026-04-17,07:26,KBank ออมทรัพย์,out,69.0,อาหาร/ร้านอาหาร,discretionary,CJ 0035 ชะอ่า,CJ 0035 ชะอ่า
+2026-04-17,07:29,KBank ออมทรัพย์,out,75.0,อาหาร/ร้านอาหาร,discretionary,CJ 0035 ชะอ่า,CJ 0035 ชะอ่า
+2026-04-18,,UOB บัตรเครดิต,out,36.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-18,,UOB บัตรเครดิต,out,138.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-18,,UOB บัตรเครดิต,out,1364.0,อาหาร/ร้านอาหาร,discretionary,Din Tai Fung,DIN TAI FUNG(ONE BANGK BANGKOK
+2026-04-18,13:35,KBank ออมทรัพย์,out,149.0,ธุรกิจ/บริการ,transfer,BTM(THAILAND)LTD.,BTM(THAILAND)LTD.
+2026-04-18,15:23,KBank ออมทรัพย์,out,90.0,ช้อปออนไลน์,discretionary,Shopee,Payment to Shopee
+2026-04-19,10:28,KBank ออมทรัพย์,in,3000.0,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์,รับโอน SCB ชวมันท์
+2026-04-19,10:43,KBank ออมทรัพย์,out,75.0,อาหาร/ร้านอาหาร,discretionary,Wongnai Merchant QR,Wongnai Merchant QR
+2026-04-19,10:45,KBank ออมทรัพย์,out,70.0,อาหาร/ร้านอาหาร,discretionary,ครัวเจ๊วน,ครัวเจ๊วน
+2026-04-19,11:42,KBank ออมทรัพย์,out,85.0,อาหาร/ร้านอาหาร,discretionary,กึ๋ก๊ออแลนด,กึ๋ก๊ออแลนด
+2026-04-20,,UOB บัตรเครดิต,out,37.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-20,,UOB บัตรเครดิต,out,38.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-20,,UOB บัตรเครดิต,out,145.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-04-20,,UOB บัตรเครดิต,out,179.0,ซับสคริปชั่น/ดิจิทัล,discretionary,Google/YouTube,Google YouTube Mountain View
+2026-04-20,,UOB บัตรเครดิต,out,308.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-20,08:10,KBank ออมทรัพย์,out,350.0,โอนเงิน/บุคคล,transfer,ดีโจ จักร,พร้อมเพย์ ดีโจ จักร
+2026-04-20,15:12,KBank ออมทรัพย์,out,40.0,โอนเงิน/บุคคล,transfer,มัลลวีร์ อนุธิ,พร้อมเพย์ มัลลวีร์ อนุธิ
+2026-04-20,15:19,KBank ออมทรัพย์,out,370.0,โอนเงิน/บุคคล,transfer,ดีโจ จักร,พร้อมเพย์ ดีโจ จักร
+2026-04-21,,UOB บัตรเครดิต,out,30.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-21,,UOB บัตรเครดิต,out,39.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-21,,UOB บัตรเครดิต,out,85.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-21,,UOB บัตรเครดิต,out,169.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-21,,UOB บัตรเครดิต,out,170.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-21,,UOB บัตรเครดิต,out,255.2,ร้านสะดวกซื้อ,essential,Don Don Donki,DONKI THANIYA PLAZA BANGKOK
+2026-04-21,,UOB บัตรเครดิต,out,920.0,ร้านสะดวกซื้อ,essential,Don Don Donki,DONKI THANIYA PLAZA BANGKOK
+2026-04-21,,UOB บัตรเครดิต,out,2300.0,โรงพยาบาล/สุขภาพ,essential,รพ.กรุงเทพคริสเตียน,BANGKOK CHRISTIAN HOS. BANGKOK
+2026-04-21,,UOB บัตรเครดิต,out,33.0,ร้านสะดวกซื้อ,essential,7-Eleven,7-11 Bangkok
+2026-04-21,13:49,KBank ออมทรัพย์,out,81.0,ช้อปออนไลน์,discretionary,Shopee,Payment to Shopee
+2026-04-22,,UOB บัตรเครดิต,out,26.5,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-22,,UOB บัตรเครดิต,out,97.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-22,,UOB บัตรเครดิต,out,105.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-22,,UOB บัตรเครดิต,out,138.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-22,,UOB บัตรเครดิต,out,1151.32,โรงพยาบาล/สุขภาพ,essential,iServiceCCP,TMN ISERVICECCP BANGKOK
+2026-04-22,07:22,KBank ออมทรัพย์,out,24.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-04-22,08:34,KBank ออมทรัพย์,out,500.0,ถอนเงินสด,transfer,ถอนเงิน ATM,ATM ถอนเงินสด
+2026-04-22,15:12,KBank ออมทรัพย์,out,700.0,โอนเงิน/บุคคล,transfer,ดีโจ จักร,พร้อมเพย์ ดีโจ จักร
+2026-04-23,,UOB บัตรเครดิต,out,10.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-23,,UOB บัตรเครดิต,out,10.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-23,,UOB บัตรเครดิต,out,40.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-23,,UOB บัตรเครดิต,out,83.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-23,,UOB บัตรเครดิต,out,120.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-23,,UOB บัตรเครดิต,out,125.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-23,,UOB บัตรเครดิต,out,273.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-23,,UOB บัตรเครดิต,out,475.0,อาหาร/ร้านอาหาร,discretionary,AROI SANG QUEUE BANGKOK,AROI SANG QUEUE BANGKOK
+2026-04-23,,UOB บัตรเครดิต,out,1320.0,ค่าใช้จ่ายอื่น,transfer,"P.PHETTHANAWAN CO.,LTD BANGK","P.PHETTHANAWAN CO.,LTD BANGKOK"
+2026-04-23,07:27,KBank ออมทรัพย์,out,24.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-04-23,09:28,KBank ออมทรัพย์,out,350.0,โอนเงิน/บุคคล,transfer,ณัฐรัฐ ลักขณามา,โอน ณัฐรัฐ ลักขณามา
+2026-04-23,12:08,KBank ออมทรัพย์,out,40.0,อาหาร/ร้านอาหาร,discretionary,ทุกอย่าง 20 by Apple,ทุกอย่าง 20 by Apple
+2026-04-23,18:16,KBank ออมทรัพย์,out,270.0,อาหาร/ร้านอาหาร,discretionary,ชันมุน เอนเตอร์ไพรซ์,ชันมุน เอนเตอร์ไพรซ์
+2026-04-23,18:25,KBank ออมทรัพย์,out,60.0,โอนเงิน/บุคคล,transfer,วนิดา ประทุม,โอน วนิดา ประทุม
+2026-04-24,,UOB บัตรเครดิต,out,20.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-24,,UOB บัตรเครดิต,out,36.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-24,,UOB บัตรเครดิต,out,43.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-24,,UOB บัตรเครดิต,out,45.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-24,,UOB บัตรเครดิต,out,46.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-24,,UOB บัตรเครดิต,out,73.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-24,,UOB บัตรเครดิต,out,1051.5,ร้านสะดวกซื้อ,essential,Tops,TOPS-BANGRAK BANGKOK
+2026-04-24,,UOB บัตรเครดิต,out,1265.0,อาหาร/ร้านอาหาร,discretionary,Sushiro,SUSHIRO GH (TH) C.BANG BANGKOK
+2026-04-24,07:23,KBank ออมทรัพย์,out,12.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-04-24,15:13,KBank ออมทรัพย์,in,3000.0,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์,รับโอน SCB ชวมันท์
+2026-04-25,15:09,KBank ออมทรัพย์,out,40.0,อาหาร/ร้านอาหาร,discretionary,เจ๊เพ็ญ อาหารตามสั่ง,SCB มณี SHOP เจ๊เพ็ญ อาหารตามสั่ง
+2026-04-25,19:00,KBank ออมทรัพย์,out,60.0,คาเฟ่/ขนม,discretionary,อุดหนุน Dessert No Chef,อุดหนุน Dessert No Chef
+2026-04-25,19:02,KBank ออมทรัพย์,out,35.0,อาหาร/ร้านอาหาร,discretionary,กรุงศรี ปุ่นกะใส เปา,กรุงศรี ปุ่นกะใส เปา
+2026-04-26,,UOB บัตรเครดิต,out,227.25,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-26,,UOB บัตรเครดิต,out,244.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-26,,UOB บัตรเครดิต,out,327.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-26,,UOB บัตรเครดิต,out,418.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-26,09:55,KBank ออมทรัพย์,out,200.0,เติมเงิน/วอลเล็ต,transfer,TrueMoney,ทรู มันนี่ E-MON
+2026-04-26,11:21,KBank ออมทรัพย์,out,90.0,ห้าง/ซูเปอร์มาร์เก็ต,essential,โลตัส ราชพฤกษ์,โลตัส ราชพฤกษ์
+2026-04-26,11:24,KBank ออมทรัพย์,out,30.0,โอนเงิน/บุคคล,transfer,ณัฐชา บุญบูล,พร้อมเพย์ ณัฐชา บุญบูล
+2026-04-26,11:26,KBank ออมทรัพย์,out,50.0,อาหาร/ร้านอาหาร,discretionary,ร้านค่าน้ำนึง ราชพฤกษ์,ร้านค่าน้ำนึง ราชพฤกษ์
+2026-04-26,11:58,KBank ออมทรัพย์,out,50.0,ห้าง/ซูเปอร์มาร์เก็ต,essential,CP Axtra,CP AXTRA PUBLIC
+2026-04-26,12:29,KBank ออมทรัพย์,out,386.0,อาหาร/ร้านอาหาร,discretionary,คิดเซนเล,คิดเซนเล
+2026-04-26,12:35,KBank ออมทรัพย์,out,80.0,คาเฟ่/ขนม,discretionary,Dakasi,Dakasi
+2026-04-26,12:48,KBank ออมทรัพย์,out,119.0,อาหาร/ร้านอาหาร,discretionary,Dee clothes shop,Dee clothes shop
+2026-04-26,23:01,KBank ออมทรัพย์,out,100.0,เติมเงิน/วอลเล็ต,transfer,TrueMoney,ทรู มันนี่ E-MON
+2026-04-27,10:45,KBank ออมทรัพย์,out,50.0,ธุรกิจ/บริการ,transfer,พีพี มูฟ เฮช ยู นิเวอร์แซล,พีพี มูฟ เฮช ยู นิเวอร์แซล
+2026-04-27,15:06,KBank ออมทรัพย์,out,65.0,อาหาร/ร้านอาหาร,discretionary,ร้านขายดึงยาย,ร้านขายดึงยาย
+2026-04-27,16:52,KBank ออมทรัพย์,out,88.0,อาหาร/ร้านอาหาร,discretionary,Thai Hachiban,THAIHACHIBAN
+2026-04-27,16:54,KBank ออมทรัพย์,out,30.0,อาหาร/ร้านอาหาร,discretionary,YUMMY BY OCHI,YUMMY BY OCHI
+2026-04-27,16:57,KBank ออมทรัพย์,out,75.0,อาหาร/ร้านอาหาร,discretionary,ทัศนี กวยจี้บนู,ทัศนี กวยจี้บนู
+2026-04-27,17:27,KBank ออมทรัพย์,out,35.0,อาหาร/ร้านอาหาร,discretionary,ออกร้องสิง,SCB มณี SHOP ออกร้องสิง
+2026-04-27,17:27,KBank ออมทรัพย์,out,85.0,อาหาร/ร้านอาหาร,discretionary,ภูริช มะพร้าว,SCB มณี SHOP ภูริช มะพร้าว
+2026-04-28,,UOB บัตรเครดิต,out,37.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-28,,UOB บัตรเครดิต,out,38.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-28,,UOB บัตรเครดิต,out,79.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-04-28,,UOB บัตรเครดิต,out,1075.78,อาหาร/ร้านอาหาร,discretionary,Kin Donburi,KIN DONBURI CAFE-I'M P BANGKOK
+2026-04-28,11:07,KBank ออมทรัพย์,out,140.0,น้ำมัน/ปั๊ม,essential,บางจาก กรีนเนท ติสราม,บางจาก กรีนเนท ติสราม
+2026-04-28,17:48,KBank ออมทรัพย์,out,80.0,อาหาร/ร้านอาหาร,discretionary,ไอ ฟาร์ม,SCB มณี SHOP ไอ ฟาร์ม
+2026-04-28,18:04,KBank ออมทรัพย์,out,50.0,อาหาร/ร้านอาหาร,discretionary,ร้านเวนดิ้งขายญูเดิม,ร้านเวนดิ้งขายญูเดิม
+2026-04-28,18:05,KBank ออมทรัพย์,out,65.0,อาหาร/ร้านอาหาร,discretionary,ร้านขายดึงยาย,ร้านขายดึงยาย
+2026-04-29,,UOB บัตรเครดิต,out,39.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-29,,UOB บัตรเครดิต,out,75.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-29,,UOB บัตรเครดิต,out,78.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-04-29,,UOB บัตรเครดิต,out,172.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-29,,UOB บัตรเครดิต,out,284.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-29,09:03,KBank ออมทรัพย์,out,115.0,โอนเงิน/บุคคล,transfer,MR. YEP WEI ZHI,พร้อมเพย์ MR. YEP WEI ZHI
+2026-04-29,14:33,KBank ออมทรัพย์,out,300.0,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,BTS Thai QR A920
+2026-04-29,14:53,KBank ออมทรัพย์,out,55.0,โอนเงิน/บุคคล,transfer,MR. YEP WEI ZHI,พร้อมเพย์ MR. YEP WEI ZHI
+2026-04-29,17:11,KBank ออมทรัพย์,out,50.0,อาหาร/ร้านอาหาร,discretionary,BIKUTA SUSHI TEPPANYAKI,BIKUTA SUSHI TEPPANYAKI
+2026-04-29,17:16,KBank ออมทรัพย์,out,60.0,อาหาร/ร้านอาหาร,discretionary,MR. SOUKSAMAY KHAM,MR. SOUKSAMAY KHAM
+2026-04-30,,UOB บัตรเครดิต,out,35.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-30,,UOB บัตรเครดิต,out,57.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-04-30,,UOB บัตรเครดิต,out,83.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-04-30,,UOB บัตรเครดิต,out,90.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-04-30,,UOB บัตรเครดิต,out,138.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-04-30,,UOB บัตรเครดิต,out,231.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-30,,UOB บัตรเครดิต,out,268.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-30,,UOB บัตรเครดิต,out,411.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-04-30,16:22,KBank ออมทรัพย์,out,45.0,โอนเงิน/บุคคล,transfer,MRS. SOMVANG CHANT,พร้อมเพย์ MRS. SOMVANG CHANT
+2026-04-30,18:38,KBank ออมทรัพย์,out,141.0,ห้าง/ซูเปอร์มาร์เก็ต,essential,ฟาร์ม-ตลาดเสรี มาร์เก็ต,ฟาร์ม-ตลาดเสรี มาร์เก็ต
+2026-05-01,,UOB บัตรเครดิต,out,20.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-01,,UOB บัตรเครดิต,out,85.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-01,,UOB บัตรเครดิต,out,149.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-05-02,,UOB บัตรเครดิต,out,107.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-02,,UOB บัตรเครดิต,out,148.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-02,,UOB บัตรเครดิต,out,199.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-02,,UOB บัตรเครดิต,out,270.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-02,,UOB บัตรเครดิต,out,336.0,ค่าใช้จ่ายอื่น,transfer,HCB00152-IMCN BANGKOK,HCB00152-IMCN BANGKOK
+2026-05-03,,UOB บัตรเครดิต,out,33.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-03,,UOB บัตรเครดิต,out,37.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-03,,UOB บัตรเครดิต,out,86.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-03,,UOB บัตรเครดิต,out,93.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-05-03,,UOB บัตรเครดิต,out,208.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-03,,UOB บัตรเครดิต,out,1556.34,โรงพยาบาล/สุขภาพ,essential,Watsons,3042 WATSONS I'M CHAIN BANGKOK
+2026-05-04,,UOB บัตรเครดิต,out,20.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,GRABTAXI BANGKOK
+2026-05-04,,UOB บัตรเครดิต,out,22.0,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,MRT-BEM Bangkok
+2026-05-04,,UOB บัตรเครดิต,out,95.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-05-04,,UOB บัตรเครดิต,out,105.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-05,,UOB บัตรเครดิต,out,147.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-05,,UOB บัตรเครดิต,out,486.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-05-05,,UOB บัตรเครดิต,out,862.74,อาหาร/ร้านอาหาร,discretionary,Kin Donburi,KIN DONBURI CAFE-I'M P BANGKOK
+2026-05-06,,UOB บัตรเครดิต,out,31.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-06,,UOB บัตรเครดิต,out,64.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-05-06,,UOB บัตรเครดิต,out,199.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,39.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,56.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,65.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,80.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,110.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,279.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,980.75,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,1180.0,เสื้อผ้า/แฟชั่น,discretionary,Uniqlo,UNIQLO-ICONSIAM BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,1421.0,อาหาร/ร้านอาหาร,discretionary,Sushiro,SUSHIRO GH (TH)-MBK CE BANGKOK
+2026-05-07,,UOB บัตรเครดิต,out,1602.0,ที่พัก/ท่องเที่ยว,discretionary,Booking.com,Hotel at Booking.com Amsterdam
+2026-05-08,,UOB บัตรเครดิต,out,30.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-08,,UOB บัตรเครดิต,out,42.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-08,,UOB บัตรเครดิต,out,65.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-08,,UOB บัตรเครดิต,out,185.0,ห้าง/ช้อปปิ้ง,discretionary,228 SCT-IM PARK SAM YA BANGK,228 SCT-IM PARK SAM YA BANGKOK
+2026-05-09,,UOB บัตรเครดิต,out,125.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-05-09,,UOB บัตรเครดิต,out,132.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-09,,UOB บัตรเครดิต,out,205.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-10,,UOB บัตรเครดิต,out,70.0,ร้านสะดวกซื้อ,essential,TMN GROCERY STORE BANGKOK,TMN GROCERY STORE BANGKOK
+2026-05-10,,UOB บัตรเครดิต,out,71.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-10,,UOB บัตรเครดิต,out,80.0,ร้านสะดวกซื้อ,essential,TMN GROCERY STORE BANGKOK,TMN GROCERY STORE BANGKOK
+2026-05-10,,UOB บัตรเครดิต,out,83.0,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-05-10,,UOB บัตรเครดิต,out,1891.08,ค่าใช้จ่ายอื่น,transfer,KAIKAN REALESTATE SARABURI,KAIKAN REALESTATE SARABURI
+2026-05-10,09:20,KBank ออมทรัพย์,in,3000.0,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์,รับโอน SCB ชวมันท์
+2026-05-10,17:15,KBank ออมทรัพย์,out,40.0,อาหาร/ร้านอาหาร,discretionary,หลิมผลไม้สด,SCB มณี SHOP หลิมผลไม้สด
+2026-05-10,17:16,KBank ออมทรัพย์,out,35.0,โอนเงิน/บุคคล,transfer,SCB ชนิดา,พร้อมเพย์ SCB ชนิดา
+2026-05-10,17:17,KBank ออมทรัพย์,out,30.0,อาหาร/ร้านอาหาร,discretionary,อาหารตามสั่ง,มณี SHOP อาหารตามสั่ง
+2026-05-10,17:19,KBank ออมทรัพย์,out,50.0,โอนเงิน/บุคคล,transfer,ทิพวรรณ กาเมเก,โอน ทิพวรรณ กาเมเก
+2026-05-10,17:35,KBank ออมทรัพย์,out,60.0,โอนเงิน/บุคคล,transfer,กาญดา สายประติ,โอน กาญดา สายประติ
+2026-05-10,18:28,KBank ออมทรัพย์,out,50.0,โอนเงิน/บุคคล,transfer,กฤติยา ติณณาวง,พร้อมเพย์ กฤติยา ติณณาวง
+2026-05-10,18:46,KBank ออมทรัพย์,out,35.0,โอนเงิน/บุคคล,transfer,จันทรา ยงงสก,พร้อมเพย์ จันทรา ยงงสก
+2026-05-10,18:49,KBank ออมทรัพย์,out,10.0,อาหาร/ร้านอาหาร,discretionary,ไก่ย่างห้าดาว สระบุรี,ไก่ย่างห้าดาว สระบุรี
+2026-05-11,,UOB บัตรเครดิต,out,110.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-11,,UOB บัตรเครดิต,out,151.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-11,,UOB บัตรเครดิต,out,182.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-11,,UOB บัตรเครดิต,out,218.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-11,12:51,KBank ออมทรัพย์,out,190.0,อาหาร/ร้านอาหาร,discretionary,ก๋วยเตี๋ยวเรือท่าน้ำสระบุรี,ก๋วยเตี๋ยวเรือท่าน้ำสระบุรี
+2026-05-11,17:20,KBank ออมทรัพย์,out,24.0,คาเฟ่/ขนม,discretionary,ร้านน้ำอิ่มเอม,ร้านน้ำอิ่มเอม
+2026-05-11,17:26,KBank ออมทรัพย์,out,100.0,อาหาร/ร้านอาหาร,discretionary,LINE Pay Merchant QR,LINE Pay Merchant QR
+2026-05-11,17:28,KBank ออมทรัพย์,out,100.0,โอนเงิน/บุคคล,transfer,สุธิรา กระทม,พร้อมเพย์ สุธิรา กระทม
+2026-05-11,17:31,KBank ออมทรัพย์,out,2000.0,โอนเงิน/บุคคล,transfer,ปรารถนา,พร้อมเพย์ ปรารถนา
+2026-05-11,17:42,KBank ออมทรัพย์,out,35.0,อาหาร/ร้านอาหาร,discretionary,ถุงเงิน ลูกชิ้นยืนกิน,ถุงเงิน ลูกชิ้นยืนกิน
+2026-05-11,17:51,KBank ออมทรัพย์,out,70.0,โอนเงิน/บุคคล,transfer,พัชรินทร์ นุช,โอน พัชรินทร์ นุช
+2026-05-12,,UOB บัตรเครดิต,out,853.86,ร้านสะดวกซื้อ,essential,Big C,SHABUSHI BIG C SARABUR SARABURI
+2026-05-12,,UOB บัตรเครดิต,out,128.5,ร้านสะดวกซื้อ,essential,Lotus,LOTUS Bangkok
+2026-05-12,11:26,KBank ออมทรัพย์,out,227.24,ห้าง/ซูเปอร์มาร์เก็ต,essential,ไทย พู้ดส์ เฟรช มาร์เก็ต,ไทย พู้ดส์ เฟรช มาร์เก็ต
+2026-05-12,15:47,KBank ออมทรัพย์,out,80.0,ห้าง/ซูเปอร์มาร์เก็ต,essential,FUN PAVILION,FUN PAVILION
+2026-05-12,17:32,KBank ออมทรัพย์,out,25.0,โอนเงิน/บุคคล,transfer,สิริกร อัน,โอน สิริกร อัน
+2026-05-13,,UOB บัตรเครดิต,out,29.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-13,,UOB บัตรเครดิต,out,124.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-13,,UOB บัตรเครดิต,out,127.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-13,,UOB บัตรเครดิต,out,203.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-13,,UOB บัตรเครดิต,out,325.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-13,,UOB บัตรเครดิต,out,1500.0,น้ำมัน/ปั๊ม,essential,Shell,SHELL 1250F CO TERMTEM SARABURI
+2026-05-13,08:49,KBank ออมทรัพย์,out,50.0,อาหาร/ร้านอาหาร,discretionary,LINE Pay Merchant QR,LINE Pay Merchant QR
+2026-05-13,10:18,KBank ออมทรัพย์,out,107.0,ธุรกิจ/บริการ,transfer,โกล้กัน เรียลเอสเตท,โกล้กัน เรียลเอสเตท
+2026-05-13,15:07,KBank ออมทรัพย์,out,186.0,อาหาร/ร้านอาหาร,discretionary,ร้านกันต์เองสิช,ร้านกันต์เองสิช
+2026-05-13,15:08,KBank ออมทรัพย์,out,55.0,อาหาร/ร้านอาหาร,discretionary,ร้านกันต์เองสิช,ร้านกันต์เองสิช
+2026-05-13,20:14,KBank ออมทรัพย์,out,65.0,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,BTS TIM TVM
+2026-05-14,,UOB บัตรเครดิต,out,21.5,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-05-14,,UOB บัตรเครดิต,out,59.5,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-14,,UOB บัตรเครดิต,out,123.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-14,,UOB บัตรเครดิต,out,178.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-14,,UOB บัตรเครดิต,out,187.75,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-14,,UOB บัตรเครดิต,out,932.68,ที่พัก/ท่องเที่ยว,discretionary,Agoda,AGODA.COM GLAI GAN P Internet
+2026-05-15,,UOB บัตรเครดิต,out,29.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-15,,UOB บัตรเครดิต,out,48.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-15,,UOB บัตรเครดิต,out,57.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-15,,UOB บัตรเครดิต,out,76.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-15,,UOB บัตรเครดิต,out,1766.0,อาหาร/ร้านอาหาร,discretionary,Kenshin Izakaya,KENSHIN IZAKAYA BANGKOK
+2026-05-16,,UOB บัตรเครดิต,out,113.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-16,,UOB บัตรเครดิต,out,157.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-16,,UOB บัตรเครดิต,out,174.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-16,,UOB บัตรเครดิต,out,253.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-17,,UOB บัตรเครดิต,out,109.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-17,,UOB บัตรเครดิต,out,169.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-17,,UOB บัตรเครดิต,out,1331.0,อาหาร/ร้านอาหาร,discretionary,Sushiro,SUSHIRO GH (TH) C.BANG BANGKOK
+2026-05-18,,UOB บัตรเครดิต,out,27.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-18,,UOB บัตรเครดิต,out,42.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-18,,UOB บัตรเครดิต,out,983.75,ร้านสะดวกซื้อ,essential,Lotus,TMN LOTUS HYPER BANGKOK
+2026-05-18,,UOB บัตรเครดิต,out,1130.0,น้ำมัน/ปั๊ม,essential,Shell,SHELL 1078F CO UDOMPOR BANGKOK
+2026-05-18,,UOB บัตรเครดิต,out,1540.0,โรงพยาบาล/สุขภาพ,essential,รพ.กรุงเทพคริสเตียน,BANGKOK CHRISTIAN HOS. BANGKOK
+2026-05-19,,UOB บัตรเครดิต,out,52.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-19,,UOB บัตรเครดิต,out,57.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-19,,UOB บัตรเครดิต,out,168.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-19,14:26,KBank ออมทรัพย์,in,3892.25,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์,รับโอน SCB ชวมันท์
+2026-05-19,14:46,KBank ออมทรัพย์,out,1892.25,โอนเงิน/บุคคล,transfer,ปรารถนา,พร้อมเพย์ ปรารถนา
+2026-05-19,15:54,KBank ออมทรัพย์,out,44.0,อาหาร/ร้านอาหาร,discretionary,แทนแก้วหน้าธร,แทนแก้วหน้าธร
+2026-05-19,17:19,KBank ออมทรัพย์,out,370.0,อาหาร/ร้านอาหาร,discretionary,อร่อยแซ่ซัว,อร่อยแซ่ซัว
+2026-05-20,,UOB บัตรเครดิต,out,20.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-20,,UOB บัตรเครดิต,out,40.0,Grab/เดลิเวอรี่/แท็กซี่,discretionary,Grab,WWW.GRAB.COM BANGKOK
+2026-05-20,,UOB บัตรเครดิต,out,62.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-05-20,,UOB บัตรเครดิต,out,104.0,ร้านสะดวกซื้อ,essential,7-Eleven,TMN 7-11 BANGKOK
+2026-05-20,,UOB บัตรเครดิต,out,199.0,ซับสคริปชั่น/ดิจิทัล,discretionary,Google/YouTube,Google YouTube Mountain View
+2026-05-20,,UOB บัตรเครดิต,out,213.0,อาหาร/ร้านอาหาร,discretionary,ร้านอาหาร/ตามสั่ง,TMN FAST FOOD BANGKOK
+2026-05-20,,UOB บัตรเครดิต,out,652.0,ค่าใช้จ่ายอื่น,transfer,HCB00152-IMCN BANGKOK,HCB00152-IMCN BANGKOK
+2026-05-20,06:57,KBank ออมทรัพย์,out,17.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-05-20,11:48,KBank ออมทรัพย์,in,1000.0,รายรับ (เงินเข้า),income,ฝากเงินสด CDM,ฝากเงินสด CDM
+2026-05-20,11:55,KBank ออมทรัพย์,out,1120.0,โอนเงิน/บุคคล,transfer,สมใจ พุดบุ๋ง,โอน สมใจ พุดบุ๋ง
+2026-05-20,12:01,KBank ออมทรัพย์,out,100.0,โอนเงิน/บุคคล,transfer,ปภากา วัฒนกิตร,พร้อมเพย์ ปภากา วัฒนกิตร
+2026-05-20,15:07,KBank ออมทรัพย์,out,50.0,อาหาร/ร้านอาหาร,discretionary,ครัวมาลี อินเตอร์ฟู้ส,ครัวมาลี อินเตอร์ฟู้ส
+2026-05-20,16:02,KBank ออมทรัพย์,out,40.0,โอนเงิน/บุคคล,transfer,มัลลวีร์ อนุธิ,พร้อมเพย์ มัลลวีร์ อนุธิ
+2026-05-20,18:02,KBank ออมทรัพย์,out,155.0,โอนเงิน/บุคคล,transfer,ธนุชา ภ. กุลเดช,โอน ธนุชา ภ. กุลเดช
+2026-05-20,18:40,KBank ออมทรัพย์,out,70.0,อาหาร/ร้านอาหาร,discretionary,ออกร้องสิง,มณี SHOP ออกร้องสิง
+2026-05-20,19:07,KBank ออมทรัพย์,out,275.0,โอนเงิน/บุคคล,transfer,ชันมุน เอนเตอร์ไพรซ์,พร้อมเพย์ ชันมุน เอนเตอร์ไพรซ์
+2026-05-21,06:58,KBank ออมทรัพย์,out,17.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-05-21,14:19,KBank ออมทรัพย์,out,200.0,เดินทาง/ขนส่ง,essential,BTS/รถไฟฟ้า,BTS Thai QR A920
+2026-05-21,15:02,KBank ออมทรัพย์,out,14.0,เดินทาง/ขนส่ง,essential,ซันเวนดิ้ง เทคโนโลยี,ซันเวนดิ้ง เทคโนโลยี
+2026-05-21,15:25,KBank ออมทรัพย์,out,24.0,โอนเงิน/บุคคล,transfer,ค่าแพง แสงสว่,โอน ค่าแพง แสงสว่
+2026-05-21,15:55,KBank ออมทรัพย์,out,40.0,โอนเงิน/บุคคล,transfer,มัลลวีร์ อนุธิ,พร้อมเพย์ มัลลวีร์ อนุธิ
+2026-05-21,17:28,KBank ออมทรัพย์,out,251.0,อาหาร/ร้านอาหาร,discretionary,อร่อยแซ่ซัว,อร่อยแซ่ซัว
+2026-05-22,07:01,KBank ออมทรัพย์,out,17.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-05-22,08:20,KBank ออมทรัพย์,out,86.0,คาเฟ่/ขนม,discretionary,Panlee Bakery,Panlee Bakery
+2026-05-22,17:13,KBank ออมทรัพย์,out,88.0,อาหาร/ร้านอาหาร,discretionary,Thai Hachiban,THAIHACHIBAN
+2026-05-22,17:48,KBank ออมทรัพย์,in,3000.0,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์,รับโอน SCB ชวมันท์
+2026-05-22,17:50,KBank ออมทรัพย์,out,746.0,โอนเงิน/บุคคล,transfer,ปรารถนา,พร้อมเพย์ ปรารถนา
+2026-05-22,19:31,KBank ออมทรัพย์,out,60.0,ช้อปออนไลน์,discretionary,Shopee,Payment to Shopee
+2026-05-23,09:55,KBank ออมทรัพย์,out,90.0,อาหาร/ร้านอาหาร,discretionary,LinePay แอฟเฟิ่ แลมพาร์ค จุฬ,LinePay แอฟเฟิ่ แลมพาร์ค จุฬา
+2026-05-23,11:48,KBank ออมทรัพย์,out,105.93,ธุรกิจ/บริการ,transfer,AIM DHRAM CO,AIM DHRAM CO
+2026-05-23,13:10,KBank ออมทรัพย์,out,560.0,โอนเงิน/บุคคล,transfer,ชัลสวรรณ์ ปวณ,โอน ชัลสวรรณ์ ปวณ
+2026-05-24,19:48,KBank ออมทรัพย์,out,65.5,เดินทาง/ขนส่ง,essential,MBC เยาวราช,MBC บางเมก62
+2026-05-25,07:01,KBank ออมทรัพย์,out,12.0,ค่าบริการรายวัน (AUD),discretionary,ค่าบริการรายวัน AUD,AUD
+2026-05-25,07:59,KBank ออมทรัพย์,out,316.0,อาหาร/ร้านอาหาร,discretionary,ร้านครัวเจ,SCB มณี SHOP ร้านครัวเจ
+2026-05-25,08:07,KBank ออมทรัพย์,out,50.0,อาหาร/ร้านอาหาร,discretionary,SCB อัครนันท์ คาร,SCB อัครนันท์ คาร
+2026-05-25,12:44,KBank ออมทรัพย์,out,100.0,ธุรกิจ/บริการ,transfer,เอ็มสกรีน-เพชรเกษม 48,เอ็มสกรีน-เพชรเกษม 48
+2026-05-25,15:39,KBank ออมทรัพย์,out,150.0,โอนเงิน/บุคคล,transfer,พรรณี ยุปธัมพ์,พร้อมเพย์ พรรณี ยุปธัมพ์
+2026-05-31,10:47,KBank ออมทรัพย์,out,90.0,อาหาร/ร้านอาหาร,discretionary,ร้านน้องหอมจัง,ร้านน้องหอมจัง
+2026-05-31,12:00,KBank ออมทรัพย์,in,3580.0,รายรับ (เงินเข้า),income,รับโอน ปรารถนา,รับโอน ปรารถนา
+2026-05-31,13:10,KBank ออมทรัพย์,out,330.0,ห้าง/ซูเปอร์มาร์เก็ต,essential,The Mall,THE MALL GROUP
+2026-05-31,13:11,KBank ออมทรัพย์,out,70.0,ห้าง/ซูเปอร์มาร์เก็ต,essential,The Mall,THE MALL GROUP
+2026-05-31,13:14,KBank ออมทรัพย์,out,55.0,คาเฟ่/ขนม,discretionary,คาเฟ่เมซอน ปีทีรี,คาเฟ่เมซอน ปีทีรี
+2026-05-31,17:08,KBank ออมทรัพย์,out,99.0,ช้อปออนไลน์,discretionary,TikTok Shop,TikTok Shop Seller
+2026-06-01,13:43,KBank ออมทรัพย์,out,1000.0,โอนเงิน/บุคคล,transfer,KTB ปรานอมพ์ งาม,โอน KTB ปรานอมพ์ งาม
+2026-06-01,19:08,KBank ออมทรัพย์,out,153.0,อาหาร/ร้านอาหาร,discretionary,GATEAUX HOUSE,GATEAUX HOUSE
+2026-06-02,12:18,KBank ออมทรัพย์,out,170.0,อาหาร/ร้านอาหาร,discretionary,ก๋วยเตี๋ยวไก่มะโลม,ก๋วยเตี๋ยวไก่มะโลม
+2026-06-02,13:06,KBank ออมทรัพย์,out,500.0,โอนเงิน/บุคคล,transfer,KTB พิศณุ เทศทอง,โอน KTB พิศณุ เทศทอง
+2026-06-02,15:03,KBank ออมทรัพย์,out,160.0,โอนเงิน/บุคคล,transfer,อัมรินทร์ ลึก,พร้อมเพย์ อัมรินทร์ ลึก
+2026-06-02,15:15,KBank ออมทรัพย์,out,500.0,โอนเงิน/บุคคล,transfer,KTB ปรารถนา,โอน KTB ปรารถนา
+2026-06-02,15:32,KBank ออมทรัพย์,out,22.0,อาหาร/ร้านอาหาร,discretionary,หมูปิ้ง,SCB มณี SHOP หมูปิ้ง
+2026-06-03,11:29,KBank ออมทรัพย์,in,1500.0,รายรับ (เงินเข้า),income,รับโอน SCB ชวมันท์,รับโอน SCB ชวมันท์
+2026-06-03,12:42,KBank ออมทรัพย์,out,875.0,โอนเงิน/บุคคล,transfer,ปรารถนา,พร้อมเพย์ ปรารถนา
+2026-06-03,14:24,KBank ออมทรัพย์,out,715.0,การศึกษา/เด็ก,essential,Little Dude Playhouse,little dude playhouse
