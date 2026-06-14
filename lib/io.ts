@@ -152,7 +152,11 @@ export function splitPasted(text: string, delim: PasteDelimiter = 'auto'): strin
 export function parseDateLoose(s: string): string {
   const t = s.trim();
   let m = t.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
-  if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+  if (m) {
+    let y = Number(m[1]);
+    if (y > 2400) y -= 543; // ISO with a Buddhist year (e.g. 2569-06-10)
+    return `${y}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+  }
   m = t.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})/); // DD/MM/YYYY
   if (m) {
     let y = Number(m[3]);
