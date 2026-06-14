@@ -17,6 +17,7 @@ import {
 } from '@/lib/io';
 import { autoCategorize, refineCategory } from '@/lib/autocat';
 import { parseUobStatement, summarizeBill } from '@/lib/pdf/uob';
+import { parseReceiptText } from '@/lib/ocr/receipt';
 import { categoryGroup } from '@/lib/categories';
 import type { Transaction, BudgetState } from '@/lib/types';
 
@@ -302,6 +303,32 @@ ok('settlement is transfer group', categoryGroup('ชำระบัตรเค
   const m = materialize(base, [settle as any]);
   eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 170575.98, 1);
   ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
+}
+
+console.log('\n── receipt OCR parser ──');
+{
+  const r = parseReceiptText('7-Eleven สาขาสุขุมวิท\nใบเสร็จรับเงิน\nนม 25.00\nขนม 15.00\nรวมทั้งสิ้น 40.00 บาท\n14/05/2026');
+  ok('receipt: amount from total line', r.amount === 40);
+  ok('receipt: merchant top line', r.merchant.startsWith('7-Eleven'));
+  ok('receipt: category from merchant', r.category === 'ร้านสะดวกซื้อ');
+  ok('receipt: date parsed', r.date === '2026-05-14');
+}
+{
+  // net keyword beats a larger subtotal
+  const r = parseReceiptText('ร้านอาหารอร่อย\nอาหาร 1,200.00\nส่วนลด 200.00\nยอดสุทธิ 1,000.00');
+  ok('receipt: net total beats subtotal', r.amount === 1000);
+}
+{
+  // no keyword -> largest 2-decimal; Grab < 120 -> transport via autocat
+  const r = parseReceiptText('Grab\nWWW.GRAB.COM\n89.00');
+  ok('receipt: fallback to decimal amount', r.amount === 89);
+  ok('receipt: Grab ride category', r.category === 'เดินทาง/ขนส่ง');
+}
+{
+  // ignores phone/tax-id long digit runs and years
+  const r = parseReceiptText('Shell\nTAX ID 0123456789012\nโทร 021234567\nยอดชำระ 1,130.00\n2026');
+  ok('receipt: ignores long digit runs', r.amount === 1130);
+  ok('receipt: fuel category', r.category === 'น้ำมัน/ปั๊ม');
 }
 
 console.log(`\n${fail === 0 ? '✓' : '✗'} ${pass} passed, ${fail} failed`);

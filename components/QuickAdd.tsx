@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, X, Check } from 'lucide-react';
+import { Plus, X, Check, Camera, Loader2 } from 'lucide-react';
 import { useData } from './DataProvider';
 import { CATEGORIES, categoryGroup } from '@/lib/categories';
 import { makeId } from '@/lib/data';
 import { autoCategorize } from '@/lib/autocat';
+import { parseReceiptText } from '@/lib/ocr/receipt';
+import { ocrImage } from '@/lib/ocr/extract';
 import { formatTHB } from '@/lib/format';
 import type { Transaction, Direction } from '@/lib/types';
 
@@ -30,6 +32,24 @@ export function QuickAdd() {
   const [category, setCategory] = useState('ค่าใช้จ่ายอื่น');
   const [catTouched, setCatTouched] = useState(false);
   const [saved, setSaved] = useState(false);
+  const photoRef = useRef<HTMLInputElement>(null);
+  const [scan, setScan] = useState<{ busy: boolean; pct: number; msg: string }>({ busy: false, pct: 0, msg: '' });
+
+  const onPhoto = async (file?: File) => {
+    if (!file) return;
+    setScan({ busy: true, pct: 0, msg: 'กำลังอ่านรูป…' });
+    try {
+      const text = await ocrImage(file, (p) => setScan((s) => ({ ...s, pct: Math.round(p.progress * 100), msg: p.status || s.msg })));
+      const g = parseReceiptText(text);
+      if (g.amount) setAmount(String(g.amount));
+      if (g.merchant) setMerchant(g.merchant);
+      if (g.date) setDate(g.date);
+      if (g.category) { setCategory(g.category); setCatTouched(true); }
+      setScan({ busy: false, pct: 100, msg: g.amount ? 'อ่านสำเร็จ — ตรวจสอบแล้วบันทึก' : 'อ่านไม่เจอยอด ลองกรอกเอง' });
+    } catch (e) {
+      setScan({ busy: false, pct: 0, msg: 'อ่านรูปไม่สำเร็จ — ลองใหม่หรือกรอกเอง' });
+    }
+  };
 
   // auto-suggest category from merchant/desc/amount until the user picks one
   useEffect(() => {
@@ -42,6 +62,7 @@ export function QuickAdd() {
   const sessionIds = useRef<Set<string>>(new Set());
 
   const reset = () => {
+    setScan({ busy: false, pct: 0, msg: '' });
     setDate(todayISO()); setAccount(ACCOUNTS[0]); setDirection('out');
     setAmount(''); setMerchant(''); setDesc(''); setCategory('ค่าใช้จ่ายอื่น'); setCatTouched(false);
   };
@@ -93,6 +114,17 @@ export function QuickAdd() {
               <button aria-label="ปิด" onClick={() => setOpen(false)} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
             </div>
             <div className="p-4 space-y-3">
+              {/* scan a receipt / slip photo */}
+              <input ref={photoRef} type="file" accept="image/*" capture="environment" hidden
+                onChange={(e) => onPhoto(e.target.files?.[0])} />
+              <button onClick={() => photoRef.current?.click()} disabled={scan.busy}
+                className="w-full btn-ghost !py-2.5 border border-dashed border-line">
+                {scan.busy
+                  ? <><Loader2 size={16} className="animate-spin" /> {scan.msg} {scan.pct ? `${scan.pct}%` : ''}</>
+                  : <><Camera size={16} /> สแกนรูปใบเสร็จ / สลิป</>}
+              </button>
+              {!scan.busy && scan.msg && <p className="text-xs text-ink-soft -mt-1">{scan.msg}</p>}
+
               <div className="inline-flex rounded-xl bg-surface-2 p-1 w-full">
                 {(['out', 'in'] as Direction[]).map((d) => (
                   <button key={d} onClick={() => setDirection(d)}
@@ -144,7 +176,7 @@ export function QuickAdd() {
                 <button onClick={() => setOpen(false)} className="btn-ghost flex-1">ปิด</button>
                 <button onClick={save} disabled={!Number(amount)} className="btn-primary flex-1"><Check size={16} /> บันทึก</button>
               </div>
-              <p className="text-[11px] text-ink-soft text-center">บันทึกในเครื่อง (localStorage) · จัดการ/ลบได้ที่หน้ารายการ</p>
+              <p className="text-[11px] text-ink-soft text-center">บันทึกในเครื่อง · สแกนรูปอ่านในเครื่อง ไม่อัปโหลดรูปออกไป</p>
             </div>
           </div>
         </div>
