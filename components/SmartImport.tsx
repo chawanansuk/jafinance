@@ -59,7 +59,7 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
   };
 
   const raws = useMemo(
-    () => rowsFromMapping(grid, mapping, (m, d) => autoCategorize(m, d, rules)),
+    () => rowsFromMapping(grid, mapping, (m, d, amt) => autoCategorize(m, d, rules, amt)),
     [grid, mapping.date, mapping.amount, mapping.merchant, mapping.desc, mapping.account, mapping.directionMode, rules],
   );
   const previewRaws = raws.map((r, i) => (catOverrides[i] ? { ...r, category: catOverrides[i] } : r));

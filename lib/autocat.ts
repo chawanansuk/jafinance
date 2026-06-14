@@ -28,20 +28,41 @@ const KEYWORD_TABLE: { kw: string[]; category: string }[] = [
   { kw: ['โอน', 'transfer', 'พร้อมเพย์', 'promptpay', 'bbl', 'ktb', 'scb', 'kbank'], category: 'โอนเงิน/บุคคล' },
 ];
 
+// Grab fares below this are treated as a ride (transport), not food delivery.
+export const GRAB_RIDE_MAX = 120;
+
+/**
+ * Amount-aware refinement applied on top of a resolved category.
+ * A cheap Grab charge is a taxi/ride → "เดินทาง/ขนส่ง"; a pricier one stays
+ * food delivery. Only adjusts when the category is still the default Grab one.
+ */
+export function refineCategory(merchant: string, desc: string, category: string, amount: number): string {
+  if (
+    category === 'Grab/เดลิเวอรี่/แท็กซี่' &&
+    /grab/.test(`${merchant} ${desc}`.toLowerCase()) &&
+    amount > 0 && amount < GRAB_RIDE_MAX
+  ) {
+    return 'เดินทาง/ขนส่ง';
+  }
+  return category;
+}
+
 /**
  * Resolve a category for a row. Priority:
  *   1. exact merchant rule (user-defined)
  *   2. keyword table match
  *   3. fallback
+ * When `amount` is given, an amount-aware refinement (e.g. Grab rides) applies.
  */
-export function autoCategorize(merchant: string, desc: string, rules: RulesState = {}): string {
+export function autoCategorize(merchant: string, desc: string, rules: RulesState = {}, amount?: number): string {
   const rule = rules[merchant];
   if (rule?.category) return rule.category;
   const hay = `${merchant} ${desc}`.toLowerCase();
-  for (const { kw, category } of KEYWORD_TABLE) {
-    if (kw.some((k) => hay.includes(k))) return category;
+  let category = 'ค่าใช้จ่ายอื่น';
+  for (const { kw, category: c } of KEYWORD_TABLE) {
+    if (kw.some((k) => hay.includes(k))) { category = c; break; }
   }
-  return 'ค่าใช้จ่ายอื่น';
+  return amount != null ? refineCategory(merchant, desc, category, amount) : category;
 }
 
 export function autoGroup(category: string) {

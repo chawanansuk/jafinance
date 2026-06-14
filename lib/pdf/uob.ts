@@ -115,7 +115,7 @@ export function parseUobStatement(lines: string[]): UobParseResult {
     if (isCredit) credit += amount; else debit += amount;
 
     const merchant = normalizeUobMerchant(desc);
-    const category = isCredit ? 'คืนเงิน (refund)' : autoCategorize(merchant, desc);
+    const category = isCredit ? 'คืนเงิน (refund)' : autoCategorize(merchant, desc, {}, amount);
     transactions.push({
       date, time: '', account,
       direction: isCredit ? 'in' : 'out',

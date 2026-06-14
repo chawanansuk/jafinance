@@ -15,7 +15,7 @@ import {
 import {
   parseImport, toCSV, splitPasted, parseDateLoose, parseAmountLoose, rowsFromMapping, dedupe,
 } from '@/lib/io';
-import { autoCategorize } from '@/lib/autocat';
+import { autoCategorize, refineCategory } from '@/lib/autocat';
 import { parseUobStatement } from '@/lib/pdf/uob';
 import { categoryGroup } from '@/lib/categories';
 import type { Transaction, BudgetState } from '@/lib/types';
@@ -73,10 +73,12 @@ ok('all ids unique', new Set(base.map((t) => t.id)).size === 635);
 console.log('\n── analytics ──');
 eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 170575.98, 0.5);
 {
+  // after the Grab-ride rule, 53 Grab rows < ฿120 (3,766) move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
-  eq('essential', g.essential, 53663.27);
-  eq('discretionary net', g.discretionary, 83651.45);
+  eq('essential (+ Grab rides)', g.essential, 57429.27);
+  eq('discretionary net (- Grab rides)', g.discretionary, 79885.45);
   eq('transfer', g.transfer, 33261.26);
+  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 170575.98, 1);
 }
 {
   const travel = toSpendingEvents(txns).filter((e) => e.category === 'ที่พัก/ท่องเที่ยว').reduce((s, e) => s + e.signed, 0);
@@ -237,6 +239,21 @@ console.log('\n── UOB PDF parser ──');
   // year rollback: a DEC transaction on a MAY-2026 statement is 2025
   const r = parseUobStatement(['24 MAY 2026', '10 JAN 28 DEC OLD THING BANGKOK 50.00']);
   ok('uob: year rolls back across Dec', r.transactions[0].date === '2025-12-28');
+}
+
+console.log('\n── Grab ride rule (< ฿120 = transport) ──');
+ok('grab < 120 -> transport', autoCategorize('Grab', 'WWW.GRAB.COM', {}, 100) === 'เดินทาง/ขนส่ง');
+ok('grab >= 120 -> delivery', autoCategorize('Grab', 'WWW.GRAB.COM', {}, 150) === 'Grab/เดลิเวอรี่/แท็กซี่');
+ok('grab no amount -> delivery (default)', autoCategorize('Grab', 'WWW.GRAB.COM') === 'Grab/เดลิเวอรี่/แท็กซี่');
+ok('refineCategory leaves non-grab alone', refineCategory('7-Eleven', '', 'ร้านสะดวกซื้อ', 50) === 'ร้านสะดวกซื้อ');
+ok('explicit Grab rule beats ride heuristic', autoCategorize('Grab', '', { Grab: { merchant: 'Grab', category: 'คาเฟ่/ขนม' } }, 50) === 'คาเฟ่/ขนม');
+{
+  // existing data: a Grab base row under ฿120 is reclassified to transport
+  const m = materialize(base);
+  const small = m.find((t) => t.merchant === 'Grab' && t.direction === 'out' && t.amount < 120)!;
+  ok('existing Grab < 120 reclassified', small.category === 'เดินทาง/ขนส่ง' && small.group === 'essential');
+  const big = m.find((t) => t.merchant === 'Grab' && t.direction === 'out' && t.amount >= 120)!;
+  ok('existing Grab >= 120 unchanged', big.category === 'Grab/เดลิเวอรี่/แท็กซี่');
 }
 
 console.log('\n── card-bill settlement (no double-count) ──');

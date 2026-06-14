@@ -1,5 +1,6 @@
 import raw from '@/data/transactions.json';
 import { categoryGroup } from './categories';
+import { refineCategory } from './autocat';
 import type { RawTransaction, Transaction, UserOverrides, RulesState } from './types';
 
 /** Stable id from immutable fields so overrides survive re-ordering/import. */
@@ -47,7 +48,11 @@ export function materialize(
   return all.map((t) => {
     const rule = rules[t.merchant];
     const idCat = overrides.categoryById[t.id];
-    const category = idCat ?? rule?.category ?? t.category;
+    const ruleCat = rule?.category;
+    // explicit user choices (id override / merchant rule) win; otherwise apply
+    // the amount-aware refinement (e.g. Grab rides < ฿120 -> transport).
+    let category = idCat ?? ruleCat ?? t.category;
+    if (!idCat && !ruleCat) category = refineCategory(t.merchant, t.desc, category, t.amount);
     const isRealIncome = overrides.realIncomeById[t.id] ?? false;
     const transferKind = rule?.transferKind;
     if (category === t.category && !isRealIncome && !transferKind) return t;

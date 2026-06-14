@@ -188,7 +188,7 @@ export interface PasteMapping {
 export function rowsFromMapping(
   grid: string[][],
   map: PasteMapping,
-  categorize: (merchant: string, desc: string) => string,
+  categorize: (merchant: string, desc: string, amount: number) => string,
 ): RawTransaction[] {
   const out: RawTransaction[] = [];
   for (const cells of grid) {
@@ -198,7 +198,7 @@ export function rowsFromMapping(
     const merchant = (map.merchant != null ? cells[map.merchant] : '') ?? '';
     const desc = (map.desc != null ? cells[map.desc] : '') ?? '';
     const direction = map.directionMode === 'sign' ? (negative ? 'out' : 'in') : map.directionMode;
-    const category = categorize(merchant, desc);
+    const category = categorize(merchant, desc, value);
     out.push({
       date, time: '', account: map.account, direction,
       amount: value, category, group: categoryGroup(category),
