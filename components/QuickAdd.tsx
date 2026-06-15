@@ -35,18 +35,21 @@ export function QuickAdd() {
   const photoRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
   const [scan, setScan] = useState<{ busy: boolean; pct: number; msg: string }>({ busy: false, pct: 0, msg: '' });
+  const [scanText, setScanText] = useState('');
 
   const onPhoto = async (file?: File) => {
     if (!file) return;
     setScan({ busy: true, pct: 0, msg: 'กำลังอ่านรูป…' });
+    setScanText('');
     try {
       const text = await ocrImage(file, (p) => setScan((s) => ({ ...s, pct: Math.round(p.progress * 100), msg: p.status || s.msg })));
+      setScanText(text);
       const g = parseReceiptText(text);
       if (g.amount) setAmount(String(g.amount));
       if (g.merchant) setMerchant(g.merchant);
       if (g.date) setDate(g.date);
       if (g.category) { setCategory(g.category); setCatTouched(true); }
-      setScan({ busy: false, pct: 100, msg: g.amount ? 'อ่านสำเร็จ — ตรวจสอบแล้วบันทึก' : 'อ่านไม่เจอยอด ลองกรอกเอง' });
+      setScan({ busy: false, pct: 100, msg: g.amount ? 'อ่านสำเร็จ — ตรวจสอบแล้วบันทึก' : 'อ่านไม่เจอยอด ลองตรวจข้อความ/กรอกเอง' });
     } catch (e) {
       setScan({ busy: false, pct: 0, msg: 'อ่านรูปไม่สำเร็จ — ลองใหม่หรือกรอกเอง' });
     }
@@ -63,7 +66,7 @@ export function QuickAdd() {
   const sessionIds = useRef<Set<string>>(new Set());
 
   const reset = () => {
-    setScan({ busy: false, pct: 0, msg: '' });
+    setScan({ busy: false, pct: 0, msg: '' }); setScanText('');
     setDate(todayISO()); setAccount(ACCOUNTS[0]); setDirection('out');
     setAmount(''); setMerchant(''); setDesc(''); setCategory('ค่าใช้จ่ายอื่น'); setCatTouched(false);
   };
@@ -137,6 +140,12 @@ export function QuickAdd() {
                 </div>
               )}
               {!scan.busy && scan.msg && <p className="text-xs text-ink-soft -mt-1">{scan.msg}</p>}
+              {!scan.busy && scanText && (
+                <details className="text-xs">
+                  <summary className="cursor-pointer text-ink-soft">ดูข้อความที่อ่านได้</summary>
+                  <pre className="mt-1 max-h-32 overflow-auto rounded-lg bg-surface-2 p-2 whitespace-pre-wrap break-words">{scanText}</pre>
+                </details>
+              )}
 
               <div className="inline-flex rounded-xl bg-surface-2 p-1 w-full">
                 {(['out', 'in'] as Direction[]).map((d) => (
