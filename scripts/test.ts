@@ -17,6 +17,8 @@ import {
 } from '@/lib/io';
 import { autoCategorize, refineCategory } from '@/lib/autocat';
 import { parseUobStatement, summarizeBill } from '@/lib/pdf/uob';
+import { parseKbankStatement } from '@/lib/pdf/kbank';
+import { detectBank, parseStatement } from '@/lib/pdf/statement';
 import { parseReceiptText } from '@/lib/ocr/receipt';
 import { categoryGroup } from '@/lib/categories';
 import type { Transaction, BudgetState } from '@/lib/types';
@@ -303,6 +305,61 @@ ok('settlement is transfer group', categoryGroup('ชำระบัตรเค
   const m = materialize(base, [settle as any]);
   eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 170575.98, 1);
   ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
+}
+
+console.log('\n── KBank statement parser ──');
+{
+  // transcribed from a real K-DEPOSIT statement (12–18 Jun 2026)
+  const L = [
+    'รอบระหว่างวันที่ 12/06/2026 - 18/06/2026',
+    'ยอดยกไป 192.97',
+    'รวมถอนเงิน 20 รายการ 2,922.25',
+    'รวมฝากเงิน 1 รายการ 3,000.00',
+    '12-06-26 ยอดยกมา 115.22',
+    '12-06-26 17:36 รับโอนเงิน 3,000.00 3,115.22 Internet/Mobile SCB จาก SCB X5730 นาย ชวมันท์ สุขพรช++',
+    '12-06-26 17:37 ชำระเงิน 507.00 2,608.22 MAKE by KBank เพื่อชำระ Ref X3115 อร่อยแซงคิว',
+    '13-06-26 15:51 ชำระเงิน 50.00 2,558.22 MAKE by KBank เพื่อชำระ Ref X3473 TrueMoney Shop',
+    '13-06-26 18:36 ชำระเงิน 150.00 2,408.22 MAKE by KBank บริษัท อัครอส ร้อย จำกัด',
+    '14-06-26 17:19 ชำระเงิน 20.00 2,388.22 MAKE by KBank โลตัส อีเทอรี่',
+    '14-06-26 17:42 ชำระเงิน 96.00 2,292.22 MAKE by KBank GOLDEN DONUTS',
+    '15-06-26 15:59 ชำระเงิน 65.00 2,227.22 MAKE by KBank ร้านเวเนตี้',
+    '15-06-26 16:04 ชำระเงิน 36.00 2,191.22 MAKE by KBank แพนเค้กหน้าออส',
+    '16-06-26 06:54 โอนเงิน 50.00 2,141.22 MAKE by KBank โอนไป พร้อมเพย์ X9709 น.ส. สุราดร์ แซ่เด่++',
+    '16-06-26 07:39 ชำระเงิน 105.00 2,036.22 MAKE by KBank SCB มณี SHOP',
+    '16-06-26 10:03 โอนเงิน 300.00 1,736.22 MAKE by KBank โอนไป X9576 นาง ธัญญาภรณ์ ปราณ++',
+    '16-06-26 11:18 ชำระเงิน 45.00 1,691.22 MAKE by KBank ร้านกันต์เอง',
+    '16-06-26 11:21 ชำระเงิน 94.00 1,597.22 MAKE by KBank พรมาเรีย เบเกอรี่',
+    '16-06-26 15:25 ชำระเงิน 180.00 1,417.22 MAKE by KBank ทุกอย่าง 20 by Apple',
+    '16-06-26 18:02 ชำระเงิน 385.00 1,032.22 MAKE by KBank อร่อยแซงคิว',
+    '17-06-26 06:14 ชำระเงิน 200.00 832.22 MAKE by KBank บจก. ทรู มันนี่',
+    '17-06-26 08:13 โอนเงิน 50.00 782.22 MAKE by KBank โอนไป X2102 น.ส. ณัฐวดี++',
+    '18-06-26 11:11 โอนเงิน 60.00 722.22 MAKE by KBank โอนไป X8535 นาย สงวน++',
+    '18-06-26 14:50 โอนเงิน 481.25 240.97 MAKE by KBank โอนไป X3473 น.ส. ชลิตตรณ์ ปราณ++',
+    '18-06-26 15:56 ชำระเงิน 18.00 222.97 MAKE by KBank บริษัท ซันเวนติ้ง',
+    '18-06-26 16:06 โอนเงิน 30.00 192.97 MAKE by KBank โอนไป X1770 นาย ประสิทธิ์ โยตา++',
+  ];
+  const r = parseKbankStatement(L);
+  ok('kbank: parses 21 rows', r.transactions.length === 21);
+  ok('kbank: 1 in / 20 out', r.transactions.filter((t) => t.direction === 'in').length === 1 && r.transactions.filter((t) => t.direction === 'out').length === 20);
+  eq('kbank: parsedOut = control', r.summary.parsedOut, 2922.25);
+  eq('kbank: parsedIn = control', r.summary.parsedIn, 3000);
+  ok('kbank: reconciled', r.summary.reconciled === true);
+  ok('kbank: first row deposit -> income', r.transactions[0].direction === 'in' && r.transactions[0].category === 'รายรับ (เงินเข้า)');
+  ok('kbank: โอนไป -> transfer category', r.transactions.find((t) => t.desc.includes('โอนไป'))!.category === 'โอนเงิน/บุคคล');
+  ok('kbank: date 20yy-mm-dd', r.transactions[0].date === '2026-06-12');
+  ok('kbank: account KBank', r.transactions[0].account === 'KBank ออมทรัพย์');
+  // unified dispatch detects KBank and parses
+  ok('detectBank -> KBank', detectBank(L) === 'KBank');
+  const u = parseStatement(L);
+  ok('parseStatement KBank', u != null && u.bank === 'KBank' && u.transactions.length === 21 && u.reconciled);
+}
+{
+  const L = ['24 MAY 2026', 'UOB PREMIER', 'TOTAL 1,300.00 200.00', 'PREVIOUS BALANCE 1,000.00',
+    '15 MAY 15 MAY PAYMENT THANK YOU 1,000.00 CR', '23 APR 22 APR WWW.GRAB.COM BANGKOK 200.00'];
+  ok('detectBank -> UOB', detectBank(L) === 'UOB');
+  const u = parseStatement(L);
+  ok('parseStatement UOB', u != null && u.bank === 'UOB' && u.transactions.length === 1);
+  ok('detectBank unknown -> null', detectBank(['random text 123']) === null);
 }
 
 console.log('\n── receipt OCR parser ──');

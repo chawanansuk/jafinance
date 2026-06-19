@@ -98,7 +98,7 @@ export default function TransactionsPage() {
         <div className="flex gap-2">
           <input ref={fileRef} type="file" accept=".csv,.json,application/json,text/csv" hidden
             onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
-          <button onClick={() => setPdfOpen(true)} className="btn-ghost !py-1.5 !px-3 text-xs"><FileText size={14} /> PDF บิล</button>
+          <button onClick={() => setPdfOpen(true)} className="btn-ghost !py-1.5 !px-3 text-xs"><FileText size={14} /> สเตทเมนต์</button>
           <button onClick={() => setSmartOpen(true)} className="btn-ghost !py-1.5 !px-3 text-xs"><ClipboardPaste size={14} /> วางข้อความ</button>
           <button onClick={() => fileRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-xs"><Upload size={14} /> ไฟล์</button>
           <button onClick={() => downloadFile('transactions.csv', toCSV(filtered), 'text/csv')} className="btn-ghost !py-1.5 !px-3 text-xs"><Download size={14} /> CSV</button>

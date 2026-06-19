@@ -1,43 +1,51 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { X, FileText, Check, AlertTriangle, Lock, Loader2 } from 'lucide-react';
+import { X, FileText, Check, AlertTriangle, Lock, Loader2, Image as ImageIcon } from 'lucide-react';
 import { useData } from './DataProvider';
 import { CATEGORIES, categoryColor } from '@/lib/categories';
 import { formatTHB, formatDate } from '@/lib/format';
 import { dedupe } from '@/lib/io';
 import { extractPdfLines, PdfPasswordError } from '@/lib/pdf/extract';
-import { parseUobStatement, summarizeBill, type UobParseResult } from '@/lib/pdf/uob';
+import { summarizeBill } from '@/lib/pdf/uob';
+import { parseStatement, type StatementResult } from '@/lib/pdf/statement';
+import { ocrImage } from '@/lib/ocr/extract';
 import type { Statement } from '@/lib/types';
 
 const CAT_NAMES = CATEGORIES.map((c) => c.name);
 
 export function PdfImport({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { txns, setImported, addStatement } = useData();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const pdfRef = useRef<HTMLInputElement>(null);
+  const imgRef = useRef<HTMLInputElement>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [password, setPassword] = useState('');
   const [needPw, setNeedPw] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
-  const [result, setResult] = useState<UobParseResult | null>(null);
+  const [result, setResult] = useState<StatementResult | null>(null);
   const [catOverrides, setCatOverrides] = useState<Record<number, string>>({});
   const [done, setDone] = useState('');
 
   const run = async (file: File, pw?: string) => {
-    setBusy(true); setError(''); setDone('');
+    setBusy(file.type.startsWith('image/') ? 'กำลังอ่านรูป…' : 'กำลังอ่านไฟล์…'); setError(''); setDone('');
     try {
-      const lines = await extractPdfLines(file, pw);
-      const r = parseUobStatement(lines);
-      if (r.transactions.length === 0) {
-        setError('ไม่พบรายการในไฟล์ — อาจเป็น PDF สแกนภาพ หรือไม่ใช่ statement UOB');
+      let lines: string[];
+      if (file.type.startsWith('image/')) {
+        const text = await ocrImage(file, (p) => setBusy(`อ่านรูป ${Math.round(p.progress * 100)}%`));
+        lines = text.split('\n');
+      } else {
+        lines = await extractPdfLines(file, pw);
       }
-      setResult(r); setNeedPw(false); setCatOverrides({});
+      const r = parseStatement(lines);
+      if (!r) { setError('ไม่รู้จักรูปแบบสเตทเมนต์ (รองรับ UOB / KBank) — ลองไฟล์ PDF จะแม่นกว่ารูป'); setResult(null); }
+      else { setResult(r); if (r.transactions.length === 0) setError('อ่านไม่เจอรายการ — รูปอาจไม่ชัด ลองใช้ PDF'); }
+      setNeedPw(false); setCatOverrides({});
     } catch (e) {
       if (e instanceof PdfPasswordError) { setNeedPw(true); setPendingFile(file); }
       else { setError('อ่านไฟล์ไม่สำเร็จ: ' + (e as Error).message); }
     } finally {
-      setBusy(false);
+      setBusy('');
     }
   };
 
@@ -49,7 +57,6 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
   );
   const ded = useMemo(() => dedupe(previewRaws, txns), [previewRaws, txns]);
 
-  // bill summary: purchases grouped by category (net of in-bill refunds)
   const bill = useMemo(() => {
     const map = new Map<string, number>();
     let refunds = 0;
@@ -58,56 +65,61 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
       map.set(t.category, (map.get(t.category) ?? 0) + t.amount);
     }
     const rows = [...map.entries()].map(([category, total]) => ({ category, total })).sort((a, b) => b.total - a.total);
-    const purchases = rows.reduce((s, r) => s + r.total, 0);
-    return { rows, purchases, refunds };
+    return { rows, purchases: rows.reduce((s, r) => s + r.total, 0), refunds };
   }, [previewRaws]);
 
   const commit = () => {
     if (!result) return;
     if (ded.added.length === 0) { setDone('ไม่มีรายการใหม่ (อาจนำเข้าไปแล้ว)'); return; }
     setImported((p) => [...p, ...ded.added]);
-    // save a persistent, categorized summary of this statement
     const sm = summarizeBill(previewRaws);
-    const sum = result.summary;
     addStatement({
-      id: `${sum.statementDate}|${result.account}`,
-      account: result.account,
-      statementDate: sum.statementDate,
+      id: `${result.bank}|${result.statementDate}|${result.account}`,
+      account: `${result.bank} ${result.account}`,
+      statementDate: result.statementDate,
       dateFrom: sm.dateFrom, dateTo: sm.dateTo,
-      totalBalance: sum.totalBalance, minPayment: sum.minPayment,
+      totalBalance: result.amountDue, minPayment: result.minPayment,
       purchases: sm.purchases, refunds: sm.refunds,
-      parsedNet: sum.parsedNet, reconciled: sum.reconciled,
+      parsedNet: sm.purchases - sm.refunds, reconciled: result.reconciled,
       count: result.transactions.length,
       byCategory: sm.byCategory,
       importedAt: new Date().toISOString(),
     } as Statement);
-    setDone(`เพิ่ม ${ded.added.length} รายการ · บันทึกสรุปบิลแล้ว`);
+    setDone(`เพิ่ม ${ded.added.length} รายการ · บันทึกสรุปแล้ว`);
     setResult(null);
   };
 
   const close = () => { setResult(null); setError(''); setNeedPw(false); setPassword(''); setPendingFile(null); setDone(''); onClose(); };
 
   if (!open) return null;
-  const s = result?.summary;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4" onClick={close}>
       <div className="card w-full max-w-2xl rounded-b-none sm:rounded-2xl max-h-[92dvh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="sticky top-0 bg-surface border-b border-line px-4 py-3 flex items-center justify-between z-10">
-          <h2 className="font-semibold flex items-center gap-2"><FileText size={18} /> นำเข้า PDF บิลบัตรเครดิต (UOB)</h2>
+          <h2 className="font-semibold flex items-center gap-2"><FileText size={18} /> นำเข้าสเตทเมนต์ (UOB / KBank)</h2>
           <button aria-label="ปิด" onClick={close} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
         </div>
 
         <div className="p-4 space-y-4">
-          <input ref={fileRef} type="file" accept="application/pdf,.pdf" hidden
-            onChange={(e) => onPick(e.target.files?.[0])} />
+          <input ref={pdfRef} type="file" accept="application/pdf,.pdf" hidden onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = ''; }} />
+          <input ref={imgRef} type="file" accept="image/*" hidden onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = ''; }} />
 
           {!result && !needPw && (
-            <button onClick={() => fileRef.current?.click()} disabled={busy}
-              className="w-full border-2 border-dashed border-line rounded-2xl py-10 text-center hover:border-brand transition-colors">
-              {busy ? <span className="inline-flex items-center gap-2 text-ink-soft"><Loader2 size={18} className="animate-spin" /> กำลังอ่านไฟล์…</span>
-                : <span className="text-ink-soft"><FileText size={28} className="mx-auto mb-2" /><br />เลือกไฟล์ PDF statement</span>}
-            </button>
+            busy ? (
+              <div className="w-full border-2 border-dashed border-line rounded-2xl py-10 text-center text-ink-soft">
+                <Loader2 size={20} className="animate-spin mx-auto mb-2" /> {busy}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                <button onClick={() => pdfRef.current?.click()} className="border-2 border-dashed border-line rounded-2xl py-8 text-center hover:border-brand transition-colors text-ink-soft">
+                  <FileText size={26} className="mx-auto mb-1.5" /><br />ไฟล์ PDF<br /><span className="text-[11px]">(แม่นสุด)</span>
+                </button>
+                <button onClick={() => imgRef.current?.click()} className="border-2 border-dashed border-line rounded-2xl py-8 text-center hover:border-brand transition-colors text-ink-soft">
+                  <ImageIcon size={26} className="mx-auto mb-1.5" /><br />รูปภาพ<br /><span className="text-[11px]">(OCR)</span>
+                </button>
+              </div>
+            )
           )}
 
           {needPw && (
@@ -116,38 +128,39 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
               <div className="flex gap-2">
                 <input type="password" className="input" placeholder="รหัสผ่าน PDF" value={password}
                   onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && pendingFile && run(pendingFile, password)} />
-                <button className="btn-primary" disabled={busy || !pendingFile} onClick={() => pendingFile && run(pendingFile, password)}>ปลดล็อก</button>
+                <button className="btn-primary" disabled={!!busy || !pendingFile} onClick={() => pendingFile && run(pendingFile, password)}>ปลดล็อก</button>
               </div>
             </div>
           )}
 
           {error && <div className="text-sm text-rose-500 flex gap-1.5 items-start"><AlertTriangle size={14} className="mt-0.5" />{error}</div>}
 
-          {s && (
+          {result && result.transactions.length > 0 && (
             <>
               {/* reconcile summary */}
-              <div className={`rounded-xl p-3 ${s.reconciled ? 'bg-emerald-500/10' : 'bg-amber-500/10'}`}>
+              <div className={`rounded-xl p-3 ${result.reconciled ? 'bg-emerald-500/10' : 'bg-amber-500/10'}`}>
                 <div className="flex items-center gap-2 text-sm font-medium mb-2">
-                  {s.reconciled ? <><Check size={16} className="text-emerald-500" /> ยอดตรงกับสลิป</>
-                    : <><AlertTriangle size={16} className="text-amber-500" /> ยอดไม่ตรง (ส่วนต่างอาจเป็นดอกเบี้ย/ค่าธรรมเนียม)</>}
+                  {result.reconciled ? <><Check size={16} className="text-emerald-500" /> ยอดตรงกับสเตทเมนต์ ({result.bank})</>
+                    : <><AlertTriangle size={16} className="text-amber-500" /> ยอดไม่ตรง — ตรวจรายการ/ลองใช้ PDF ({result.bank})</>}
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                  <div><div className="text-ink-soft">รอบบิล</div><div className="font-semibold">{s.statementDate || '—'}</div></div>
-                  <div><div className="text-ink-soft">ยอดรวมบิล</div><div className="font-semibold tnum">{s.totalBalance != null ? formatTHB(s.totalBalance) : '—'}</div></div>
-                  <div><div className="text-ink-soft">รูดสุทธิ (แกะได้)</div><div className="font-semibold tnum">{formatTHB(s.parsedNet)}</div></div>
-                  <div><div className="text-ink-soft">ส่วนต่าง</div><div className={`font-semibold tnum ${s.reconciled ? '' : 'text-amber-600'}`}>{s.diff != null ? formatTHB(s.diff) : '—'}</div></div>
+                  {result.summaryRows.map((r) => (
+                    <div key={r.label}><div className="text-ink-soft">{r.label}</div><div className={`font-semibold tnum ${r.warn ? 'text-amber-600' : ''}`}>{r.value}</div></div>
+                  ))}
                 </div>
               </div>
 
-              {/* bill summary */}
+              {/* category breakdown */}
               <div className="rounded-xl border border-line p-3">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-semibold">สรุปบิล (ก่อนชำระ)</span>
-                  <div className="text-right">
-                    <div className="text-xs text-ink-soft">ยอดที่ต้องชำระ</div>
-                    <div className="text-lg font-bold tnum text-rose-500">{s.totalBalance != null ? formatTHB(s.totalBalance) : formatTHB(bill.purchases)}</div>
-                    {s.minPayment != null && <div className="text-[11px] text-ink-soft">ขั้นต่ำ {formatTHB(s.minPayment)}</div>}
-                  </div>
+                  <span className="text-sm font-semibold">สรุปแยกหมวด</span>
+                  {result.amountDue != null && (
+                    <div className="text-right">
+                      <div className="text-xs text-ink-soft">ยอดที่ต้องชำระ</div>
+                      <div className="text-lg font-bold tnum text-rose-500">{formatTHB(result.amountDue)}</div>
+                      {result.minPayment != null && <div className="text-[11px] text-ink-soft">ขั้นต่ำ {formatTHB(result.minPayment)}</div>}
+                    </div>
+                  )}
                 </div>
                 <ul className="space-y-1.5">
                   {bill.rows.slice(0, 6).map((r) => (
@@ -162,24 +175,20 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
                     </li>
                   ))}
                 </ul>
-                {bill.refunds > 0 && <p className="text-xs text-emerald-600 mt-2">มีเงินคืนในบิล {formatTHB(bill.refunds)} (หักออกแล้ว)</p>}
-                <p className="text-[11px] text-ink-soft mt-2 flex gap-1.5 items-start">
-                  <AlertTriangle size={12} className="mt-0.5 shrink-0" />
-                  เมื่อจ่ายบิลนี้จาก KBank รายการ “จ่ายค่าบัตร” จะถูกตั้งเป็นหมวด “ชำระบัตรเครดิต” อัตโนมัติ และ<b>ไม่ถูกนับซ้ำ</b>กับรายการในบิล
-                </p>
+                {bill.refunds > 0 && <p className="text-xs text-emerald-600 mt-2">เงินคืน/รับเข้า {formatTHB(bill.refunds)}</p>}
               </div>
 
               {/* preview */}
               <div>
                 <div className="flex items-center justify-between mb-2 text-sm">
-                  <span className="font-medium">{result!.transactions.length} รายการ · ใหม่ {ded.added.length} · ซ้ำ {ded.duplicates}</span>
+                  <span className="font-medium">{result.transactions.length} รายการ · ใหม่ {ded.added.length} · ซ้ำ {ded.duplicates}</span>
                   <span className="text-ink-soft text-xs">หมวดจัดอัตโนมัติ แก้ได้</span>
                 </div>
                 {ded.overlaps.length > 0 && (
                   <div className="text-xs text-amber-600 dark:text-amber-400 flex gap-1.5 items-start mb-2"><AlertTriangle size={13} className="mt-0.5 shrink-0" /><span>{ded.overlaps.join(' · ')}</span></div>
                 )}
                 <div className="max-h-64 overflow-y-auto rounded-xl border border-line divide-y divide-line/60">
-                  {previewRaws.slice(0, 200).map((r, i) => (
+                  {previewRaws.slice(0, 300).map((r, i) => (
                     <div key={i} className="flex items-center gap-2 px-3 py-2 text-sm">
                       <span className="text-xs text-ink-soft w-12 shrink-0">{formatDate(r.date)}</span>
                       <span className="truncate flex-1" title={r.desc}>{r.merchant}</span>
@@ -202,9 +211,9 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
 
           <div className="flex gap-2">
             <button onClick={close} className="btn-ghost flex-1">ปิด</button>
-            {result && <button onClick={commit} disabled={ded.added.length === 0} className="btn-primary flex-1"><Check size={16} /> เพิ่ม {ded.added.length} รายการ</button>}
+            {result && result.transactions.length > 0 && <button onClick={commit} disabled={ded.added.length === 0} className="btn-primary flex-1"><Check size={16} /> เพิ่ม {ded.added.length} รายการ</button>}
           </div>
-          <p className="text-[11px] text-ink-soft text-center">อ่านไฟล์ในเครื่องด้วย pdf.js · ไฟล์ไม่ถูกส่งออกไปไหน</p>
+          <p className="text-[11px] text-ink-soft text-center">อ่านในเครื่อง · ไฟล์/รูปไม่ถูกส่งออกไปไหน</p>
         </div>
       </div>
     </div>
