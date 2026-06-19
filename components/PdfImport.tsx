@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { X, FileText, Check, AlertTriangle, Lock, Loader2, Image as ImageIcon } from 'lucide-react';
+import { X, FileText, Check, AlertTriangle, Lock, Loader2, Image as ImageIcon, Sparkles, ArrowLeft } from 'lucide-react';
 import { useData } from './DataProvider';
 import { CATEGORIES, categoryColor } from '@/lib/categories';
 import { formatTHB, formatDate } from '@/lib/format';
@@ -10,6 +10,8 @@ import { extractPdfLines, PdfPasswordError } from '@/lib/pdf/extract';
 import { summarizeBill } from '@/lib/pdf/uob';
 import { parseStatement, type StatementResult } from '@/lib/pdf/statement';
 import { ocrImage } from '@/lib/ocr/extract';
+import { extractStatementWithAI, aiErrorMessage, AI_MODELS, DEFAULT_AI_MODEL } from '@/lib/ai/statement';
+import { useLocalStorage, KEYS } from '@/lib/storage';
 import type { Statement } from '@/lib/types';
 
 const CAT_NAMES = CATEGORIES.map((c) => c.name);
@@ -18,6 +20,7 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
   const { txns, setImported, addStatement } = useData();
   const pdfRef = useRef<HTMLInputElement>(null);
   const imgRef = useRef<HTMLInputElement>(null);
+  const aiRef = useRef<HTMLInputElement>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [password, setPassword] = useState('');
   const [needPw, setNeedPw] = useState(false);
@@ -26,6 +29,9 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
   const [result, setResult] = useState<StatementResult | null>(null);
   const [catOverrides, setCatOverrides] = useState<Record<number, string>>({});
   const [done, setDone] = useState('');
+  const [cloud, setCloud] = useState(false);
+  const [aiKey, setAiKey] = useLocalStorage<string>(KEYS.aiKey, '');
+  const [aiModel, setAiModel] = useLocalStorage<string>(KEYS.aiModel, DEFAULT_AI_MODEL);
 
   const run = async (file: File, pw?: string) => {
     setBusy(file.type.startsWith('image/') ? 'กำลังอ่านรูป…' : 'กำลังอ่านไฟล์…'); setError(''); setDone('');
@@ -50,6 +56,22 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
   };
 
   const onPick = (file?: File) => { if (file) { setResult(null); setPassword(''); run(file); } };
+
+  const runCloud = async (file: File) => {
+    setResult(null); setError(''); setDone(''); setBusy('ส่งให้ Cloud AI อ่าน…');
+    try {
+      const r = await extractStatementWithAI(file, { apiKey: aiKey, model: aiModel });
+      if (r.transactions.length === 0) { setError('AI อ่านไม่เจอรายการ — รูปอาจไม่ชัด'); setResult(null); }
+      else { setResult(r); setCloud(false); }
+      setCatOverrides({});
+    } catch (e) {
+      setError(aiErrorMessage(e));
+    } finally {
+      setBusy('');
+    }
+  };
+
+  const onPickCloud = (file?: File) => { if (file) runCloud(file); };
 
   const previewRaws = useMemo(
     () => (result?.transactions ?? []).map((t, i) => (catOverrides[i] ? { ...t, category: catOverrides[i] } : t)),
@@ -89,7 +111,7 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
     setResult(null);
   };
 
-  const close = () => { setResult(null); setError(''); setNeedPw(false); setPassword(''); setPendingFile(null); setDone(''); onClose(); };
+  const close = () => { setResult(null); setError(''); setNeedPw(false); setPassword(''); setPendingFile(null); setDone(''); setCloud(false); onClose(); };
 
   if (!open) return null;
 
@@ -104,19 +126,44 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
         <div className="p-4 space-y-4">
           <input ref={pdfRef} type="file" accept="application/pdf,.pdf" hidden onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = ''; }} />
           <input ref={imgRef} type="file" accept="image/*" hidden onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = ''; }} />
+          <input ref={aiRef} type="file" accept="image/*" hidden onChange={(e) => { onPickCloud(e.target.files?.[0]); e.target.value = ''; }} />
 
           {!result && !needPw && (
             busy ? (
               <div className="w-full border-2 border-dashed border-line rounded-2xl py-10 text-center text-ink-soft">
                 <Loader2 size={20} className="animate-spin mx-auto mb-2" /> {busy}
               </div>
+            ) : cloud ? (
+              <div className="space-y-3">
+                <button onClick={() => { setCloud(false); setError(''); }} className="btn-ghost !px-2 !py-1 text-xs"><ArrowLeft size={14} /> กลับ</button>
+                <div className="rounded-xl bg-brand/5 border border-brand/20 p-3 space-y-2.5">
+                  <p className="text-sm font-medium flex items-center gap-1.5"><Sparkles size={15} className="text-brand" /> อ่านด้วย Cloud AI (แม่นกับรูปมาก)</p>
+                  <label className="block">
+                    <span className="text-xs text-ink-soft">Claude API key</span>
+                    <input type="password" className="input mt-1 !py-1.5 font-mono text-xs" placeholder="sk-ant-…"
+                      value={aiKey} onChange={(e) => setAiKey(e.target.value)} autoComplete="off" />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs text-ink-soft">โมเดล</span>
+                    <select className="input mt-1 !py-1.5" value={aiModel} onChange={(e) => setAiModel(e.target.value)}>
+                      {AI_MODELS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+                    </select>
+                  </label>
+                  <button onClick={() => aiRef.current?.click()} disabled={!aiKey.trim()}
+                    className="btn-primary w-full disabled:opacity-50"><ImageIcon size={16} /> เลือกรูปแล้วอ่านด้วย AI</button>
+                  <p className="text-[11px] text-ink-soft">คีย์เก็บในเบราว์เซอร์ · รูป+คีย์ส่งผ่านเซิร์ฟเวอร์ของแอปนี้ไปยัง Claude API เท่านั้น · ออกคีย์ที่ console.anthropic.com</p>
+                </div>
+              </div>
             ) : (
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 <button onClick={() => pdfRef.current?.click()} className="border-2 border-dashed border-line rounded-2xl py-8 text-center hover:border-brand transition-colors text-ink-soft">
-                  <FileText size={26} className="mx-auto mb-1.5" /><br />ไฟล์ PDF<br /><span className="text-[11px]">(แม่นสุด)</span>
+                  <FileText size={24} className="mx-auto mb-1.5" /><br />ไฟล์ PDF<br /><span className="text-[11px]">(แม่นสุด)</span>
                 </button>
                 <button onClick={() => imgRef.current?.click()} className="border-2 border-dashed border-line rounded-2xl py-8 text-center hover:border-brand transition-colors text-ink-soft">
-                  <ImageIcon size={26} className="mx-auto mb-1.5" /><br />รูปภาพ<br /><span className="text-[11px]">(OCR)</span>
+                  <ImageIcon size={24} className="mx-auto mb-1.5" /><br />รูปภาพ<br /><span className="text-[11px]">(OCR)</span>
+                </button>
+                <button onClick={() => { setError(''); setCloud(true); }} className="border-2 border-dashed border-brand/40 rounded-2xl py-8 text-center hover:border-brand transition-colors text-brand">
+                  <Sparkles size={24} className="mx-auto mb-1.5" /><br />Cloud AI<br /><span className="text-[11px]">(รูป·แม่น)</span>
                 </button>
               </div>
             )
@@ -213,7 +260,7 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
             <button onClick={close} className="btn-ghost flex-1">ปิด</button>
             {result && result.transactions.length > 0 && <button onClick={commit} disabled={ded.added.length === 0} className="btn-primary flex-1"><Check size={16} /> เพิ่ม {ded.added.length} รายการ</button>}
           </div>
-          <p className="text-[11px] text-ink-soft text-center">อ่านในเครื่อง · ไฟล์/รูปไม่ถูกส่งออกไปไหน</p>
+          {!cloud && <p className="text-[11px] text-ink-soft text-center">PDF/OCR อ่านในเครื่อง ไม่ส่งออก · Cloud AI ส่งรูปไป Claude API</p>}
         </div>
       </div>
     </div>

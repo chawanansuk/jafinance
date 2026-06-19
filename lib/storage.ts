@@ -15,6 +15,8 @@ export const KEYS = {
   settings: `${PREFIX}settings`,
   statements: `${PREFIX}statements`,
   theme: `${PREFIX}theme`,
+  aiKey: `${PREFIX}aiKey`,
+  aiModel: `${PREFIX}aiModel`,
 } as const;
 
 function read<T>(key: string, fallback: T): T {

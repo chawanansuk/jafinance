@@ -36,7 +36,7 @@ export interface KbankParseResult {
 }
 
 /** Heuristic merchant from a KBank detail string. */
-function kbankMerchant(desc: string): string {
+export function kbankMerchant(desc: string): string {
   let s = desc
     .replace(/^MAKE by KBank\s*/i, '')
     .replace(/^Internet\/Mobile\s*\w*\s*/i, '')
@@ -49,7 +49,7 @@ function kbankMerchant(desc: string): string {
   return (s || desc).slice(0, 40).trim();
 }
 
-function classify(type: string, desc: string, amount: number): { direction: 'in' | 'out'; category: string } {
+export function classifyKbank(type: string, desc: string, amount: number): { direction: 'in' | 'out'; category: string } {
   const isIn = IN_TYPES.some((k) => type.includes(k));
   if (isIn) return { direction: 'in', category: 'รายรับ (เงินเข้า)' };
   if (/ถอน/.test(type)) return { direction: 'out', category: 'ถอนเงินสด' };
@@ -93,7 +93,7 @@ export function parseKbankStatement(lines: string[]): KbankParseResult {
     if (!amount) continue;
     const date = `20${yy}-${mm}-${dd}`;
     const desc = (descRaw || type).trim();
-    const { direction, category } = classify(type, desc, amount);
+    const { direction, category } = classifyKbank(type, desc, amount);
     if (direction === 'in') parsedIn += amount; else parsedOut += amount;
     transactions.push({
       date, time, account, direction, amount,
