@@ -400,6 +400,39 @@ console.log('\n── KBank row parser: OCR separator tolerance ──');
   ok('kbank: amount intact', r.transactions[0].amount === 507);
 }
 
+console.log('\n── KBank balance-column self-correction ──');
+{
+  // row 2's amount is misread by OCR (300.00 -> 30.00), but the running-balance
+  // column is intact. Control totals don't match the amount column, so the
+  // parser reconstructs amounts from the balance deltas and recovers 300.00.
+  const L = [
+    'ยอดยกมา 1,000.00',
+    'รวมถอนเงิน 2 รายการ 500.00',
+    'รวมฝากเงิน 1 รายการ 150.00',
+    '01-06-26 09:00 ชำระเงิน 200.00 800.00 MAKE by KBank ร้าน A',
+    '02-06-26 09:00 ชำระเงิน 30.00 500.00 MAKE by KBank ร้าน B',
+    '03-06-26 09:00 รับโอนเงิน 150.00 650.00 รับโอน X',
+  ];
+  const r = parseKbankStatement(L);
+  ok('balance-fix: reconciles after correction', r.summary.reconciled === true);
+  ok('balance-fix: amountSource = balance', r.summary.amountSource === 'balance');
+  ok('balance-fix: misread 30 -> 300', r.transactions[1].amount === 300);
+  ok('balance-fix: correct rows untouched', r.transactions[0].amount === 200 && r.transactions[2].amount === 150);
+  eq('balance-fix: parsedOut = control', r.summary.parsedOut, 500);
+  eq('balance-fix: parsedIn = control', r.summary.parsedIn, 150);
+}
+{
+  // when the amount column already reconciles, the balance path is NOT used
+  // (amounts pass through untouched).
+  const L = [
+    'ยอดยกมา 1,000.00',
+    'รวมถอนเงิน 1 รายการ 200.00',
+    '01-06-26 09:00 ชำระเงิน 200.00 800.00 MAKE by KBank ร้าน A',
+  ];
+  const r = parseKbankStatement(L);
+  ok('clean statement keeps amount column', r.summary.amountSource === 'column' && r.transactions[0].amount === 200);
+}
+
 console.log('\n── receipt OCR parser ──');
 {
   const r = parseReceiptText('7-Eleven สาขาสุขุมวิท\nใบเสร็จรับเงิน\nนม 25.00\nขนม 15.00\nรวมทั้งสิ้น 40.00 บาท\n14/05/2026');

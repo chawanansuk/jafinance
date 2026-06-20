@@ -55,7 +55,15 @@ export function parseStatement(lines: string[]): StatementResult | null {
         { label: 'รอบบัญชี', value: s.period || '—' },
         { label: 'ถอน/จ่าย (แกะได้)', value: `${money(s.parsedOut)}${s.controlOut != null ? ` / ${money(s.controlOut)}` : ''}` },
         { label: 'ฝาก/รับ (แกะได้)', value: `${money(s.parsedIn)}${s.controlIn != null ? ` / ${money(s.controlIn)}` : ''}` },
-        { label: 'ตรงยอดควบคุม', value: s.reconciled ? 'ตรง' : 'ไม่ตรง', warn: !s.reconciled },
+        {
+          label: 'ตรงยอดควบคุม',
+          value: s.reconciled
+            ? s.amountSource === 'balance'
+              ? 'ตรง (แก้ยอดจากคอลัมน์คงเหลือ)'
+              : 'ตรง'
+            : 'ไม่ตรง',
+          warn: !s.reconciled,
+        },
       ],
     };
   }

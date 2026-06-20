@@ -32,6 +32,9 @@ export interface KbankSummary {
   reconciled: boolean;
   diffOut: number | null;
   diffIn: number | null;
+  /** where row amounts came from: the amount column, or reconstructed from the
+   *  running-balance column when the amount column failed to reconcile. */
+  amountSource: 'column' | 'balance';
 }
 
 export interface KbankParseResult {
@@ -64,6 +67,38 @@ export function classifyKbank(type: string, desc: string, amount: number): { dir
   return { direction: 'out', category: cat };
 }
 
+/**
+ * Recover row amounts from the running-balance column. Each real transaction
+ * moves the balance by exactly its amount, so |balance[i] - balance[i-1]| is the
+ * amount even when the amount column itself was misread by OCR. The keyword-based
+ * direction is authoritative; if a balance reading disagrees with it (the balance
+ * was the misread cell), that row keeps its amount-column value and the chain
+ * continues from the implied balance instead.
+ */
+function reconstructFromBalance(
+  rows: { direction: 'in' | 'out'; amtCol: number; balance: number }[],
+  opening: number | null,
+): number[] {
+  let prev = opening;
+  if (prev === null && rows.length) {
+    const r0 = rows[0];
+    prev = r0.balance - (r0.direction === 'in' ? r0.amtCol : -r0.amtCol);
+  }
+  const out: number[] = [];
+  for (const r of rows) {
+    const sign = r.direction === 'in' ? 1 : -1;
+    const delta = r.balance - (prev as number);
+    if (sign > 0 ? delta > 0.005 : delta < -0.005) {
+      out.push(Math.round(Math.abs(delta) * 100) / 100);
+      prev = r.balance; // balance reading trusted
+    } else {
+      out.push(r.amtCol); // balance conflicts with direction → distrust it
+      prev = (prev as number) + sign * r.amtCol;
+    }
+  }
+  return out;
+}
+
 export function parseKbankStatement(lines: string[]): KbankParseResult {
   const account = 'KBank ออมทรัพย์';
   let openingBalance: number | null = null;
@@ -87,41 +122,67 @@ export function parseKbankStatement(lines: string[]): KbankParseResult {
     if (m && !period) period = m[1];
   }
 
-  const transactions: RawTransaction[] = [];
-  let parsedOut = 0;
-  let parsedIn = 0;
+  // First pass: keep BOTH the amount column and the running-balance column for
+  // each row (the statement's built-in redundancy used for self-correction).
+  interface Row {
+    date: string; time: string; desc: string;
+    direction: 'in' | 'out'; category: string; amtCol: number; balance: number;
+  }
+  const rows: Row[] = [];
   for (const raw of lines) {
     const m = raw.trim().match(ROW_RE);
     if (!m) continue;
-    const [, dd, mm, yy, hh, mi, type, amtRaw, , descRaw] = m;
-    const amount = num(amtRaw);
-    if (!amount) continue;
+    const [, dd, mm, yy, hh, mi, type, amtRaw, balRaw, descRaw] = m;
+    const amtCol = num(amtRaw);
+    if (!amtCol) continue;
     const date = `20${yy}-${mm}-${dd}`;
     const time = `${hh.padStart(2, '0')}:${mi}`;
     const desc = (descRaw || type).trim();
-    const { direction, category } = classifyKbank(type, desc, amount);
-    if (direction === 'in') parsedIn += amount; else parsedOut += amount;
-    transactions.push({
-      date, time, account, direction, amount,
-      category, group: categoryGroup(category),
-      merchant: kbankMerchant(desc), desc,
-    });
+    const { direction, category } = classifyKbank(type, desc, amtCol);
+    rows.push({ date, time, desc, direction, category, amtCol, balance: num(balRaw) });
   }
 
-  const diffOut = controlOut !== null ? parsedOut - controlOut : null;
-  const diffIn = controlIn !== null ? parsedIn - controlIn : null;
-  const reconciled =
-    (diffOut === null || Math.abs(diffOut) < 0.05) &&
-    (diffIn === null || Math.abs(diffIn) < 0.05) &&
-    (controlOut !== null || controlIn !== null);
+  const dirs = rows.map((r) => r.direction);
+  const recon = (amts: number[]) => {
+    let o = 0, i = 0;
+    amts.forEach((a, k) => (dirs[k] === 'in' ? (i += a) : (o += a)));
+    const dOut = controlOut !== null ? o - controlOut : null;
+    const dIn = controlIn !== null ? i - controlIn : null;
+    const ok =
+      (dOut === null || Math.abs(dOut) < 0.05) &&
+      (dIn === null || Math.abs(dIn) < 0.05) &&
+      (controlOut !== null || controlIn !== null);
+    return { o, i, dOut, dIn, ok };
+  };
+
+  // Trust the amount column first; if it fails to reconcile against the control
+  // totals but the balance-derived amounts DO reconcile, use those instead.
+  let amounts = rows.map((r) => r.amtCol);
+  let amountSource: 'column' | 'balance' = 'column';
+  let chosen = recon(amounts);
+  if (!chosen.ok && rows.length > 0 && (controlOut !== null || controlIn !== null)) {
+    const rebuilt = reconstructFromBalance(rows, openingBalance);
+    const rr = recon(rebuilt);
+    if (rr.ok) {
+      amounts = rebuilt;
+      amountSource = 'balance';
+      chosen = rr;
+    }
+  }
+
+  const transactions: RawTransaction[] = rows.map((r, k) => ({
+    date: r.date, time: r.time, account, direction: r.direction, amount: amounts[k],
+    category: r.category, group: categoryGroup(r.category),
+    merchant: kbankMerchant(r.desc), desc: r.desc,
+  }));
 
   return {
     transactions,
     account,
     summary: {
       account, period, openingBalance, closingBalance,
-      controlOut, controlIn, parsedOut, parsedIn,
-      reconciled, diffOut, diffIn,
+      controlOut, controlIn, parsedOut: chosen.o, parsedIn: chosen.i,
+      reconciled: chosen.ok, diffOut: chosen.dOut, diffIn: chosen.dIn, amountSource,
     },
   };
 }
