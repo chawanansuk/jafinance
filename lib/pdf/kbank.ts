@@ -10,7 +10,12 @@ import type { RawTransaction } from '../types';
 // (รับโอนเงิน/ฝากเงิน/ดอกเบี้ย) are money in. Control totals (รวมถอนเงิน /
 // รวมฝากเงิน) are used to reconcile.
 
-const ROW_RE = /^(\d{2})-(\d{2})-(\d{2})\s+(\d{1,2}:\d{2})\s+(\S+)\s+([\d,]+\.\d{2})\s+([\d,]+\.\d{2})\s*(.*)$/;
+// Date/time separators are intentionally loose: the clean PDF-text path emits
+// "12-06-26 17:37", but OCR of a photo often renders the same cell as
+// "12/06/26 17.37" (or with dots). Accept -, /, . (and spaced) so a noisy scan
+// still parses into the same row shape.
+const ROW_RE =
+  /^(\d{2})[-/. ](\d{2})[-/. ](\d{2})\s+(\d{1,2})[:.](\d{2})\s+(\S+)\s+([\d,]+\.\d{2})\s+([\d,]+\.\d{2})\s*(.*)$/;
 const IN_TYPES = ['รับโอน', 'ฝาก', 'ดอกเบี้ย', 'เงินเข้า', 'คืนเงิน'];
 
 const num = (s: string) => Number(s.replace(/,/g, ''));
@@ -88,10 +93,11 @@ export function parseKbankStatement(lines: string[]): KbankParseResult {
   for (const raw of lines) {
     const m = raw.trim().match(ROW_RE);
     if (!m) continue;
-    const [, dd, mm, yy, time, type, amtRaw, , descRaw] = m;
+    const [, dd, mm, yy, hh, mi, type, amtRaw, , descRaw] = m;
     const amount = num(amtRaw);
     if (!amount) continue;
     const date = `20${yy}-${mm}-${dd}`;
+    const time = `${hh.padStart(2, '0')}:${mi}`;
     const desc = (descRaw || type).trim();
     const { direction, category } = classifyKbank(type, desc, amount);
     if (direction === 'in') parsedIn += amount; else parsedOut += amount;

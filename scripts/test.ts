@@ -20,6 +20,7 @@ import { parseUobStatement, summarizeBill } from '@/lib/pdf/uob';
 import { parseKbankStatement } from '@/lib/pdf/kbank';
 import { detectBank, parseStatement } from '@/lib/pdf/statement';
 import { parseReceiptText } from '@/lib/ocr/receipt';
+import { adaptiveThreshold } from '@/lib/ocr/extract';
 import { categoryGroup } from '@/lib/categories';
 import type { Transaction, BudgetState } from '@/lib/types';
 
@@ -360,6 +361,43 @@ console.log('\n── KBank statement parser ──');
   const u = parseStatement(L);
   ok('parseStatement UOB', u != null && u.bank === 'UOB' && u.transactions.length === 1);
   ok('detectBank unknown -> null', detectBank(['random text 123']) === null);
+}
+
+console.log('\n── OCR preprocess (adaptive binarization) ──');
+{
+  // Synthetic 40x10 image: a left->right brightness gradient (50..200, like an
+  // unevenly-lit photo) with two ink strokes — one in the dark region (x=5),
+  // one in the bright region (x=35), each 45 darker than its local background.
+  const w = 40, h = 10;
+  const gray = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const bg = Math.round(50 + (150 * x) / (w - 1));
+      gray[y * w + x] = x === 5 || x === 35 ? bg - 45 : bg;
+    }
+  }
+  // A single global threshold cannot separate ink from paper across the gradient:
+  // dark-region PAPER (x=4) reads darker than bright-region INK (x=35).
+  ok('global threshold (128) would misclassify both ends', gray[4] < 128 && !(gray[35] < 128));
+
+  const bin = adaptiveThreshold(gray, w, h, 4, 20);
+  ok('adaptive: ink in dark region -> black', bin[5] === 0);
+  ok('adaptive: ink in bright region -> black', bin[35] === 0);
+  ok('adaptive: paper stays white (both ends)', bin[4] === 255 && bin[20] === 255 && bin[36] === 255);
+  ok('adaptive: output is strictly binary', bin.every((v) => v === 0 || v === 255));
+}
+
+console.log('\n── KBank row parser: OCR separator tolerance ──');
+{
+  // OCR often renders the date/time cell with / and . instead of - and :.
+  // The clean PDF-text shape must still parse, and so must the noisy one.
+  const r = parseKbankStatement([
+    '12/06/26 17.37 ชำระเงิน 507.00 2,608.22 MAKE by KBank เพื่อชำระ Ref X3115 ร้านอร่อย',
+  ]);
+  ok('kbank: parses / and . separators', r.transactions.length === 1);
+  ok('kbank: date normalized', r.transactions[0].date === '2026-06-12');
+  ok('kbank: time normalized to HH:MM', r.transactions[0].time === '17:37');
+  ok('kbank: amount intact', r.transactions[0].amount === 507);
 }
 
 console.log('\n── receipt OCR parser ──');
