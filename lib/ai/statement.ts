@@ -8,10 +8,17 @@ import type { RawTransaction } from '../types';
 import type { Bank, StatementResult } from '../pdf/statement';
 
 // ── Cloud AI statement reader (client side) ─────────────────────────────────
-// Sends a statement image to /api/extract-statement (server proxy) along with
-// the user's own Claude API key, then shapes the model's JSON into the same
+// Sends a statement image straight from the browser to the Claude API, using
+// the user's own API key, then shapes the model's JSON into the same
 // StatementResult the PDF/OCR path produces — so the import UI (preview,
 // reconcile, commit) is reused untouched.
+//
+// The call goes browser -> api.anthropic.com directly (no backend): the app is
+// a static export (`output: 'export'`) with no server to proxy through, so a
+// server route would 404 on the deployed site. The SDK is loaded lazily and
+// runs with `dangerouslyAllowBrowser` — the key + image never touch any
+// intermediate server, only Anthropic. Keep this aligned with the static,
+// no-backend design in the README.
 
 export const AI_MODELS = [
   { id: 'claude-opus-4-8', label: 'Opus 4.8 · แม่นสุด' },
@@ -182,27 +189,100 @@ export interface AiExtractOptions {
   model: string;
 }
 
-/** Read a statement image via the Claude API (through our server proxy). */
+const SYSTEM_PROMPT = `คุณคือผู้ช่วยอ่านสเตทเมนต์ธนาคารไทย (KBank ออมทรัพย์ / UOB บัตรเครดิต) จากรูปภาพอย่างแม่นยำ
+หน้าที่ของคุณคือถอดข้อความทุกแถวของตารางรายการเดินบัญชีให้ครบถ้วน ห้ามข้ามแถว ห้ามเดาตัวเลข
+กฎสำคัญ:
+- อ่านตัวเลขจำนวนเงินและยอดคงเหลือให้ตรงเป๊ะตามภาพ (ทศนิยม 2 ตำแหน่ง) แปลงให้เป็นตัวเลขล้วน ไม่มีเครื่องหมายคอมมา
+- amount เป็นค่าบวกเสมอ ทิศทางเงินบอกผ่าน direction: "out" = เงินออก/ถอน/จ่าย/โอนออก, "in" = เงินเข้า/รับโอน/ฝาก/ดอกเบี้ย/คืนเงิน
+- date เป็นรูปแบบ YYYY-MM-DD (ปีพ.ศ.ในสลิป เช่น 68/2568 ให้แปลงเป็น ค.ศ. โดยลบ 543 — เช่น 12-06-68 → 2025-06-12; ถ้าเป็นปี ค.ศ. 2 หลักเช่น 26 → 2026)
+- เก็บยอดควบคุมถ้ามี: รวมถอนเงิน→controlOut, รวมฝากเงิน→controlIn, ยอดยกมา→openingBalance, ยอดยกไป→closingBalance
+- ถ้าไม่แน่ใจค่าใด ให้ใส่ null อย่าเดา`;
+
+const USER_PROMPT =
+  'อ่านสเตทเมนต์นี้แล้วส่งกลับเป็น JSON ตาม schema ที่กำหนด ให้ครบทุกรายการในตาราง พร้อมยอดควบคุมและยอดยกมา/ยกไปถ้ามี';
+
+const OUTPUT_SCHEMA: Record<string, unknown> = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    bank: { type: 'string', enum: ['KBank', 'UOB', 'other'] },
+    account: { type: ['string', 'null'] },
+    period: { type: ['string', 'null'] },
+    openingBalance: { type: ['number', 'null'] },
+    closingBalance: { type: ['number', 'null'] },
+    controlOut: { type: ['number', 'null'] },
+    controlIn: { type: ['number', 'null'] },
+    amountDue: { type: ['number', 'null'] },
+    minPayment: { type: ['number', 'null'] },
+    transactions: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          date: { type: 'string' },
+          time: { type: 'string' },
+          type: { type: 'string' },
+          direction: { type: 'string', enum: ['in', 'out'] },
+          amount: { type: 'number' },
+          balance: { type: ['number', 'null'] },
+          desc: { type: 'string' },
+        },
+        required: ['date', 'direction', 'amount'],
+      },
+    },
+  },
+  required: ['bank', 'transactions'],
+};
+
+/** Read a statement image by calling the Claude API directly from the browser. */
 export async function extractStatementWithAI(
   file: File,
   { apiKey, model }: AiExtractOptions,
 ): Promise<StatementResult> {
   const media = IMAGE_MEDIA[file.type.toLowerCase()];
   if (!media) throw new Error('Cloud AI รองรับเฉพาะรูปภาพ (JPG/PNG/WebP)');
+  const key = apiKey.trim();
+  if (!key) throw new Error('ยังไม่ได้ใส่ API key');
 
   const imageBase64 = await readAsBase64(file);
 
-  const resp = await fetch('/api/extract-statement', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ apiKey: apiKey.trim(), model, imageBase64, mediaType: media }),
-  });
+  // Lazy-load the SDK so it stays out of the main bundle until Cloud AI is used.
+  const { default: Anthropic } = await import('@anthropic-ai/sdk');
+  const client = new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true });
 
-  const payload = (await resp.json().catch(() => ({}))) as { text?: string; error?: string };
-  if (!resp.ok) throw new Error(payload.error || `Cloud AI ผิดพลาด (${resp.status})`);
-  if (!payload.text) throw new Error('AI ไม่ได้ส่งข้อความกลับ');
+  let res;
+  try {
+    res = await client.messages.create({
+      model: model || DEFAULT_AI_MODEL,
+      max_tokens: 8000,
+      system: SYSTEM_PROMPT,
+      output_config: { format: { type: 'json_schema', schema: OUTPUT_SCHEMA } },
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: media, data: imageBase64 } },
+            { type: 'text', text: USER_PROMPT },
+          ],
+        },
+      ],
+    });
+  } catch (e) {
+    if (e instanceof Anthropic.AuthenticationError)
+      throw new Error('API key ไม่ถูกต้อง — ตรวจสอบคีย์อีกครั้ง');
+    if (e instanceof Anthropic.PermissionDeniedError)
+      throw new Error('API key ไม่มีสิทธิ์ใช้โมเดลนี้');
+    if (e instanceof Anthropic.RateLimitError)
+      throw new Error('ถูกจำกัดอัตราการเรียก (rate limit) — ลองใหม่อีกครั้ง');
+    if (e instanceof Anthropic.APIError) throw new Error(`Claude API ผิดพลาด: ${e.message}`);
+    throw e;
+  }
 
-  return toStatementResult(parseJsonLoose(payload.text));
+  const text = res.content.map((b) => (b.type === 'text' ? b.text : '')).join('').trim();
+  if (!text) throw new Error('AI ไม่ได้ส่งข้อความกลับ (อาจถูกปฏิเสธ)');
+
+  return toStatementResult(parseJsonLoose(text));
 }
 
 /** Friendly Thai message for a failed extraction. */
