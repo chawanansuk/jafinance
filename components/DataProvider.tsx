@@ -1,8 +1,9 @@
 'use client';
 
-import { createContext, useContext, useMemo, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react';
 import { materialize, baseTransactions, allMonths, dropBaseDuplicates } from '@/lib/data';
 import { aggregateByMonth, defaultMonth } from '@/lib/analytics';
+import { repairChannelNoiseCategories } from '@/lib/autocat';
 import { useLocalStorage, KEYS } from '@/lib/storage';
 import { EMPTY_BUDGET } from '@/lib/budget';
 import type { Transaction, UserOverrides, BudgetState, RulesState, MerchantRule, Settings, Statement } from '@/lib/types';
@@ -58,6 +59,19 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [statements, setStatements, h6] = useLocalStorage<Statement[]>(KEYS.statements, []);
 
   const base = useMemo(() => baseTransactions(), []);
+
+  const hydrated = h1 && h2 && h3 && h4 && h5 && h6;
+
+  // One-time repair (idempotent): rows imported while the channel-noise bug
+  // was live are stored with category โอนเงิน/บุคคล; re-derive them once the
+  // store has hydrated. No-op when nothing needs fixing.
+  useEffect(() => {
+    if (!hydrated) return;
+    const { rows, changed } = repairChannelNoiseCategories(imported);
+    if (changed > 0) setImported(rows);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
+
   const txns = useMemo(
     () => materialize(base, imported, overrides, rules),
     [base, overrides, imported, rules],
@@ -108,7 +122,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     txns,
     months,
     defaultMonth: dMonth,
-    hydrated: h1 && h2 && h3 && h4 && h5 && h6,
+    hydrated,
     overrides,
     setOverrides,
     setCategory,
@@ -117,12 +131,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
     imported,
     setImported,
     dedupeImported: () => {
-      let removed = 0;
-      setImported((prev) => {
-        const kept = dropBaseDuplicates(prev, base);
-        removed = prev.length - kept.length;
-        return kept;
-      });
+      // compute synchronously from current state — reading a variable assigned
+      // inside the setState updater returns 0 before React runs the updater.
+      const kept = dropBaseDuplicates(imported, base);
+      const removed = imported.length - kept.length;
+      if (removed > 0) setImported(kept);
       return removed;
     },
     budget,
@@ -142,6 +155,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setSettings(DEFAULT_SETTINGS);
       setImported([]);
       setStatements([]);
+      // the Claude API key/model live in their own hook inside PdfImport —
+      // wipe them here too so "reset all" doesn't leave a secret behind.
+      try {
+        window.localStorage.removeItem(KEYS.aiKey);
+        window.localStorage.removeItem(KEYS.aiModel);
+      } catch {
+        /* private mode */
+      }
     },
   };
 

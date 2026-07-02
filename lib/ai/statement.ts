@@ -3,6 +3,7 @@
 import { categoryGroup } from '../categories';
 import { autoCategorize } from '../autocat';
 import { classifyKbank, kbankMerchant } from '../pdf/kbank';
+import { normalizeUobMerchant } from '../pdf/uob';
 import { formatTHB } from '../format';
 import type { RawTransaction } from '../types';
 import type { Bank, StatementResult } from '../pdf/statement';
@@ -28,7 +29,7 @@ export const AI_MODELS = [
 
 export const DEFAULT_AI_MODEL = AI_MODELS[0].id;
 
-interface AiTxn {
+export interface AiTxn {
   date: string;
   time?: string;
   type?: string;
@@ -38,7 +39,7 @@ interface AiTxn {
   desc?: string;
 }
 
-interface AiResult {
+export interface AiResult {
   bank?: string;
   account?: string | null;
   period?: string | null;
@@ -59,7 +60,7 @@ const IMAGE_MEDIA: Record<string, 'image/jpeg' | 'image/png' | 'image/gif' | 'im
   'image/webp': 'image/webp',
 };
 
-function readAsBase64(file: File): Promise<string> {
+function readAsBase64(file: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -87,13 +88,16 @@ function parseJsonLoose(text: string): AiResult {
 
 const money = (n: number | null) => (n != null ? formatTHB(n) : '—');
 
-function toStatementResult(r: AiResult): StatementResult {
+export function toStatementResult(r: AiResult): StatementResult {
   const bank: Bank = r.bank === 'UOB' ? 'UOB' : 'KBank';
   const account = bank === 'KBank' ? 'KBank ออมทรัพย์' : 'UOB บัตรเครดิต';
 
   const transactions: RawTransaction[] = [];
   let parsedOut = 0;
   let parsedIn = 0;
+  let payments = 0; // UOB card-bill payments — settle debt, never spending
+
+  const isUobPayment = (d: string) => /PAYMENT\s+(THANK\s+YOU|RECEIVED)/i.test(d);
 
   for (const t of r.transactions ?? []) {
     const amount = Math.abs(Number(t.amount) || 0);
@@ -108,13 +112,25 @@ function toStatementResult(r: AiResult): StatementResult {
     const direction: 'in' | 'out' =
       t.direction === 'in' || t.direction === 'out' ? t.direction : guess.direction;
 
+    // The prompt (correctly) demands every row, so the model returns the
+    // card-bill payment line too. The PDF path excludes it — that money is
+    // already recorded as a KBank-side settlement, importing it here would
+    // double-count. Track it for the reconcile formula, but never commit it.
+    if (bank === 'UOB' && direction === 'in' && isUobPayment(desc)) {
+      payments += amount;
+      continue;
+    }
+
     let category: string;
     if (direction === 'in') {
-      category = 'รายรับ (เงินเข้า)';
+      // a credit on a card statement is a refund (netted against spending),
+      // not income — mirror the PDF path.
+      category = bank === 'UOB' ? 'คืนเงิน (refund)' : 'รายรับ (เงินเข้า)';
     } else if (bank === 'KBank' && guess.direction === 'out') {
       category = guess.category;
     } else {
-      category = autoCategorize(kbankMerchant(desc), desc, {}, amount);
+      const m = bank === 'KBank' ? kbankMerchant(desc) : normalizeUobMerchant(desc);
+      category = autoCategorize(m, desc, {}, amount);
     }
 
     if (direction === 'in') parsedIn += amount;
@@ -128,7 +144,7 @@ function toStatementResult(r: AiResult): StatementResult {
       amount,
       category,
       group: categoryGroup(category),
-      merchant: bank === 'KBank' ? kbankMerchant(desc) : desc.slice(0, 40).trim(),
+      merchant: bank === 'KBank' ? kbankMerchant(desc) : normalizeUobMerchant(desc),
       desc,
     });
   }
@@ -139,8 +155,14 @@ function toStatementResult(r: AiResult): StatementResult {
 
   if (bank === 'UOB') {
     const amountDue = r.amountDue ?? null;
+    const opening = r.openingBalance ?? 0; // PREVIOUS BALANCE on the bill
     const parsedNet = parsedOut - parsedIn;
-    const diff = amountDue != null ? parsedNet - amountDue : null;
+    // TOTAL BALANCE = previous balance - payments + net new spend, so the
+    // spend we parsed should equal amountDue - opening + payments. Comparing
+    // parsedNet to amountDue directly (the old formula) only reconciles when
+    // the previous bill was zero.
+    const expectedNet = amountDue != null ? amountDue - opening + payments : null;
+    const diff = expectedNet != null ? parsedNet - expectedNet : null;
     const reconciled = diff != null && Math.abs(diff) < 1;
     return {
       bank,
@@ -179,7 +201,15 @@ function toStatementResult(r: AiResult): StatementResult {
       { label: 'รอบบัญชี', value: period || '—' },
       { label: 'ถอน/จ่าย (AI อ่าน)', value: `${money(parsedOut)}${controlOut != null ? ` / ${money(controlOut)}` : ''}` },
       { label: 'ฝาก/รับ (AI อ่าน)', value: `${money(parsedIn)}${controlIn != null ? ` / ${money(controlIn)}` : ''}` },
-      { label: 'ตรงยอดควบคุม', value: reconciled ? 'ตรง' : 'ไม่ตรง', warn: !reconciled },
+      {
+        label: 'ตรงยอดควบคุม',
+        value: reconciled
+          ? controlOut != null && controlIn != null
+            ? 'ตรง'
+            : 'ตรง (พบยอดคุมฝั่งเดียว)'
+          : 'ไม่ตรง',
+        warn: !reconciled,
+      },
     ],
   };
 }
@@ -196,6 +226,7 @@ const SYSTEM_PROMPT = `คุณคือผู้ช่วยอ่านสเ
 - amount เป็นค่าบวกเสมอ ทิศทางเงินบอกผ่าน direction: "out" = เงินออก/ถอน/จ่าย/โอนออก, "in" = เงินเข้า/รับโอน/ฝาก/ดอกเบี้ย/คืนเงิน
 - date เป็นรูปแบบ YYYY-MM-DD (ปีพ.ศ.ในสลิป เช่น 68/2568 ให้แปลงเป็น ค.ศ. โดยลบ 543 — เช่น 12-06-68 → 2025-06-12; ถ้าเป็นปี ค.ศ. 2 หลักเช่น 26 → 2026)
 - เก็บยอดควบคุมถ้ามี: รวมถอนเงิน→controlOut, รวมฝากเงิน→controlIn, ยอดยกมา→openingBalance, ยอดยกไป→closingBalance
+- สำหรับบิลบัตรเครดิต UOB: PREVIOUS BALANCE→openingBalance, TOTAL BALANCE→amountDue, MINIMUM PAYMENT→minPayment และให้ใส่แถว PAYMENT THANK YOU เป็น direction "in" ตามจริง
 - ถ้าไม่แน่ใจค่าใด ให้ใส่ null อย่าเดา`;
 
 const USER_PROMPT =
@@ -235,6 +266,37 @@ const OUTPUT_SCHEMA: Record<string, unknown> = {
   required: ['bank', 'transactions'],
 };
 
+/**
+ * Downscale/re-encode big phone photos before upload: the API rejects images
+ * over ~5 MB / 8000 px, and a 15 MB JPEG would balloon to ~20 MB of base64 in
+ * memory. Statement text survives 2200 px on the long edge comfortably. Falls
+ * back to the original bytes if canvas decoding fails.
+ */
+async function toApiImage(
+  file: File,
+  media: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp',
+): Promise<{ data: string; media: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp' }> {
+  const LIMIT = 3.5 * 1024 * 1024; // stay well under the 5 MB API cap
+  if (file.size <= LIMIT) return { data: await readAsBase64(file), media };
+  try {
+    const bmp = await createImageBitmap(file);
+    const scale = Math.min(1, 2200 / Math.max(bmp.width, bmp.height));
+    const w = Math.round(bmp.width * scale);
+    const h = Math.round(bmp.height * scale);
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return { data: await readAsBase64(file), media };
+    ctx.drawImage(bmp, 0, 0, w, h);
+    const blob: Blob | null = await new Promise((res) => canvas.toBlob((b) => res(b), 'image/jpeg', 0.9));
+    if (!blob) return { data: await readAsBase64(file), media };
+    return { data: await readAsBase64(blob), media: 'image/jpeg' };
+  } catch {
+    return { data: await readAsBase64(file), media };
+  }
+}
+
 /** Read a statement image by calling the Claude API directly from the browser. */
 export async function extractStatementWithAI(
   file: File,
@@ -245,7 +307,7 @@ export async function extractStatementWithAI(
   const key = apiKey.trim();
   if (!key) throw new Error('ยังไม่ได้ใส่ API key');
 
-  const imageBase64 = await readAsBase64(file);
+  const { data: imageBase64, media: sendMedia } = await toApiImage(file, media);
 
   // Lazy-load the SDK so it stays out of the main bundle until Cloud AI is used.
   const { default: Anthropic } = await import('@anthropic-ai/sdk');
@@ -255,14 +317,14 @@ export async function extractStatementWithAI(
   try {
     res = await client.messages.create({
       model: model || DEFAULT_AI_MODEL,
-      max_tokens: 8000,
+      max_tokens: 16000,
       system: SYSTEM_PROMPT,
       output_config: { format: { type: 'json_schema', schema: OUTPUT_SCHEMA } },
       messages: [
         {
           role: 'user',
           content: [
-            { type: 'image', source: { type: 'base64', media_type: media, data: imageBase64 } },
+            { type: 'image', source: { type: 'base64', media_type: sendMedia, data: imageBase64 } },
             { type: 'text', text: USER_PROMPT },
           ],
         },
@@ -278,6 +340,9 @@ export async function extractStatementWithAI(
     if (e instanceof Anthropic.APIError) throw new Error(`Claude API ผิดพลาด: ${e.message}`);
     throw e;
   }
+
+  if (res.stop_reason === 'max_tokens')
+    throw new Error('สเตทเมนต์มีรายการเยอะเกินคำตอบเดียว — ลองครอปรูปเป็นครึ่งบน/ล่าง แล้วอ่านทีละส่วน');
 
   const text = res.content.map((b) => (b.type === 'text' ? b.text : '')).join('').trim();
   if (!text) throw new Error('AI ไม่ได้ส่งข้อความกลับ (อาจถูกปฏิเสธ)');

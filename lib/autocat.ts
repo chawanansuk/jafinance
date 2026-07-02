@@ -86,3 +86,32 @@ export function autoCategorize(merchant: string, desc: string, rules: RulesState
 export function autoGroup(category: string) {
   return categoryGroup(category);
 }
+
+/**
+ * One-time repair for rows imported while the channel-noise bug was live:
+ * their desc carries a payment-rail phrase (MAKE by KBank / SCB มณี SHOP / …)
+ * that used to match the bank keywords and mislabel them โอนเงิน/บุคคล. Only
+ * rows still carrying that exact label AND channel noise are re-derived —
+ * real transfers re-resolve to โอนเงิน/บุคคล (via โอน/พร้อมเพย์ in the desc)
+ * and stay untouched, so the pass is idempotent. Per-id user overrides live
+ * elsewhere and always win over this.
+ */
+export function repairChannelNoiseCategories<
+  T extends { category: string; group: string; merchant: string; desc: string; amount: number },
+>(rows: T[]): { rows: T[]; changed: number } {
+  let changed = 0;
+  const out = rows.map((r) => {
+    if (r.category !== 'โอนเงิน/บุคคล') return r;
+    const hay = `${r.merchant} ${r.desc}`.toLowerCase();
+    const noisy = CHANNEL_NOISE.some((re) => {
+      re.lastIndex = 0; // /g/ regexes are stateful under .test()
+      return re.test(hay);
+    });
+    if (!noisy) return r;
+    const category = autoCategorize(r.merchant, r.desc, {}, r.amount);
+    if (category === r.category) return r;
+    changed++;
+    return { ...r, category, group: categoryGroup(category) };
+  });
+  return changed ? { rows: out, changed } : { rows, changed: 0 };
+}

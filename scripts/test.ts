@@ -15,7 +15,8 @@ import {
 import {
   parseImport, toCSV, splitPasted, parseDateLoose, parseAmountLoose, rowsFromMapping, dedupe,
 } from '@/lib/io';
-import { autoCategorize, refineCategory } from '@/lib/autocat';
+import { autoCategorize, refineCategory, repairChannelNoiseCategories } from '@/lib/autocat';
+import { toStatementResult } from '@/lib/ai/statement';
 import { parseUobStatement, summarizeBill } from '@/lib/pdf/uob';
 import { parseKbankStatement, classifyKbank } from '@/lib/pdf/kbank';
 import { detectBank, parseStatement } from '@/lib/pdf/statement';
@@ -460,6 +461,48 @@ console.log('\n── comma paste with thousand separators ──');
   ok('amount cell stays whole', g[0].length === 3 && g[0][1] === '1,234.50');
   ok('small ints still split', splitPasted('a,120,b')[0].length === 3);
   ok('amount parses after split', parseAmountLoose(g[0][1]).value === 1234.5);
+}
+
+console.log('\n── AI statement shaping (UOB parity with PDF path) ──');
+{
+  const r = toStatementResult({
+    bank: 'UOB', openingBalance: 1000, amountDue: 1300, minPayment: 200,
+    period: '24 MAY 2026',
+    transactions: [
+      { date: '2026-05-15', direction: 'in', amount: 1000, desc: 'PAYMENT THANK YOU - UOBT TMRW APP' },
+      { date: '2026-04-22', direction: 'out', amount: 138, desc: 'WWW.GRAB.COM BANGKOK' },
+      { date: '2026-05-03', direction: 'out', amount: 1200, desc: 'SUSHIRO GH BANGKOK' },
+      { date: '2026-05-05', direction: 'in', amount: 38, desc: 'SOME REFUND' },
+    ],
+  });
+  ok('ai-uob: payment row excluded', r.transactions.length === 3);
+  ok('ai-uob: reconciled via expectedNet', r.reconciled === true);
+  const ref = r.transactions.find((t) => t.direction === 'in')!;
+  ok('ai-uob: credit -> refund group', ref.group === 'refund' && ref.category === 'คืนเงิน (refund)');
+  ok('ai-uob: merchant normalized', r.transactions.some((t) => t.merchant === 'Grab'));
+}
+{
+  // KBank: single control total found -> still reconciles but says so
+  const r = toStatementResult({
+    bank: 'KBank', controlOut: 100, controlIn: null,
+    transactions: [{ date: '2026-06-01', time: '09:00', type: 'ชำระเงิน', direction: 'out', amount: 100, desc: 'MAKE by KBank ร้าน A' }],
+  });
+  ok('ai-kbank: one-sided control noted', r.summaryRows.some((x) => x.value.includes('ฝั่งเดียว')));
+}
+
+console.log('\n── repair of channel-noise mislabels (localStorage migration) ──');
+{
+  const rows = [
+    { category: 'โอนเงิน/บุคคล', group: 'transfer', merchant: 'GOLDEN DONUTS', desc: 'MAKE by KBank GOLDEN DONUTS', amount: 96 },
+    { category: 'โอนเงิน/บุคคล', group: 'transfer', merchant: 'รัตนา', desc: 'MAKE by KBank โอนไป X5803 นาง รัตนา', amount: 290 },
+    { category: 'คาเฟ่/ขนม', group: 'discretionary', merchant: 'X', desc: 'MAKE by KBank X', amount: 10 },
+  ];
+  const { rows: out, changed } = repairChannelNoiseCategories(rows as any);
+  ok('repair: mislabeled shop fixed', out[0].category === 'ค่าใช้จ่ายอื่น' && out[0].group === 'transfer');
+  ok('repair: real transfer untouched', out[1].category === 'โอนเงิน/บุคคล');
+  ok('repair: non-transfer rows untouched', out[2] === rows[2]);
+  ok('repair: reports 1 change', changed === 1);
+  ok('repair: idempotent', repairChannelNoiseCategories(out as any).changed === 0);
 }
 
 console.log('\n── receipt OCR parser ──');

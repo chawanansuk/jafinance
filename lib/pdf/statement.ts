@@ -60,7 +60,9 @@ export function parseStatement(lines: string[]): StatementResult | null {
           value: s.reconciled
             ? s.amountSource === 'balance'
               ? 'ตรง (แก้ยอดจากคอลัมน์คงเหลือ)'
-              : 'ตรง'
+              : s.controlOut != null && s.controlIn != null
+                ? 'ตรง'
+                : 'ตรง (พบยอดคุมฝั่งเดียว)'
             : 'ไม่ตรง',
           warn: !s.reconciled,
         },

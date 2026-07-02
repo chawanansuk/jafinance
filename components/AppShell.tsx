@@ -6,7 +6,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import {
   LayoutDashboard, PieChart, Wallet, ListOrdered, Lightbulb, SlidersHorizontal, Moon, Sun, Wallet2,
 } from 'lucide-react';
-import { KEYS } from '@/lib/storage';
+import { KEYS, STORAGE_ERROR_EVENT } from '@/lib/storage';
 import { QuickAdd } from './QuickAdd';
 
 const NAV = [
@@ -36,12 +36,32 @@ function ThemeToggle() {
   );
 }
 
+/** Persistent warning once any localStorage write has failed (quota full /
+ *  private mode) — otherwise the user keeps "saving" into memory that
+ *  evaporates on reload. */
+function StorageAlert() {
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    const on = () => setFailed(true);
+    window.addEventListener(STORAGE_ERROR_EVENT, on);
+    return () => window.removeEventListener(STORAGE_ERROR_EVENT, on);
+  }, []);
+  if (!failed) return null;
+  return (
+    <div className="bg-red-600 text-white text-xs text-center px-3 py-2">
+      ⚠ บันทึกลงเครื่องไม่สำเร็จ (พื้นที่เต็มหรือโหมดส่วนตัว) — การเปลี่ยนแปลงล่าสุดอาจหายเมื่อรีโหลด
+      แนะนำให้ไปหน้า จัดการ → สำรองข้อมูล เก็บไฟล์ไว้ก่อน
+    </div>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
 
   return (
     <div className="min-h-dvh flex flex-col">
+      <StorageAlert />
       {/* top bar */}
       <header className="sticky top-0 z-30 border-b border-line bg-surface/70 backdrop-blur-xl">
         <div className="mx-auto max-w-5xl px-4 h-14 flex items-center justify-between">

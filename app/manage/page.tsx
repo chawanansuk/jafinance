@@ -39,6 +39,18 @@ export default function ManagePage() {
   const restoreBackup = async (file: File) => {
     try {
       const data = JSON.parse(await file.text());
+      // validate the shape BEFORE touching state — any random JSON (including
+      // the transactions-page export, which is a bare array) used to fall
+      // through every `if` and still report "สำเร็จ" while restoring nothing.
+      const valid =
+        data && typeof data === 'object' && !Array.isArray(data) &&
+        data.version === BACKUP_VERSION &&
+        (data.overrides || data.budget || data.rules || data.settings || Array.isArray(data.imported));
+      if (!valid) {
+        setBackupMsg('ไฟล์นี้ไม่ใช่ไฟล์สำรองของแอพนี้ — ใช้ไฟล์จากปุ่ม "ส่งออกสำรอง" เท่านั้น');
+        return;
+      }
+      if (!confirm('กู้คืนจะทับข้อมูลปัจจุบัน (หมวดที่แก้ / งบ / กฎ / รายการที่นำเข้า) — ดำเนินการต่อ?')) return;
       if (data.overrides) setOverrides(data.overrides);
       if (data.budget) setBudget(data.budget);
       if (data.rules) setRulesAll(data.rules);
@@ -91,7 +103,11 @@ export default function ManagePage() {
         <div className="flex flex-wrap gap-2 items-center">
           <button onClick={exportBackup} className="btn-ghost !py-1.5 !px-3 text-sm"><Download size={14} /> ส่งออกสำรอง</button>
           <input ref={backupRef} type="file" accept=".json,application/json" hidden
-            onChange={(e) => e.target.files?.[0] && restoreBackup(e.target.files[0])} />
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              e.target.value = ''; // allow re-picking the same file
+              if (f) restoreBackup(f);
+            }} />
           <button onClick={() => backupRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-sm"><Upload size={14} /> กู้คืน</button>
           <button
             onClick={() => { const n = dedupeImported(); setBackupMsg(n > 0 ? `ลบรายการซ้ำ ${n} รายการแล้ว` : 'ไม่พบรายการซ้ำกับข้อมูลเดิม'); }}
