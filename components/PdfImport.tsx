@@ -151,7 +151,7 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
                   </label>
                   <button onClick={() => aiRef.current?.click()} disabled={!aiKey.trim()}
                     className="btn-primary w-full disabled:opacity-50"><ImageIcon size={16} /> เลือกรูปแล้วอ่านด้วย AI</button>
-                  <p className="text-[11px] text-ink-soft">คีย์เก็บในเบราว์เซอร์ · รูป+คีย์ส่งผ่านเซิร์ฟเวอร์ของแอปนี้ไปยัง Claude API เท่านั้น · ออกคีย์ที่ console.anthropic.com</p>
+                  <p className="text-[11px] text-ink-soft">คีย์เก็บในเบราว์เซอร์ · รูป+คีย์ส่งตรงถึง Claude API ไม่ผ่านเซิร์ฟเวอร์อื่น · ออกคีย์ที่ console.anthropic.com</p>
                 </div>
               </div>
             ) : (

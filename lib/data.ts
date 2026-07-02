@@ -105,8 +105,8 @@ export function allMonths(txns: Transaction[]): string[] {
 
 export const ACCOUNTS = ['KBank ออมทรัพย์', 'UOB บัตรเครดิต'] as const;
 
-// KBank coverage windows (from the source statements). Used for the
-// "ดูเฉพาะช่วงข้อมูลครบ" filter and the data disclaimer.
+// KBank coverage windows (from the source statements). Feeds ACCOUNT_COVERAGE
+// below, which drives the month-completeness flag in analytics.
 export const KBANK_RANGES: [string, string][] = [
   ['2026-03-20', '2026-03-25'],
   ['2026-04-01', '2026-04-05'],
@@ -120,3 +120,18 @@ export const KBANK_RANGES: [string, string][] = [
   ['2026-06-12', '2026-06-18'],
   ['2026-06-19', '2026-06-26'],
 ];
+
+// UOB card statements run continuously over this window.
+export const UOB_RANGES: [string, string][] = [['2026-02-20', '2026-05-20']];
+
+/**
+ * Per-account statement coverage. A month's completeness must consider BOTH
+ * accounts: June 2026 has near-full KBank coverage but ZERO UOB data, so its
+ * total is missing most of the household's spending — a "days with any
+ * transaction" heuristic can't see that. Analytics weights each account by its
+ * share of total spend when deciding whether a month is complete.
+ */
+export const ACCOUNT_COVERAGE: Record<string, [string, string][]> = {
+  'KBank ออมทรัพย์': KBANK_RANGES,
+  'UOB บัตรเครดิต': UOB_RANGES,
+};

@@ -137,6 +137,19 @@ export function parseImport(text: string, existing: Transaction[]): ImportResult
 
 export type PasteDelimiter = 'auto' | 'comma' | 'tab' | 'space';
 
+/**
+ * Mask thousands-separator commas (1,234.50) so comma-delimited pastes don't
+ * split amounts into pieces. Only currency-shaped tokens are masked (leading
+ * group of at most 3 digits, not preceded by a digit/','/'.'), so list commas in
+ * "a,120,b" stay real delimiters.
+ */
+const MASK = '\u0000';
+function maskThousands(line: string): string {
+  return line.replace(/(?<![\d.,])\d{1,3}(?:,\d{3})+(?:\.\d{1,2})?(?!\d)/g, (tok) =>
+    tok.split(',').join(MASK),
+  );
+}
+
 /** Split pasted text into a grid of cells using the chosen delimiter. */
 export function splitPasted(text: string, delim: PasteDelimiter = 'auto'): string[][] {
   const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
@@ -148,8 +161,24 @@ export function splitPasted(text: string, delim: PasteDelimiter = 'auto'): strin
     else if (first.includes(',')) d = 'comma';
     else d = 'space';
   }
-  const sep = d === 'comma' ? /\s*,\s*/ : d === 'tab' ? /\t/ : /\s{2,}|\t/;
+  if (d === 'comma') {
+    return lines.map((l) =>
+      maskThousands(l).split(/\s*,\s*/).map((c) => c.split(MASK).join(',').trim()),
+    );
+  }
+  const sep = d === 'tab' ? /\t/ : /\s{2,}|\t/;
   return lines.map((l) => l.split(sep).map((c) => c.trim()));
+}
+
+/**
+ * Map a 2-digit year to a full CE year. Thai documents print 2-digit years in
+ * BOTH eras: "26" = CE 2026, but "68" = BE 2568 = CE 2025 (receipts almost
+ * always use BE). Fixed window: 00–49 → CE 20xx; 50–99 → BE 25xx (= CE
+ * 2007–2056). A CE reading of 50–99 would mean 2050+, which no receipt or
+ * statement handled by this app can be.
+ */
+export function fromTwoDigitYear(y: number): number {
+  return y >= 50 ? y + 2500 - 543 : y + 2000;
 }
 
 /** Loosely parse a date in common TH/EN formats to YYYY-MM-DD ('' if unknown). */
@@ -164,7 +193,7 @@ export function parseDateLoose(s: string): string {
   m = t.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})/); // DD/MM/YYYY
   if (m) {
     let y = Number(m[3]);
-    if (y < 100) y += 2000;
+    if (y < 100) y = fromTwoDigitYear(y); // 2-digit years may be BE (68 = 2568)
     if (y > 2400) y -= 543; // Buddhist year typed in
     return `${y}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
   }

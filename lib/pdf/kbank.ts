@@ -1,5 +1,6 @@
 import { categoryGroup } from '../categories';
 import { autoCategorize } from '../autocat';
+import { fromTwoDigitYear } from '../io';
 import type { RawTransaction } from '../types';
 
 // ── pure KBank (K-DEPOSIT) savings statement parser ─────────────────────────
@@ -135,7 +136,12 @@ export function parseKbankStatement(lines: string[]): KbankParseResult {
     const [, dd, mm, yy, hh, mi, type, amtRaw, balRaw, descRaw] = m;
     const amtCol = num(amtRaw);
     if (!amtCol) continue;
-    const date = `20${yy}-${mm}-${dd}`;
+    // Sanity-check the calendar fields so garbled OCR fragments that happen to
+    // fit ROW_RE's shape don't become fake transactions (and poison the
+    // balance chain used by reconstructFromBalance).
+    if (Number(mm) < 1 || Number(mm) > 12 || Number(dd) < 1 || Number(dd) > 31 || Number(hh) > 23) continue;
+    // 2-digit years may be Buddhist-era (12-06-68 = 2025-06-12).
+    const date = `${fromTwoDigitYear(Number(yy))}-${mm}-${dd}`;
     const time = `${hh.padStart(2, '0')}:${mi}`;
     const desc = (descRaw || type).trim();
     const { direction, category } = classifyKbank(type, desc, amtCol);

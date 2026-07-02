@@ -28,6 +28,24 @@ const KEYWORD_TABLE: { kw: string[]; category: string }[] = [
   { kw: ['โอน', 'transfer', 'พร้อมเพย์', 'promptpay', 'bbl', 'ktb', 'scb', 'kbank'], category: 'โอนเงิน/บุคคล' },
 ];
 
+// Payment-rail phrases that appear in almost every statement desc. They must
+// NOT drive categorization: "MAKE by KBank ..." would match the bank keywords
+// ('kbank'/'scb') in the transfer row and pull every shop payment into
+// โอนเงิน/บุคคล. Stripped from the (lowercased) haystack before matching.
+const CHANNEL_NOISE: RegExp[] = [
+  /make\s*by\s*k\s*bank/g, // MAKE by KBank (OCR may pad spaces)
+  /internet\/mobile\s+\S+/g, // Internet/Mobile SCB
+  /เพื่อชำระ\s*ref\s*\S+/g, // เพื่อชำระ Ref X3115
+  /scb\s*มณี\s*shop/g, // SCB มณี SHOP (merchant-side POS rail)
+  /k\s*plus/g, // K PLUS channel
+];
+
+function stripChannelNoise(hay: string): string {
+  let out = hay;
+  for (const re of CHANNEL_NOISE) out = out.replace(re, ' ');
+  return out;
+}
+
 // Grab fares below this are treated as a ride (transport), not food delivery.
 export const GRAB_RIDE_MAX = 120;
 
@@ -57,7 +75,7 @@ export function refineCategory(merchant: string, desc: string, category: string,
 export function autoCategorize(merchant: string, desc: string, rules: RulesState = {}, amount?: number): string {
   const rule = rules[merchant];
   if (rule?.category) return rule.category;
-  const hay = `${merchant} ${desc}`.toLowerCase();
+  const hay = stripChannelNoise(`${merchant} ${desc}`.toLowerCase());
   let category = 'ค่าใช้จ่ายอื่น';
   for (const { kw, category: c } of KEYWORD_TABLE) {
     if (kw.some((k) => hay.includes(k))) { category = c; break; }

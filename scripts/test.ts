@@ -17,7 +17,7 @@ import {
 } from '@/lib/io';
 import { autoCategorize, refineCategory } from '@/lib/autocat';
 import { parseUobStatement, summarizeBill } from '@/lib/pdf/uob';
-import { parseKbankStatement } from '@/lib/pdf/kbank';
+import { parseKbankStatement, classifyKbank } from '@/lib/pdf/kbank';
 import { detectBank, parseStatement } from '@/lib/pdf/statement';
 import { parseReceiptText } from '@/lib/ocr/receipt';
 import { adaptiveThreshold } from '@/lib/ocr/extract';
@@ -92,9 +92,12 @@ eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 176663.23, 0
   const months = aggregateByMonth(txns);
   ok('defaultMonth = 2026-05', defaultMonth(months) === '2026-05');
   ok('Feb flagged incomplete', months.find((m) => m.month === '2026-02')!.incomplete);
-  ok('June now complete (>=60% day coverage)', !months.find((m) => m.month === '2026-06')!.incomplete);
+  ok('Mar complete (UOB carries the weight)', !months.find((m) => m.month === '2026-03')!.incomplete);
+  ok('May complete', !months.find((m) => m.month === '2026-05')!.incomplete);
+  ok('June incomplete (zero UOB coverage)', months.find((m) => m.month === '2026-06')!.incomplete);
 }
 ok('projection Feb unreliable', projectMonth(txns, '2026-02').reliable === false);
+ok('projection June unreliable (missing UOB)', projectMonth(txns, '2026-06').reliable === false);
 ok('projection Feb projected=null', projectMonth(txns, '2026-02').projected === null);
 ok('projection May reliable', projectMonth(txns, '2026-05').reliable === true);
 {
@@ -431,6 +434,32 @@ console.log('\n── KBank balance-column self-correction ──');
   ];
   const r = parseKbankStatement(L);
   ok('clean statement keeps amount column', r.summary.amountSource === 'column' && r.transactions[0].amount === 200);
+}
+
+console.log('\n── autocat: channel noise must not drive category ──');
+ok('MAKE by KBank not swallowed', autoCategorize('GOLDEN DONUTS', 'MAKE by KBank GOLDEN DONUTS (THAILAND) CO.,LTD.', {}, 96) === 'ค่าใช้จ่ายอื่น');
+ok('SCB มณี SHOP not swallowed', autoCategorize('อาหารกล่อง BY วาสนา', 'SCB มณี SHOP อาหารกล่อง BY วาสนา', {}, 105) !== 'โอนเงิน/บุคคล');
+ok('เพื่อชำระ Ref stripped', autoCategorize('อร่อยแซงคิว', 'MAKE by KBank เพื่อชำระ Ref X3115 อร่อยแซงคิว', {}, 507) === 'ค่าใช้จ่ายอื่น');
+ok('real โอนไป still transfer', autoCategorize('สุรางค์', 'โอนไป พร้อมเพย์ X9709 สุรางค์', {}, 50) === 'โอนเงิน/บุคคล');
+ok('classifyKbank payment not transfer', classifyKbank('ชำระเงิน', 'MAKE by KBank GOLDEN DONUTS', 96).category !== 'โอนเงิน/บุคคล');
+ok('bank keyword still works alone', autoCategorize('', 'โอน KTB ปรารถนา') === 'โอนเงิน/บุคคล');
+
+console.log('\n── Buddhist-era 2-digit years ──');
+ok('parseDateLoose 2-digit BE year', parseDateLoose('14/05/68') === '2025-05-14');
+ok('parseDateLoose 2-digit CE year', parseDateLoose('10/06/26') === '2026-06-10');
+{
+  const r = parseKbankStatement(['12-06-68 17:37 ชำระเงิน 507.00 2,608.22 MAKE by KBank ร้านอร่อย']);
+  ok('kbank: 2-digit BE row year', r.transactions[0]?.date === '2025-06-12');
+  const bad = parseKbankStatement(['99-99-26 25:99 ชำระเงิน 1.00 2.00 ขยะ OCR']);
+  ok('kbank: rejects impossible date/time', bad.transactions.length === 0);
+}
+
+console.log('\n── comma paste with thousand separators ──');
+{
+  const g = splitPasted('10/06/2026, 1,234.50, Grab');
+  ok('amount cell stays whole', g[0].length === 3 && g[0][1] === '1,234.50');
+  ok('small ints still split', splitPasted('a,120,b')[0].length === 3);
+  ok('amount parses after split', parseAmountLoose(g[0][1]).value === 1234.5);
 }
 
 console.log('\n── receipt OCR parser ──');

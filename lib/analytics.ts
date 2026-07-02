@@ -1,4 +1,5 @@
 import { categoryGroup } from './categories';
+import { ACCOUNT_COVERAGE } from './data';
 import type {
   Transaction,
   SpendingEvent,
@@ -12,8 +13,8 @@ import type {
 } from './types';
 
 // Groups that count as "spending" for totals. transfer IS included in the
-// reconciled net total (53,663 + 83,651 + 33,261 = 170,576) but callers can
-// exclude it for "รายจ่ายจริง" views.
+// reconciled net total (asserted against the statement baseline in
+// scripts/reconcile.ts) but callers can exclude it for "รายจ่ายจริง" views.
 export const SPENDING_GROUPS: Group[] = ['essential', 'discretionary', 'transfer'];
 
 // Large/irregular categories treated as one-off for burn-rate purposes.
@@ -186,12 +187,50 @@ export function aggregateByGroup(events: SpendingEvent[]): Record<Group, number>
   return out;
 }
 
-/** Distinct calendar days that have any transaction in a month. */
-function coverageDays(txns: Transaction[], ym: string): number {
-  const days = new Set<string>();
-  for (const t of txns) if (monthOf(t.date) === ym) days.add(t.date);
-  return days.size;
+/**
+ * Days of `ym` covered for one account: statement windows (ACCOUNT_COVERAGE)
+ * unioned with days that have data — so future imports extend coverage even
+ * before the static table is updated. A day inside a statement window with
+ * zero spend still counts as covered (no-spend ≠ no-data).
+ */
+function accountCoveredDays(txns: Transaction[], account: string, ym: string): number {
+  const dim = daysInMonth(ym);
+  const covered = new Set<string>();
+  const windows = ACCOUNT_COVERAGE[account] ?? [];
+  for (let d = 1; d <= dim; d++) {
+    const date = `${ym}-${String(d).padStart(2, '0')}`;
+    if (windows.some(([lo, hi]) => lo <= date && date <= hi)) covered.add(date);
+  }
+  for (const t of txns) if (t.account === account && monthOf(t.date) === ym) covered.add(t.date);
+  return covered.size;
 }
+
+/**
+ * 0..1 — how completely a month's SPENDING is visible. Per-account day
+ * coverage, weighted by each account's share of total outflow, so a month
+ * missing the dominant account (June 2026: full KBank, zero UOB) scores low
+ * even though many calendar days have some transaction. Accounts outside
+ * ACCOUNT_COVERAGE (manual/cash entries) don't gate completeness.
+ */
+function monthCoverage(txns: Transaction[], ym: string): number {
+  const dim = daysInMonth(ym);
+  const outByAccount = new Map<string, number>();
+  for (const t of txns) {
+    if (t.direction !== 'out') continue;
+    outByAccount.set(t.account, (outByAccount.get(t.account) ?? 0) + t.amount);
+  }
+  let totalW = 0;
+  let acc = 0;
+  for (const account of Object.keys(ACCOUNT_COVERAGE)) {
+    const w = outByAccount.get(account) ?? 0;
+    totalW += w;
+    acc += w * (accountCoveredDays(txns, account, ym) / dim);
+  }
+  return totalW ? acc / totalW : 0;
+}
+
+/** A month is incomplete when less than 60% of its spending is visible. */
+const COVERAGE_THRESHOLD = 0.6;
 
 export function aggregateByMonth(txns: Transaction[], opts: EventOptions = {}): MonthAgg[] {
   const events = toSpendingEvents(txns, opts);
@@ -208,11 +247,11 @@ export function aggregateByMonth(txns: Transaction[], opts: EventOptions = {}): 
     byMonth.set(e.month, cur);
   }
   const rows = [...byMonth.values()].sort((a, b) => a.month.localeCompare(b.month));
-  // Mark a month incomplete when the dataset covers < 60% of its days
-  // (catches the edge-truncated Feb start & June tail). Bug #3 guard.
+  // Mark a month incomplete when too little of its spending is visible
+  // (catches the edge-truncated Feb start AND months where one whole account
+  // is missing, e.g. June 2026 with no UOB statement). Bug #3 guard.
   for (const r of rows) {
-    const cov = coverageDays(txns, r.month);
-    r.incomplete = cov < daysInMonth(r.month) * 0.6;
+    r.incomplete = monthCoverage(txns, r.month) < COVERAGE_THRESHOLD;
   }
   return rows;
 }
@@ -276,7 +315,7 @@ export function projectMonth(txns: Transaction[], month: string, opts: EventOpti
   let lastDay = 0;
   for (const e of events) lastDay = Math.max(lastDay, Number(e.date.slice(8, 10)));
 
-  const incomplete = coverageDays(txns, month) < dim * 0.6;
+  const incomplete = monthCoverage(txns, month) < COVERAGE_THRESHOLD;
   const reliable = !incomplete && lastDay >= 7 && daysWithData >= 5;
   const projected = reliable ? (spentSoFar / lastDay) * dim : null;
 
