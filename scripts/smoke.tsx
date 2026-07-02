@@ -14,6 +14,7 @@ g.document = dom.window.document;
 g.HTMLElement = dom.window.HTMLElement;
 g.Node = dom.window.Node;
 g.getComputedStyle = dom.window.getComputedStyle;
+g.MutationObserver = dom.window.MutationObserver;
 g.requestAnimationFrame = (cb: any) => setTimeout(() => cb(Date.now()), 0);
 g.cancelAnimationFrame = (id: any) => clearTimeout(id);
 g.IS_REACT_ACT_ENVIRONMENT = true;

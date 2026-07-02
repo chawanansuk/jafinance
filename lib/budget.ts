@@ -1,4 +1,5 @@
 import { aggregateByCategory, aggregateByMonth, toSpendingEvents, SPENDING_GROUPS } from './analytics';
+import { categoryGroup } from './categories';
 import type { BudgetState, Transaction, CategoryAgg } from './types';
 
 export const EMPTY_BUDGET: BudgetState = { byMonth: {}, income: {}, ceiling: {} };
@@ -61,7 +62,7 @@ export function categoryBudgetRows(
   const rows: CategoryBudgetRow[] = [];
   for (const category of cats) {
     const actual = byCat.get(category)?.total ?? 0;
-    const group = byCat.get(category)?.group ?? 'discretionary';
+    const group = byCat.get(category)?.group ?? categoryGroup(category);
     const budget = getCategoryBudget(state, month, category);
     const pct = budget ? actual / budget : 0;
     rows.push({ category, group, actual, budget, pct, tone: budgetTone(actual, budget ?? 0) });

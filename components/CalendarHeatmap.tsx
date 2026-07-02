@@ -32,7 +32,9 @@ export function CalendarHeatmap({ data }: { data: { date: string; total: number 
       for (let i = 0; i < 7; i++) {
         const iso = `${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, '0')}-${String(cur.getDate()).padStart(2, '0')}`;
         week.push({ date: iso, total: byDate.get(iso) ?? -1 }); // -1 = no data
-        if (cur.getDate() <= 7 && cur.getMonth() !== lastMonth) {
+        // label a month at its first visible week; lastMonth === -1 also labels
+        // an opening partial month (data starting after the 7th used to hide it)
+        if ((cur.getDate() <= 7 || lastMonth === -1) && cur.getMonth() !== lastMonth) {
           lastMonth = cur.getMonth();
           monthLabels.push({ col, label: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][cur.getMonth()] });
         }

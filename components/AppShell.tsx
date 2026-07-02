@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 import {
-  LayoutDashboard, PieChart, Wallet, ListOrdered, Lightbulb, SlidersHorizontal, Moon, Sun, Wallet2,
+  LayoutDashboard, PieChart, Wallet, ListOrdered, Lightbulb, SlidersHorizontal, Moon, Sun, Wallet2, Plus,
 } from 'lucide-react';
 import { KEYS, STORAGE_ERROR_EVENT } from '@/lib/storage';
-import { QuickAdd } from './QuickAdd';
+import { QuickAdd, QUICKADD_EVENT } from './QuickAdd';
 
 const NAV = [
   { href: '/', label: 'ภาพรวม', icon: LayoutDashboard },
@@ -85,6 +85,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </Link>
               ))}
             </nav>
+            <button
+              onClick={() => window.dispatchEvent(new Event(QUICKADD_EVENT))}
+              className="hidden lg:inline-flex btn-primary !py-1.5 !px-3 text-sm"
+            >
+              <Plus size={16} /> เพิ่มรายการ
+            </button>
             <ThemeToggle />
           </div>
         </div>

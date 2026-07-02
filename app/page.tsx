@@ -6,7 +6,7 @@ import { Receipt, CalendarDays, TrendingUp, TrendingDown, Wallet } from 'lucide-
 import { useData } from '@/components/DataProvider';
 import { StatCard, SectionTitle, IncompleteBadge, Notice, Money, CategoryChip, Skeleton } from '@/components/ui';
 import { MonthSelect, AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
-import { MonthlyBarChart, CategoryDonut } from '@/components/charts';
+import { MonthlyBarChart, CategoryDonut, GroupSplitBar } from '@/components/charts';
 import { Sparkline } from '@/components/Sparkline';
 import {
   aggregateByMonth, aggregateByCategory, toSpendingEvents,
@@ -142,7 +142,7 @@ export default function Dashboard() {
               {formatTHB(total)}
             </div>
             <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
-              {delta != null && delta !== 0 && (
+              {delta != null && Math.round(Math.abs(delta) * 100) >= 1 && (
                 <span className="inline-flex items-center gap-0.5 font-semibold rounded-full bg-white/20 px-2 py-0.5">
                   {delta > 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
                   {delta > 0 ? '+' : ''}{Math.round(delta * 100)}%
@@ -160,16 +160,19 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* stat cards */}
+      {/* stat cards + spending split */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard label="เฉลี่ยต่อวัน" value={<Money value={avgPerDay} />} icon={CalendarDays} accent="#06b6d4"
           sub={`${daysWithData} วันที่มีข้อมูล`} />
         <StatCard label="จำนวนรายการ" value={String(count)} icon={Receipt} accent="#14b8a6" />
-        <StatCard label="ลดได้ (discretionary)" value={<Money value={discretionary} />} icon={TrendingDown} accent="#f97316"
-          sub={total ? `${Math.round((discretionary / total) * 100)}% ของยอด` : undefined} />
-        <StatCard label="จำเป็น (essential)" value={<Money value={events.filter((e) => e.group === 'essential').reduce((s, e) => s + e.signed, 0)} />}
-          icon={TrendingUp} accent="#10b981"
-          sub={total ? `${Math.round((events.filter((e) => e.group === 'essential').reduce((s, e) => s + e.signed, 0) / total) * 100)}% ของยอด` : undefined} />
+        <div className="card card-pad col-span-2">
+          <SectionTitle>แบ่งตามลักษณะรายจ่าย</SectionTitle>
+          <GroupSplitBar
+            essential={events.filter((e) => e.group === 'essential').reduce((s, e) => s + e.signed, 0)}
+            discretionary={discretionary}
+            transfer={events.filter((e) => e.group === 'transfer').reduce((s, e) => s + e.signed, 0)}
+          />
+        </div>
       </div>
 
       {incomplete && (
@@ -181,7 +184,7 @@ export default function Dashboard() {
 
       {/* monthly bar */}
       <div className="card card-pad">
-        <SectionTitle action={<span className="text-xs text-ink-soft">คลิกแท่งเพื่อเลือกเดือน · แท่งจางคือเดือนข้อมูลไม่ครบ</span>}>
+        <SectionTitle action={<span className="text-xs text-ink-soft">คลิกแท่งเพื่อเลือกเดือน · แท่งลายเส้น = เดือนข้อมูลไม่ครบ</span>}>
           รายจ่ายรายเดือน
         </SectionTitle>
         <MonthlyBarChart

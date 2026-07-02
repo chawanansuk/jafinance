@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { TrendingUp, TrendingDown, AlertTriangle, type LucideIcon } from 'lucide-react';
 import { formatTHB, formatDelta } from '@/lib/format';
 import { GROUP_LABEL, GROUP_COLOR, categoryMeta } from '@/lib/categories';
@@ -86,7 +86,7 @@ export function CategoryChip({ name, size = 16 }: { name: string; size?: number 
   const meta = categoryMeta(name);
   const Icon = meta.icon;
   return (
-    <span className="inline-flex items-center gap-2 min-w-0">
+    <span className="inline-flex items-center gap-2 min-w-0 max-w-full">
       <span className="grid place-items-center rounded-lg shrink-0"
         style={{ background: meta.color + '22', color: meta.color, width: size + 12, height: size + 12 }}>
         <Icon size={size} />
@@ -144,4 +144,78 @@ export function EmptyState({ children }: { children: ReactNode }) {
 
 export function Skeleton({ className = '' }: { className?: string }) {
   return <div className={`animate-pulse rounded-xl bg-surface-2 ${className}`} />;
+}
+
+/**
+ * Shared modal: dialog semantics, Escape-to-close, a tab trap, body scroll
+ * lock, and focus restore — the four hand-rolled overlays lacked all of it,
+ * so keyboard users could tab into the page behind and Esc did nothing.
+ * Backdrop click calls onClose; put any discard-confirm inside onClose.
+ */
+export function Modal({
+  open, onClose, children, labelledBy, maxW = 'max-w-md',
+}: {
+  open: boolean;
+  onClose: () => void;
+  children: ReactNode;
+  labelledBy?: string;
+  maxW?: string;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.activeElement as HTMLElement | null;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    panelRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const nodes = panelRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      const focusables = nodes ? [...nodes].filter((el) => !el.hasAttribute('disabled')) : [];
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || active === panelRef.current)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+      prev?.focus?.();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4"
+      onClick={onClose}>
+      <div
+        ref={panelRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={labelledBy}
+        className={`card w-full ${maxW} rounded-b-none sm:rounded-2xl max-h-[92dvh] overflow-y-auto outline-none`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>
+  );
 }

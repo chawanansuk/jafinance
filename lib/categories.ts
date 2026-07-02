@@ -44,19 +44,19 @@ export const CATEGORIES: CategoryMeta[] = [
   { name: 'Grab/เดลิเวอรี่/แท็กซี่', group: 'discretionary', color: '#14b8a6', icon: Car },
   { name: 'เดินทาง/ขนส่ง', group: 'essential', color: '#0ea5e9', icon: Bus },
   { name: 'ที่พัก/ท่องเที่ยว', group: 'discretionary', color: '#8b5cf6', icon: Plane },
-  { name: 'น้ำมัน/ปั๊ม', group: 'essential', color: '#64748b', icon: Fuel },
-  { name: 'โรงพยาบาล/สุขภาพ', group: 'essential', color: '#06b6d4', icon: HeartPulse },
+  { name: 'น้ำมัน/ปั๊ม', group: 'essential', color: '#2a78d6', icon: Fuel },
+  { name: 'โรงพยาบาล/สุขภาพ', group: 'essential', color: '#0891b2', icon: HeartPulse },
   { name: 'เสื้อผ้า/แฟชั่น', group: 'discretionary', color: '#d946ef', icon: Shirt },
   { name: 'คาเฟ่/ขนม', group: 'discretionary', color: '#f59e0b', icon: Coffee },
   { name: 'ซับสคริปชั่น/ดิจิทัล', group: 'discretionary', color: '#6366f1', icon: Repeat },
   { name: 'ช้อปออนไลน์', group: 'discretionary', color: '#a855f7', icon: Globe },
-  { name: 'เติมเงิน/วอลเล็ต', group: 'transfer', color: '#94a3b8', icon: Wallet },
+  { name: 'เติมเงิน/วอลเล็ต', group: 'transfer', color: '#c026d3', icon: Wallet },
   { name: 'การศึกษา/เด็ก', group: 'essential', color: '#3b82f6', icon: GraduationCap },
   { name: 'ค่าบริการรายวัน (AUD)', group: 'discretionary', color: '#eab308', icon: CalendarClock },
-  { name: 'โอนเงิน/บุคคล', group: 'transfer', color: '#78716c', icon: Send },
-  { name: 'ถอนเงินสด', group: 'transfer', color: '#a8a29e', icon: Banknote },
-  { name: 'ธุรกิจ/บริการ', group: 'transfer', color: '#737373', icon: Briefcase },
-  { name: 'ค่าใช้จ่ายอื่น', group: 'transfer', color: '#9ca3af', icon: CircleEllipsis },
+  { name: 'โอนเงิน/บุคคล', group: 'transfer', color: '#e87ba4', icon: Send },
+  { name: 'ถอนเงินสด', group: 'transfer', color: '#c98500', icon: Banknote },
+  { name: 'ธุรกิจ/บริการ', group: 'transfer', color: '#4a3aa7', icon: Briefcase },
+  { name: 'ค่าใช้จ่ายอื่น', group: 'transfer', color: '#6b8e23', icon: CircleEllipsis },
   { name: 'ชำระบัตรเครดิต', group: 'transfer', color: '#0d9488', icon: CreditCard },
   { name: 'รายรับ (เงินเข้า)', group: 'income', color: '#10b981', icon: ArrowDownCircle },
   { name: 'คืนเงิน (refund)', group: 'refund', color: '#34d399', icon: Undo2 },
@@ -67,7 +67,7 @@ const BY_NAME = new Map(CATEGORIES.map((c) => [c.name, c]));
 const FALLBACK: CategoryMeta = {
   name: 'ค่าใช้จ่ายอื่น',
   group: 'transfer',
-  color: '#9ca3af',
+  color: '#6b8e23',
   icon: CircleEllipsis,
 };
 
@@ -94,7 +94,28 @@ export const GROUP_LABEL: Record<Group, string> = {
 export const GROUP_COLOR: Record<Group, string> = {
   essential: '#16a34a',
   discretionary: '#f97316',
-  transfer: '#64748b',
+  transfer: '#2a78d6',
   income: '#10b981',
   refund: '#34d399',
 };
+
+// Dark mode uses its own (darker) steps for hues that float above the dark
+// lightness band — applied by charts only; chips keep base colors since they
+// always carry a text label. Validated with the dataviz palette checker.
+const DARK_STEP: Record<string, string> = {
+  '#22c55e': '#16a34a', // ร้านสะดวกซื้อ
+  '#e87ba4': '#d55181', // โอนเงิน/บุคคล
+  '#14b8a6': '#0d9488', // Grab
+  '#f97316': '#d95926', // discretionary group
+  '#f59e0b': '#d97706', // คาเฟ่/ขนม
+};
+
+/** Chart-facing color: base category color, stepped down in dark mode. */
+export function chartCategoryColor(name: string, dark: boolean): string {
+  const c = categoryColor(name);
+  return dark ? DARK_STEP[c] ?? c : c;
+}
+
+export function chartHex(color: string, dark: boolean): string {
+  return dark ? DARK_STEP[color] ?? color : color;
+}

@@ -34,18 +34,32 @@ export default function BudgetPage() {
   const ceiling = getCeiling(budget, selected);
   const savings = useMemo(() => cumulativeSavings(txns, budget), [txns, budget]);
 
+  // clearing a field deletes the key — storing 0 would block the "*" fallback
+  // and make "เติมงบที่ว่าง" skip fields the user cleared.
   const setCatBudget = (category: string, value: number) =>
-    setBudget((p) => ({
-      ...p,
-      byMonth: { ...p.byMonth, [selected]: { ...(p.byMonth[selected] ?? {}), [category]: value } },
-    }));
+    setBudget((p) => {
+      const cur = { ...(p.byMonth[selected] ?? {}) };
+      if (value > 0) cur[category] = value;
+      else delete cur[category];
+      return { ...p, byMonth: { ...p.byMonth, [selected]: cur } };
+    });
 
   const setIncome = (value: number) =>
-    setBudget((p) => ({ ...p, income: { ...p.income, [selected]: value } }));
+    setBudget((p) => {
+      const income = { ...p.income };
+      if (value > 0) income[selected] = value;
+      else delete income[selected];
+      return { ...p, income };
+    });
   const setSavingsGoal = (value: number) =>
     setBudget((p) => ({ ...p, savingsGoal: value || undefined }));
   const setCeiling = (value: number) =>
-    setBudget((p) => ({ ...p, ceiling: { ...p.ceiling, [selected]: value } }));
+    setBudget((p) => {
+      const ceiling = { ...p.ceiling };
+      if (value > 0) ceiling[selected] = value;
+      else delete ceiling[selected];
+      return { ...p, ceiling };
+    });
 
   const autoFill = () => {
     const sug = suggestBudgets(txns);
@@ -130,7 +144,7 @@ export default function BudgetPage() {
               </div>
             </div>
           </div>
-          {ceiling && summary.remainingPerDayLeft != null && (
+          {!!ceiling && summary.remainingPerDayLeft != null && (
             <p className="text-xs text-ink-soft">เหลือใช้ได้อีก ~{formatTHB(summary.remainingPerDayLeft)}/วัน</p>
           )}
           {!projection.reliable && !ceiling && (
@@ -144,11 +158,16 @@ export default function BudgetPage() {
 
       {/* summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="งบรวมทั้งเดือน" value={<Money value={summary.totalBudget} />} icon={Target} accent="#8b5cf6" />
+        <StatCard label="งบรวมทั้งเดือน" icon={Target} accent="#8b5cf6"
+          value={summary.totalBudget ? <Money value={summary.totalBudget} /> : 'ยังไม่ตั้ง'}
+          sub={summary.totalBudget ? undefined : 'ใช้ "เติมงบที่ว่าง" ด้านล่าง'} />
         <StatCard label="ใช้ไปแล้ว" value={<Money value={summary.totalActual} />} icon={TrendingUp} accent="#0ea5e9" />
-        <StatCard label="คงเหลือ" value={<Money value={summary.remaining} />} icon={PiggyBank} accent="#10b981"
-          tone={summary.remaining < 0 ? 'bad' : 'good'} />
-        <StatCard label="หมวดที่เกินงบ" value={String(rows.filter((r) => r.tone === 'over' && r.budget).length)} icon={AlertTriangle} accent="#f43f5e" />
+        <StatCard label="คงเหลือ" icon={PiggyBank} accent="#10b981"
+          value={summary.totalBudget ? <Money value={summary.remaining} /> : '—'}
+          tone={summary.totalBudget && summary.remaining < 0 ? 'bad' : 'good'}
+          sub={summary.totalBudget ? undefined : 'ตั้งงบก่อนจึงจะคำนวณได้'} />
+        <StatCard label="หมวดที่เกินงบ" icon={AlertTriangle} accent="#f43f5e"
+          value={summary.totalBudget ? String(rows.filter((r) => r.tone === 'over' && r.budget).length) : '—'} />
       </div>
 
       {/* essential vs discretionary */}
@@ -222,7 +241,7 @@ export default function BudgetPage() {
             <li key={r.category} className="space-y-1.5">
               <div className="flex items-center gap-3">
                 <span className="min-w-0 flex-1"><CategoryChip name={r.category} /></span>
-                <span className="text-sm font-semibold tnum"><Money value={r.actual} /></span>
+                <span className="text-sm font-semibold tnum whitespace-nowrap shrink-0"><Money value={r.actual} /></span>
                 <span className="text-ink-soft text-sm">/</span>
                 <input
                   type="number" inputMode="numeric"

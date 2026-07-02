@@ -12,6 +12,7 @@ import { parseStatement, type StatementResult } from '@/lib/pdf/statement';
 import { ocrImage } from '@/lib/ocr/extract';
 import { extractStatementWithAI, aiErrorMessage, AI_MODELS, DEFAULT_AI_MODEL } from '@/lib/ai/statement';
 import { useLocalStorage, KEYS } from '@/lib/storage';
+import { Modal } from './ui';
 import type { Statement } from '@/lib/types';
 
 const CAT_NAMES = CATEGORIES.map((c) => c.name);
@@ -48,8 +49,12 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
       else { setResult(r); if (r.transactions.length === 0) setError('อ่านไม่เจอรายการ — รูปอาจไม่ชัด ลองใช้ PDF'); }
       setNeedPw(false); setCatOverrides({});
     } catch (e) {
-      if (e instanceof PdfPasswordError) { setNeedPw(true); setPendingFile(file); }
-      else { setError('อ่านไฟล์ไม่สำเร็จ: ' + (e as Error).message); }
+      if (e instanceof PdfPasswordError) {
+        setNeedPw(true);
+        setPendingFile(file);
+        // a retry that supplied a password and still landed here = wrong password
+        if (pw != null) setError('รหัสผ่านไม่ถูกต้อง — ลองใหม่อีกครั้ง');
+      } else { setError('อ่านไฟล์ไม่สำเร็จ: ' + (e as Error).message); }
     } finally {
       setBusy('');
     }
@@ -111,15 +116,19 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
     setResult(null);
   };
 
-  const close = () => { setResult(null); setError(''); setNeedPw(false); setPassword(''); setPendingFile(null); setDone(''); setCloud(false); onClose(); };
+  const close = () => {
+    if (result && result.transactions.length > 0 && !done) {
+      if (!confirm('ยังไม่ได้กด "เพิ่มรายการ" — ปิดแล้วผลที่อ่านได้และหมวดที่แก้ไว้จะหายไป ปิดเลย?')) return;
+    }
+    setResult(null); setError(''); setNeedPw(false); setPassword(''); setPendingFile(null); setDone(''); setCloud(false); onClose();
+  };
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4" onClick={close}>
-      <div className="card w-full max-w-2xl rounded-b-none sm:rounded-2xl max-h-[92dvh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+    <Modal open={open} onClose={close} labelledBy="pdfimport-title" maxW="max-w-2xl">
         <div className="sticky top-0 bg-surface border-b border-line px-4 py-3 flex items-center justify-between z-10">
-          <h2 className="font-semibold flex items-center gap-2"><FileText size={18} /> นำเข้าสเตทเมนต์ (UOB / KBank)</h2>
+          <h2 id="pdfimport-title" className="font-semibold flex items-center gap-2"><FileText size={18} /> นำเข้าสเตทเมนต์ (UOB / KBank)</h2>
           <button aria-label="ปิด" onClick={close} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
         </div>
 
@@ -174,7 +183,8 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
               <p className="text-sm flex items-center gap-1.5"><Lock size={15} /> ไฟล์ล็อกรหัสผ่าน</p>
               <div className="flex gap-2">
                 <input type="password" className="input" placeholder="รหัสผ่าน PDF" value={password}
-                  onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && pendingFile && run(pendingFile, password)} />
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !busy && pendingFile) { setError(''); run(pendingFile, password); } }} />
                 <button className="btn-primary" disabled={!!busy || !pendingFile} onClick={() => pendingFile && run(pendingFile, password)}>ปลดล็อก</button>
               </div>
             </div>
@@ -262,7 +272,6 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
           </div>
           {!cloud && <p className="text-[11px] text-ink-soft text-center">PDF/OCR อ่านในเครื่อง ไม่ส่งออก · Cloud AI ส่งรูปไป Claude API</p>}
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }

@@ -44,7 +44,9 @@ export default function InsightsPage() {
     const out: { category: string; from: number; to: number; pct: number }[] = [];
     for (const [category, to] of b) {
       const fromV = a.get(category) ?? 0;
-      if (to < 300) continue;
+      // need a meaningful base AND destination, otherwise tiny categories
+      // (฿281 -> ฿707) headline as "+152%" noise
+      if (to < 1000 || fromV < 300) continue;
       const pct = fromV > 0 ? (to - fromV) / fromV : to > 0 ? 1 : 0;
       out.push({ category, from: fromV, to, pct });
     }
@@ -122,9 +124,10 @@ export default function InsightsPage() {
             <ul className="space-y-2.5">
               {recurring.map((r) => (
                 <li key={r.merchant + r.category} className="flex items-center gap-3 text-sm">
-                  <span className="truncate">
+                  <span className="truncate min-w-0">
                     <b>{r.merchant}</b>
                     <span className="text-ink-soft"> · {r.cadence}</span>
+                    <span className="block text-xs text-ink-soft truncate">{r.category}</span>
                   </span>
                   <span className="ml-auto text-right shrink-0">
                     <div className="font-semibold tnum"><Money value={r.total} /></div>

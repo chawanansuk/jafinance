@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { X, ClipboardPaste, Check, AlertTriangle } from 'lucide-react';
 import { useData } from './DataProvider';
+import { Modal } from './ui';
 import { CATEGORIES } from '@/lib/categories';
 import { autoCategorize } from '@/lib/autocat';
 import { formatTHB, formatDate } from '@/lib/format';
@@ -58,6 +59,10 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
     directionMode,
   };
 
+  useEffect(() => {
+    setCatOverrides({});
+  }, [text, delim, account, directionMode, manual]);
+
   const raws = useMemo(
     () => rowsFromMapping(grid, mapping, (m, d, amt) => autoCategorize(m, d, rules, amt)),
     [grid, mapping.date, mapping.amount, mapping.merchant, mapping.desc, mapping.account, mapping.directionMode, rules],
@@ -76,10 +81,9 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
   const colOptions = Array.from({ length: cols }, (_, i) => i);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4" onClick={onClose}>
-      <div className="card w-full max-w-2xl rounded-b-none sm:rounded-2xl max-h-[92dvh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+    <Modal open={open} onClose={onClose} labelledBy="smartimport-title" maxW="max-w-2xl">
         <div className="sticky top-0 bg-surface border-b border-line px-4 py-3 flex items-center justify-between z-10">
-          <h2 className="font-semibold flex items-center gap-2"><ClipboardPaste size={18} /> นำเข้าด้วยการวางข้อความ</h2>
+          <h2 id="smartimport-title" className="font-semibold flex items-center gap-2"><ClipboardPaste size={18} /> นำเข้าด้วยการวางข้อความ</h2>
           <button aria-label="ปิด" onClick={onClose} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
         </div>
 
@@ -164,7 +168,6 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
             </button>
           </div>
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }
