@@ -15,11 +15,11 @@
 }
 
 .dark {
-  --surface: 21 30 28;
-  --surface-2: 28 40 37;
-  --ink: 231 240 236;
-  --ink-soft: 148 166 159;
-  --line: 40 54 49;
+  --surface: 24 33 31;
+  --surface-2: 31 43 40;
+  --ink: 233 241 238;
+  --ink-soft: 152 170 163;
+  --line: 45 60 55;
   --brand: 52 211 153;
   --brand-2: 45 212 191;
   --bg: 9 18 15;
@@ -46,13 +46,51 @@ body {
 
 .tnum { font-variant-numeric: tabular-nums; }
 
+::selection { background: rgb(var(--brand) / 0.25); }
+
+/* visible, on-brand keyboard focus without touching mouse users */
+:focus-visible {
+  outline: 2px solid rgb(var(--brand) / 0.65);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* subtle scrollbar on fine pointers */
+@media (pointer: fine) {
+  * { scrollbar-width: thin; scrollbar-color: rgb(var(--line)) transparent; }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-thumb { background: rgb(var(--line)); border-radius: 8px; }
+  *::-webkit-scrollbar-thumb:hover { background: rgb(var(--ink-soft) / 0.5); }
+  *::-webkit-scrollbar-track { background: transparent; }
+}
+
 @layer components {
   .card {
-    @apply rounded-2xl bg-surface border border-line;
-    box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 12px 30px -18px rgb(15 23 42 / 0.18);
+    @apply rounded-2xl bg-surface border border-line/80;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.6),
+      0 1px 2px rgb(15 23 42 / 0.04),
+      0 12px 30px -18px rgb(15 23 42 / 0.18);
+  }
+  .dark .card {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.06),
+      0 1px 2px rgb(0 0 0 / 0.35),
+      0 16px 36px -20px rgb(0 0 0 / 0.55);
   }
   .card-hover { @apply transition-all duration-200 hover:-translate-y-0.5; }
-  .card-hover:hover { box-shadow: 0 2px 6px rgb(15 23 42 / 0.06), 0 18px 40px -20px rgb(15 23 42 / 0.28); }
+  .card-hover:hover {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.6),
+      0 2px 6px rgb(15 23 42 / 0.06),
+      0 18px 40px -20px rgb(15 23 42 / 0.28);
+  }
+  .dark .card-hover:hover {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.07),
+      0 2px 6px rgb(0 0 0 / 0.4),
+      0 22px 44px -22px rgb(0 0 0 / 0.65);
+  }
   .card-pad { @apply p-4 sm:p-5; }
 
   .pill { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium; }
@@ -61,8 +99,13 @@ body {
     @apply inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-medium
            transition-all active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none;
   }
-  .btn-primary { @apply btn text-white shadow-sm; background-image: linear-gradient(120deg, rgb(var(--brand)), rgb(var(--brand-2))); }
-  .btn-primary:hover { filter: brightness(1.07); }
+  .btn-primary {
+    @apply btn text-white;
+    background-image: linear-gradient(120deg, rgb(var(--brand)), rgb(var(--brand-2)));
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.12), 0 8px 18px -8px rgb(var(--brand) / 0.55);
+  }
+  .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0) scale(0.97); }
   .btn-ghost { @apply btn bg-surface-2 text-ink hover:bg-line/60; }
 
   .seg { @apply text-xs font-medium px-3 py-1.5 rounded-lg transition-all; }
@@ -87,6 +130,13 @@ body {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.hero-dots {
+  background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1.4px);
+  background-size: 16px 16px;
+  mask-image: linear-gradient(115deg, transparent 30%, black 85%);
+  -webkit-mask-image: linear-gradient(115deg, transparent 30%, black 85%);
+}
 
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .animate-rise { animation: rise 0.35s ease both; }

@@ -129,8 +129,9 @@ export default function Dashboard() {
       </div>
 
       {/* hero summary */}
-      <div className="rounded-2xl p-5 relative overflow-hidden animate-rise text-white shadow-lg"
+      <div className="rounded-3xl p-5 sm:p-6 relative overflow-hidden animate-rise text-white shadow-lg"
         style={{ backgroundImage: 'linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%)' }}>
+        <div className="hero-dots absolute inset-0 pointer-events-none" />
         <div className="absolute -top-10 -right-8 h-40 w-40 rounded-full bg-white/15 blur-2xl pointer-events-none" />
         <div className="absolute -bottom-12 -left-6 h-40 w-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
         <div className="relative flex items-end justify-between gap-4">
@@ -138,19 +139,19 @@ export default function Dashboard() {
             <div className="flex items-center gap-2 text-sm text-white/85">
               <Wallet size={15} /> รายจ่าย{range === 'month' ? '' : 'รวม'} {rangeLabel}
             </div>
-            <div className="mt-1 text-4xl sm:text-5xl font-extrabold tnum leading-none drop-shadow-sm">
+            <div className="mt-1 text-4xl sm:text-5xl font-extrabold tnum leading-none drop-shadow-sm tracking-tight">
               {formatTHB(total)}
             </div>
             <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
               {delta != null && Math.round(Math.abs(delta) * 100) >= 1 && (
-                <span className="inline-flex items-center gap-0.5 font-semibold rounded-full bg-white/20 px-2 py-0.5">
+                <span className="inline-flex items-center gap-0.5 font-semibold rounded-full bg-white/20 border border-white/20 backdrop-blur-sm px-2 py-0.5">
                   {delta > 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
                   {delta > 0 ? '+' : ''}{Math.round(delta * 100)}%
                   <span className="font-normal text-white/80">เทียบ {prevM ? formatMonth(prevM) : 'ก่อนหน้า'}</span>
                 </span>
               )}
-              <span className="rounded-full bg-white/15 px-2 py-0.5">{count} รายการ</span>
-              <span className="rounded-full bg-white/15 px-2 py-0.5">เฉลี่ย {formatTHB(avgPerDay)}/วัน</span>
+              <span className="rounded-full bg-white/15 border border-white/20 backdrop-blur-sm px-2 py-0.5">{count} รายการ</span>
+              <span className="rounded-full bg-white/15 border border-white/20 backdrop-blur-sm px-2 py-0.5">เฉลี่ย {formatTHB(avgPerDay)}/วัน</span>
             </div>
           </div>
           <div className="hidden xs:block shrink-0 self-center">

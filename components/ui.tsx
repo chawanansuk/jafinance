@@ -27,8 +27,12 @@ export function StatCard({
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs text-ink-soft font-medium">{label}</span>
         {Icon && (
-          <span className="grid place-items-center h-7 w-7 rounded-lg shrink-0 shadow-sm"
-            style={{ background: accent, color: '#fff' }}>
+          <span className="grid place-items-center h-7 w-7 rounded-lg shrink-0"
+            style={{
+              background: `color-mix(in srgb, ${accent} 16%, transparent)`,
+              color: accent,
+              boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${accent} 28%, transparent)`,
+            }}>
             <Icon size={15} />
           </span>
         )}

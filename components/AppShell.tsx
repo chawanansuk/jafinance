@@ -114,12 +114,13 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Link
                 key={href}
                 href={href}
-                className={`relative flex flex-col items-center gap-0.5 py-2.5 text-[11px] transition-colors ${
-                  on ? 'text-brand' : 'text-ink-soft'
+                className={`flex flex-col items-center gap-0.5 py-2 text-[11px] transition-colors ${
+                  on ? 'text-brand font-medium' : 'text-ink-soft'
                 }`}
               >
-                {on && <span className="absolute top-0 h-0.5 w-7 rounded-full bg-brand" />}
-                <Icon size={20} strokeWidth={on ? 2.5 : 2} />
+                <span className={`grid place-items-center h-7 w-12 rounded-full transition-colors ${on ? 'bg-brand/15' : ''}`}>
+                  <Icon size={20} strokeWidth={on ? 2.4 : 2} />
+                </span>
                 {label}
               </Link>
             );
