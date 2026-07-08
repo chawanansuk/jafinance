@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Receipt, CalendarDays, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
-import { StatCard, SectionTitle, IncompleteBadge, Notice, Money, CategoryChip, Skeleton } from '@/components/ui';
+import { StatCard, SectionTitle, IncompleteBadge, Notice, Money, CountUp, CategoryChip, Skeleton } from '@/components/ui';
 import { MonthSelect, AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
 import { MonthlyBarChart, CategoryDonut, GroupSplitBar } from '@/components/charts';
 import { Sparkline } from '@/components/Sparkline';
@@ -140,7 +140,7 @@ export default function Dashboard() {
               <Wallet size={15} /> รายจ่าย{range === 'month' ? '' : 'รวม'} {rangeLabel}
             </div>
             <div className="mt-1 text-4xl sm:text-5xl font-extrabold tnum leading-none drop-shadow-sm tracking-tight">
-              {formatTHB(total)}
+              <CountUp value={total} format={formatTHB} />
             </div>
             <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
               {delta != null && Math.round(Math.abs(delta) * 100) >= 1 && (
@@ -162,10 +162,10 @@ export default function Dashboard() {
       </div>
 
       {/* stat cards + spending split */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="เฉลี่ยต่อวัน" value={<Money value={avgPerDay} />} icon={CalendarDays} accent="#06b6d4"
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 animate-rise" style={{ animationDelay: '60ms' }}>
+        <StatCard label="เฉลี่ยต่อวัน" value={<CountUp value={avgPerDay} format={formatTHB} />} icon={CalendarDays} accent="#06b6d4"
           sub={`${daysWithData} วันที่มีข้อมูล`} />
-        <StatCard label="จำนวนรายการ" value={String(count)} icon={Receipt} accent="#14b8a6" />
+        <StatCard label="จำนวนรายการ" value={<CountUp value={count} />} icon={Receipt} accent="#14b8a6" />
         <div className="card card-pad col-span-2">
           <SectionTitle>แบ่งตามลักษณะรายจ่าย</SectionTitle>
           <GroupSplitBar
@@ -184,7 +184,7 @@ export default function Dashboard() {
       )}
 
       {/* monthly bar */}
-      <div className="card card-pad">
+      <div className="card card-pad animate-rise" style={{ animationDelay: '120ms' }}>
         <SectionTitle action={<span className="text-xs text-ink-soft">คลิกแท่งเพื่อเลือกเดือน · แท่งลายเส้น = เดือนข้อมูลไม่ครบ</span>}>
           รายจ่ายรายเดือน
         </SectionTitle>
@@ -196,7 +196,7 @@ export default function Dashboard() {
       </div>
 
       {/* donut + top categories */}
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-2 gap-4 animate-rise" style={{ animationDelay: '180ms' }}>
         <div className="card card-pad">
           <SectionTitle>แยกตามหมวด</SectionTitle>
           {catAggs.length ? (

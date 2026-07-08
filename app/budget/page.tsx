@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { Wand2, PiggyBank, Target, TrendingUp, AlertTriangle } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
-import { StatCard, SectionTitle, ProgressBar, CategoryChip, Money, Notice, Skeleton, IncompleteBadge } from '@/components/ui';
+import { StatCard, SectionTitle, ProgressBar, CategoryChip, Money, CountUp, Notice, Skeleton, IncompleteBadge } from '@/components/ui';
 import { MonthSelect } from '@/components/Controls';
 import {
   categoryBudgetRows, suggestBudgets, monthSummary, getIncome, getCeiling, cumulativeSavings,
@@ -157,13 +157,13 @@ export default function BudgetPage() {
       </div>
 
       {/* summary cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 animate-rise" style={{ animationDelay: '60ms' }}>
         <StatCard label="งบรวมทั้งเดือน" icon={Target} accent="#8b5cf6"
-          value={summary.totalBudget ? <Money value={summary.totalBudget} /> : 'ยังไม่ตั้ง'}
+          value={summary.totalBudget ? <CountUp value={summary.totalBudget} format={formatTHB} /> : 'ยังไม่ตั้ง'}
           sub={summary.totalBudget ? undefined : 'ใช้ "เติมงบที่ว่าง" ด้านล่าง'} />
-        <StatCard label="ใช้ไปแล้ว" value={<Money value={summary.totalActual} />} icon={TrendingUp} accent="#0ea5e9" />
+        <StatCard label="ใช้ไปแล้ว" value={<CountUp value={summary.totalActual} format={formatTHB} />} icon={TrendingUp} accent="#0ea5e9" />
         <StatCard label="คงเหลือ" icon={PiggyBank} accent="#10b981"
-          value={summary.totalBudget ? <Money value={summary.remaining} /> : '—'}
+          value={summary.totalBudget ? <CountUp value={summary.remaining} format={formatTHB} /> : '—'}
           tone={summary.totalBudget && summary.remaining < 0 ? 'bad' : 'good'}
           sub={summary.totalBudget ? undefined : 'ตั้งงบก่อนจึงจะคำนวณได้'} />
         <StatCard label="หมวดที่เกินงบ" icon={AlertTriangle} accent="#f43f5e"

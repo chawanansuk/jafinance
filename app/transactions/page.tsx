@@ -8,7 +8,7 @@ import { AccountToggle, Segmented, type AccountFilter } from '@/components/Contr
 import { SmartImport } from '@/components/SmartImport';
 import { PdfImport } from '@/components/PdfImport';
 import { BillsPanel } from '@/components/BillsPanel';
-import { CATEGORIES } from '@/lib/categories';
+import { categoryMeta, CATEGORIES } from '@/lib/categories';
 import { formatDate } from '@/lib/format';
 import { parseImport, toCSV, downloadFile } from '@/lib/io';
 
@@ -149,13 +149,63 @@ export default function TransactionsPage() {
         </div>
       </details>
 
-      <div className="flex items-center justify-between text-sm text-ink-soft px-1">
-        <span>{filtered.length} รายการ</span>
-        <span>รวมรายจ่าย <b className="tnum text-ink"><Money value={totalShown} /></b></span>
+      <div className="flex items-center justify-between gap-2 text-sm text-ink-soft px-1">
+        <span className="shrink-0">{filtered.length} รายการ</span>
+        <span className="sm:hidden flex gap-1">
+          <button onClick={() => toggleSort('date')} className={`seg ${sortKey === 'date' ? 'seg-on' : 'seg-off'}`}>
+            วันที่ <ArrowUpDown size={11} className="inline" />
+          </button>
+          <button onClick={() => toggleSort('amount')} className={`seg ${sortKey === 'amount' ? 'seg-on' : 'seg-off'}`}>
+            จำนวน <ArrowUpDown size={11} className="inline" />
+          </button>
+        </span>
+        <span className="text-right">รวมรายจ่าย <b className="tnum text-ink"><Money value={totalShown} /></b></span>
       </div>
 
-      {/* table */}
-      <div className="card overflow-x-auto no-scrollbar">
+      {/* mobile: 2-line cards (the table squeezes unreadably at 390px) */}
+      <ul className="sm:hidden card divide-y divide-line/60">
+        {filtered.slice(0, limit).map((t) => {
+          const meta = categoryMeta(t.category);
+          const MetaIcon = meta.icon;
+          return (
+            <li key={t.id} className="px-3.5 py-3">
+              <div className="flex items-start gap-3">
+                <span className="grid place-items-center h-9 w-9 rounded-xl shrink-0 mt-0.5"
+                  style={{ background: meta.color + '1f', color: meta.color }}>
+                  <MetaIcon size={17} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-medium truncate">{t.merchant || '—'}</span>
+                    <span className={`ml-auto shrink-0 font-semibold tnum ${t.direction === 'in' ? 'text-emerald-500' : ''}`}>
+                      {t.direction === 'in' ? '+' : ''}<Money value={t.amount} />
+                    </span>
+                  </div>
+                  {t.desc && t.desc !== t.merchant && (
+                    <div className="text-xs text-ink-soft truncate">{t.desc}</div>
+                  )}
+                  <div className="mt-1.5 flex items-center gap-2">
+                    <span className="text-xs text-ink-soft whitespace-nowrap shrink-0">
+                      {formatDate(t.date)}{t.time ? ` ${t.time}` : ''} · {t.account.startsWith('KBank') ? 'KBank' : 'UOB'}
+                    </span>
+                    <span className="ml-auto min-w-0"><CategorySelect value={t.category} onChange={(v) => setCategory(t.id, v)} /></span>
+                  </div>
+                  {t.direction === 'in' && t.group !== 'refund' && (
+                    <label className="mt-1 inline-flex items-center gap-1.5 text-xs text-ink-soft cursor-pointer">
+                      <input type="checkbox" checked={!!t.isRealIncome} onChange={() => toggleRealIncome(t.id)} />
+                      เป็นรายได้จริง
+                    </label>
+                  )}
+                </div>
+              </div>
+            </li>
+          );
+        })}
+        {filtered.length === 0 && <li className="px-4 py-10 text-center text-sm text-ink-soft">ไม่พบรายการที่ตรงเงื่อนไข</li>}
+      </ul>
+
+      {/* desktop table */}
+      <div className="hidden sm:block card overflow-x-auto no-scrollbar">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-xs text-ink-soft border-b border-line">
@@ -179,7 +229,6 @@ export default function TransactionsPage() {
                 <td className="px-3 py-2.5 align-top max-w-[200px]">
                   <div className="truncate font-medium">{t.merchant || '—'}</div>
                   <div className="text-xs text-ink-soft truncate">{t.desc}</div>
-                  <div className="sm:hidden mt-1"><CategorySelect value={t.category} onChange={(v) => setCategory(t.id, v)} /></div>
                   {t.direction === 'in' && t.group !== 'refund' && (
                     <label className="mt-1 inline-flex items-center gap-1.5 text-xs text-ink-soft cursor-pointer">
                       <input type="checkbox" checked={!!t.isRealIncome} onChange={() => toggleRealIncome(t.id)} />

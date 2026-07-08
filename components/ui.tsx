@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { TrendingUp, TrendingDown, AlertTriangle, type LucideIcon } from 'lucide-react';
 import { formatTHB, formatDelta } from '@/lib/format';
 import { GROUP_LABEL, GROUP_COLOR, categoryMeta } from '@/lib/categories';
@@ -131,6 +131,46 @@ export function Notice({ children, tone = 'info' }: { children: ReactNode; tone?
       <div className="min-w-0">{children}</div>
     </div>
   );
+}
+
+/**
+ * Animated numeral: eases from the previous value to the new one (~650ms,
+ * cubic ease-out). First render is static (no zero-flash) and the whole thing
+ * degrades to instant text under prefers-reduced-motion. tnum keeps the width
+ * stable while digits roll.
+ */
+export function CountUp({
+  value, format = (n: number) => String(Math.round(n)), className = '',
+}: {
+  value: number;
+  format?: (n: number) => string;
+  className?: string;
+}) {
+  const [display, setDisplay] = useState(value);
+  const prevRef = useRef(value);
+
+  useEffect(() => {
+    const prev = prevRef.current;
+    prevRef.current = value;
+    if (prev === value) return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setDisplay(value);
+      return;
+    }
+    const t0 = performance.now();
+    const dur = 650;
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setDisplay(prev + (value - prev) * eased);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+
+  return <span className={`tnum ${className}`}>{format(display)}</span>;
 }
 
 export function Money({ value, className = '' }: { value: number; className?: string }) {
