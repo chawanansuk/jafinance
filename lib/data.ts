@@ -119,7 +119,7 @@ export const KBANK_RANGES: [string, string][] = [
   ['2026-05-31', '2026-06-04'],
   ['2026-06-12', '2026-06-18'],
   ['2026-06-19', '2026-06-26'],
-  ['2026-07-04', '2026-07-10'],
+  ['2026-07-01', '2026-07-10'],
 ];
 
 // UOB card statements run continuously over this window.

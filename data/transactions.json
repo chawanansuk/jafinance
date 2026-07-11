@@ -7557,6 +7557,116 @@
   "desc": "SUPER TURTLE PUBLIC COMPANY LIMITED"
  },
  {
+  "date": "2026-07-01",
+  "time": "06:19",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "เติมเงิน/วอลเล็ต",
+  "group": "transfer",
+  "merchant": "TrueMoney",
+  "desc": "ทรู มันนี่ E-MON"
+ },
+ {
+  "date": "2026-07-01",
+  "time": "08:24",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 3320.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน ปรารถนา",
+  "desc": "K PLUS จาก น.ส. ปรารถนา บุญสอาด"
+ },
+ {
+  "date": "2026-07-01",
+  "time": "14:54",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 98.0,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Donki",
+  "desc": "DONKI (THAILAND) CO., LTD."
+ },
+ {
+  "date": "2026-07-01",
+  "time": "17:12",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 65.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "อร่อยแซงคิว",
+  "desc": "อร่อยแซงคิว"
+ },
+ {
+  "date": "2026-07-02",
+  "time": "08:47",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 69.0,
+  "category": "โรงพยาบาล/สุขภาพ",
+  "group": "essential",
+  "merchant": "รพ.สมเด็จพระปิ่นเกล้า",
+  "desc": "โรงพยาบาลสมเด็จพระปิ่นเกล้า"
+ },
+ {
+  "date": "2026-07-02",
+  "time": "11:33",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 69.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ไก่ห้าดาว",
+  "desc": "SCB มณี SHOP ไก่ห้าดาว"
+ },
+ {
+  "date": "2026-07-02",
+  "time": "15:45",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 1000.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปราไมพย์ อามว",
+  "desc": "โอนไป KTB ปราไมพย์ อามว"
+ },
+ {
+  "date": "2026-07-02",
+  "time": "16:24",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-07-03",
+  "time": "07:32",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 60.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ศรีใจ จักรจ",
+  "desc": "โอนไป ศรีใจ จักรจ"
+ },
+ {
+  "date": "2026-07-03",
+  "time": "08:26",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 395.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "รัตนา ดีศ",
+  "desc": "โอนไป รัตนา ดีศ"
+ },
+ {
   "date": "2026-07-04",
   "time": "10:48",
   "account": "KBank ออมทรัพย์",

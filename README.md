@@ -21,10 +21,10 @@ Next.js 14 (App Router, `output: 'export'`) · TypeScript · Tailwind CSS · Rec
 
 | รายการ | ค่า |
 |---|---|
-| รายจ่ายสุทธิรวม (net, รวม transfer) | 181,430 |
+| รายจ่ายสุทธิรวม (net, รวม transfer) | 183,586 |
 | UOB net (gross 143,902.08 − refund 10,682.02) | 133,220.06 |
-| KBank | 48,210.10 |
-| จำเป็น / ลดได้(net) / โอน-ถอน | 54,293 / 86,963 / 40,173 |
+| KBank | 50,366.10 |
+| จำเป็น / ลดได้(net) / โอน-ถอน | 54,460 / 87,097 / 42,028 |
 
 ### หลักการสำคัญที่ฝังไว้ในโค้ด
 1. **Refund netting แบบ route ตามร้าน** — รายการ `refund` (Airbnb/Booking) ถูกหักกลับเข้า "ที่พัก/ท่องเที่ยว"
@@ -49,5 +49,5 @@ npm run build      # static export -> ./out
   (โค้ดอ่าน basePath/assetPrefix จาก env ตัวนี้ ใช้ build เดียวได้ทั้งสองที่)
 
 ## ข้อมูล
-`data/transactions.json` — 719 รายการ ผ่านการ reconcile กับสลิปแล้ว
+`data/transactions.json` — 729 รายการ ผ่านการ reconcile กับสลิปแล้ว
 ขอบเขต: UOB ต่อเนื่อง 20 ก.พ.–20 พ.ค. · KBank เป็นช่วงๆ ถึง 10 ก.ค. (ดู disclaimer ในแอพ)
