@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Receipt, CalendarDays, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
@@ -30,12 +30,12 @@ export default function Dashboard() {
   const [to, setTo] = useState('');
 
   const selected = month || defaultMonth || months[months.length - 1] || '';
-  const exFlags = { excludeMovingTransfers: settings.excludeMovingTransfers, excludeOneOff: settings.excludeOneOff };
-
-  const monthAggs = useMemo(
-    () => aggregateByMonth(txns, { account, ...exFlags }),
-    [txns, account, settings.excludeMovingTransfers, settings.excludeOneOff],
+  const exFlags = useMemo(
+    () => ({ excludeMovingTransfers: settings.excludeMovingTransfers, excludeOneOff: settings.excludeOneOff }),
+    [settings.excludeMovingTransfers, settings.excludeOneOff],
   );
+
+  const monthAggs = useMemo(() => aggregateByMonth(txns, { account, ...exFlags }), [txns, account, exFlags]);
 
   // which calendar months fall inside the active range
   const rangeMonths = useMemo(() => {
@@ -47,15 +47,18 @@ export default function Dashboard() {
     return months.filter((m) => (!from || m >= from.slice(0, 7)) && (!to || m <= to.slice(0, 7)));
   }, [range, selected, months, from, to]);
 
-  const inRange = (date: string) => {
-    if (range === 'month') return date.slice(0, 7) === selected;
-    if (range === '3m') return rangeMonths.includes(date.slice(0, 7));
-    return (!from || date >= from) && (!to || date <= to);
-  };
+  const inRange = useCallback(
+    (date: string) => {
+      if (range === 'month') return date.slice(0, 7) === selected;
+      if (range === '3m') return rangeMonths.includes(date.slice(0, 7));
+      return (!from || date >= from) && (!to || date <= to);
+    },
+    [range, selected, rangeMonths, from, to],
+  );
 
   const events = useMemo(
     () => toSpendingEvents(txns, { account, ...exFlags }).filter((e) => inRange(e.date)),
-    [txns, account, selected, range, from, to, rangeMonths, settings.excludeMovingTransfers, settings.excludeOneOff],
+    [txns, account, exFlags, inRange],
   );
 
   const total = events.reduce((s, e) => s + e.signed, 0);

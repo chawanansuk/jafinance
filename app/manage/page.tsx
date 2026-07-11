@@ -7,7 +7,8 @@ import { SectionTitle, CategoryChip, Money, Skeleton, Notice } from '@/component
 import { Segmented } from '@/components/Controls';
 import { CATEGORIES } from '@/lib/categories';
 import { downloadFile } from '@/lib/io';
-import { formatTHB } from '@/lib/format';
+import { formatTHB, formatDate } from '@/lib/format';
+import { coverageGaps } from '@/lib/analytics';
 import type { TransferKind } from '@/lib/types';
 
 const BACKUP_VERSION = 1;
@@ -62,6 +63,8 @@ export default function ManagePage() {
     }
   };
 
+  const gaps = useMemo(() => coverageGaps(txns), [txns]);
+
   // transfer-group merchants, biggest first
   const transferMerchants = useMemo(() => {
     const map = new Map<string, { total: number; count: number }>();
@@ -97,6 +100,29 @@ export default function ManagePage() {
       <h1 className="text-xl font-bold">จัดการ & กฎ</h1>
 
       {/* backup / restore / reset */}
+      {/* which statements are still missing — coverage holes silently
+          understate every total, so surface them as a to-fetch list */}
+      <div className="card card-pad">
+        <SectionTitle>ช่วงข้อมูลที่ยังขาด</SectionTitle>
+        {gaps.length === 0 ? (
+          <p className="text-sm text-ink-soft">ครบทุกช่วงแล้ว 🎉</p>
+        ) : (
+          <ul className="space-y-2">
+            {gaps.slice(0, 6).map((g) => (
+              <li key={`${g.account}|${g.from}`} className="flex items-center gap-2 text-sm">
+                <span className={`pill shrink-0 ${g.account.startsWith('UOB') ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400' : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'}`}>
+                  {g.account.startsWith('UOB') ? 'UOB' : 'KBank'}
+                </span>
+                <span className="tnum">{formatDate(g.from)} – {formatDate(g.to)}</span>
+                {g.trailing && <span className="text-xs text-ink-soft">(ยังไม่มีสเตทเมนต์รอบล่าสุด)</span>}
+              </li>
+            ))}
+            {gaps.length > 6 && <li className="text-xs text-ink-soft">…และอีก {gaps.length - 6} ช่วงก่อนหน้า</li>}
+          </ul>
+        )}
+        <p className="text-xs text-ink-soft mt-2">นำเข้าสเตทเมนต์ช่วงเหล่านี้ (หน้า รายการ → สเตทเมนต์) เพื่อให้ยอดรวม/ค่าเฉลี่ยครบจริง</p>
+      </div>
+
       <div className="card card-pad">
         <SectionTitle>สำรอง & กู้คืนข้อมูล</SectionTitle>
         <p className="text-xs text-ink-soft mb-3">สำรองงบ + กฎ + การแก้หมวด + รายการที่ import ทั้งหมดเป็นไฟล์เดียว (เก็บในเครื่อง)</p>

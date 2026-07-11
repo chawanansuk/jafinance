@@ -7,7 +7,7 @@ import { baseTransactions, materialize, makeId, dropBaseDuplicates } from '@/lib
 import {
   toSpendingEvents, grandTotal, aggregateByGroup, aggregateByCategory,
   aggregateByMonth, defaultMonth, projectMonth, topMerchants,
-  detectRecurring, detectOutliers, fixedVsVariable, dailySpending, avgMonthlyByCategory,
+  detectRecurring, detectOutliers, fixedVsVariable, dailySpending, avgMonthlyByCategory, coverageGaps,
 } from '@/lib/analytics';
 import {
   suggestBudgets, categoryBudgetRows, monthSummary, cumulativeSavings, EMPTY_BUDGET,
@@ -503,6 +503,42 @@ console.log('\n── repair of channel-noise mislabels (localStorage migration)
   ok('repair: non-transfer rows untouched', out[2] === rows[2]);
   ok('repair: reports 1 change', changed === 1);
   ok('repair: idempotent', repairChannelNoiseCategories(out as any).changed === 0);
+}
+
+console.log('\n── coverage gaps (missing-statement list) ──');
+{
+  const gaps = coverageGaps(txns);
+  ok('finds the 27-30 Jun KBank hole', gaps.some((g) => g.account.startsWith('KBank') && g.from === '2026-06-27' && g.to === '2026-06-30' && !g.trailing));
+  ok('finds the trailing UOB gap since 21 May', gaps.some((g) => g.account.startsWith('UOB') && g.from === '2026-05-21' && g.trailing));
+  ok('no gap inside a statement window', !gaps.some((g) => g.from >= '2026-07-01' && g.to <= '2026-07-10'));
+  ok('sorted newest first', gaps.every((g, i) => i === 0 || gaps[i - 1].from >= g.from));
+}
+
+console.log('\n── KBank trust flags (corrections / chain breaks) ──');
+{
+  // balance-repair case: misread 30 -> real 300; parser reports the fix
+  const r = parseKbankStatement([
+    'ยอดยกมา 1,000.00',
+    'รวมถอนเงิน 2 รายการ 500.00',
+    '01-06-26 09:00 ชำระเงิน 200.00 800.00 MAKE by KBank ร้าน A',
+    '02-06-26 09:00 ชำระเงิน 30.00 500.00 MAKE by KBank ร้าน B',
+  ]);
+  ok('correction reported for the repaired row', r.summary.corrections.length === 1 && r.summary.corrections[0].index === 1
+    && r.summary.corrections[0].from === 30 && r.summary.corrections[0].to === 300);
+  ok('no chain breaks when reconciled', r.summary.chainBreaks.length === 0);
+}
+{
+  // unreconcilable case: row 2's BALANCE is misread (900 instead of 500) so
+  // neither the amount column nor the reconstruction matches the control —
+  // the parser keeps the column but pinpoints where the chain stops adding up
+  const r = parseKbankStatement([
+    'ยอดยกมา 1,000.00',
+    'รวมถอนเงิน 2 รายการ 600.00',
+    '01-06-26 09:00 ชำระเงิน 200.00 800.00 MAKE by KBank ร้าน A',
+    '02-06-26 09:00 ชำระเงิน 300.00 900.00 MAKE by KBank ร้าน B',
+  ]);
+  ok('unreconciled stays column-sourced', r.summary.reconciled === false && r.summary.amountSource === 'column');
+  ok('chain break pinpointed at bad row', r.summary.chainBreaks.length === 1 && r.summary.chainBreaks[0] === 1);
 }
 
 console.log('\n── receipt OCR parser ──');

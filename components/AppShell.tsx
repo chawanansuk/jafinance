@@ -19,19 +19,17 @@ const NAV = [
 ];
 
 function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains('dark'));
-  }, []);
+  // icon follows the <html>.dark class via CSS — no state, so dark-mode users
+  // don't see the wrong icon on first paint
   const toggle = () => {
-    const next = !dark;
-    setDark(next);
+    const next = !document.documentElement.classList.contains('dark');
     document.documentElement.classList.toggle('dark', next);
     try { localStorage.setItem(KEYS.theme, next ? 'dark' : 'light'); } catch {}
   };
   return (
     <button onClick={toggle} aria-label="สลับธีม" className="btn-ghost !px-2.5 !py-2">
-      {dark ? <Sun size={18} /> : <Moon size={18} />}
+      <Sun size={18} className="hidden dark:block" />
+      <Moon size={18} className="dark:hidden" />
     </button>
   );
 }

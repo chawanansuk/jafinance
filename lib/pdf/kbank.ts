@@ -36,6 +36,10 @@ export interface KbankSummary {
   /** where row amounts came from: the amount column, or reconstructed from the
    *  running-balance column when the amount column failed to reconcile. */
   amountSource: 'column' | 'balance';
+  /** rows whose amount was CHANGED by the balance reconstruction ({index, from, to}) */
+  corrections: { index: number; from: number; to: number }[];
+  /** rows where the balance chain stops matching (amount-column mode, unreconciled) */
+  chainBreaks: number[];
 }
 
 export interface KbankParseResult {
@@ -176,6 +180,24 @@ export function parseKbankStatement(lines: string[]): KbankParseResult {
     }
   }
 
+  // trust surface for the preview: which rows were repaired, and (when we
+  // could NOT reconcile) where the balance chain first stops adding up.
+  const corrections =
+    amountSource === 'balance'
+      ? rows.map((r, k) => ({ index: k, from: r.amtCol, to: amounts[k] })).filter((c) => c.from !== c.to)
+      : [];
+  const chainBreaks: number[] = [];
+  if (amountSource === 'column' && !chosen.ok && openingBalance !== null) {
+    let bal = openingBalance;
+    rows.forEach((r, k) => {
+      bal = Math.round((bal + (r.direction === 'in' ? amounts[k] : -amounts[k])) * 100) / 100;
+      if (Math.abs(bal - r.balance) > 0.01) {
+        chainBreaks.push(k);
+        bal = r.balance; // resync so one bad row doesn't flag everything after it
+      }
+    });
+  }
+
   const transactions: RawTransaction[] = rows.map((r, k) => ({
     date: r.date, time: r.time, account, direction: r.direction, amount: amounts[k],
     category: r.category, group: categoryGroup(r.category),
@@ -189,6 +211,7 @@ export function parseKbankStatement(lines: string[]): KbankParseResult {
       account, period, openingBalance, closingBalance,
       controlOut, controlIn, parsedOut: chosen.o, parsedIn: chosen.i,
       reconciled: chosen.ok, diffOut: chosen.dOut, diffIn: chosen.dIn, amountSource,
+      corrections, chainBreaks,
     },
   };
 }

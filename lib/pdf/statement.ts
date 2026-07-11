@@ -22,6 +22,10 @@ export interface StatementResult {
   amountDue: number | null; // UOB statement total; null for KBank
   minPayment: number | null;
   summaryRows: { label: string; value: string; warn?: boolean }[];
+  /** KBank rows repaired from the balance column ({index, from, to}) */
+  corrections?: { index: number; from: number; to: number }[];
+  /** KBank rows where the balance chain stops matching (unreconciled imports) */
+  chainBreaks?: number[];
 }
 
 const money = (n: number | null) => (n != null ? formatTHB(n) : '—');
@@ -51,6 +55,7 @@ export function parseStatement(lines: string[]): StatementResult | null {
     return {
       bank, transactions: r.transactions, account: r.account, statementDate: s.period,
       reconciled: s.reconciled, amountDue: null, minPayment: null,
+      corrections: s.corrections, chainBreaks: s.chainBreaks,
       summaryRows: [
         { label: 'รอบบัญชี', value: s.period || '—' },
         { label: 'ถอน/จ่าย (แกะได้)', value: `${money(s.parsedOut)}${s.controlOut != null ? ` / ${money(s.controlOut)}` : ''}` },

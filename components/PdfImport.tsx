@@ -78,6 +78,11 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
 
   const onPickCloud = (file?: File) => { if (file) runCloud(file); };
 
+  // per-row trust flags from the KBank parser: which amounts were repaired
+  // from the balance column, and where the chain stops adding up
+  const fixedAt = useMemo(() => new Map((result?.corrections ?? []).map((c) => [c.index, c])), [result]);
+  const brokenAt = useMemo(() => new Set(result?.chainBreaks ?? []), [result]);
+
   const previewRaws = useMemo(
     () => (result?.transactions ?? []).map((t, i) => (catOverrides[i] ? { ...t, category: catOverrides[i] } : t)),
     [result, catOverrides],
@@ -246,7 +251,8 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
                 )}
                 <div className="max-h-64 overflow-y-auto rounded-xl border border-line divide-y divide-line/60">
                   {previewRaws.slice(0, 300).map((r, i) => (
-                    <div key={i} className="flex items-center gap-2 px-3 py-2 text-sm">
+                    <div key={i} className={`px-3 py-2 text-sm ${brokenAt.has(i) ? 'bg-amber-500/10' : ''}`}>
+                    <div className="flex items-center gap-2">
                       <span className="text-xs text-ink-soft w-12 shrink-0">{formatDate(r.date)}</span>
                       <span className="truncate flex-1" title={r.desc}>{r.merchant}</span>
                       <select className="input !w-auto !py-1 !px-2 text-xs max-w-[130px]" value={r.category}
@@ -257,6 +263,17 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
                       <span className={`tnum font-semibold w-16 text-right shrink-0 ${r.direction === 'in' ? 'text-emerald-500' : ''}`}>
                         {r.direction === 'in' ? '+' : ''}{formatTHB(r.amount)}
                       </span>
+                    </div>
+                    {fixedAt.has(i) && (
+                      <div className="text-[11px] text-sky-600 dark:text-sky-400 pl-14">
+                        แก้ยอดจากคอลัมน์คงเหลือ: {formatTHB(fixedAt.get(i)!.from)} → {formatTHB(fixedAt.get(i)!.to)}
+                      </div>
+                    )}
+                    {brokenAt.has(i) && (
+                      <div className="text-[11px] text-amber-600 dark:text-amber-400 pl-14">
+                        ยอดคงเหลือไม่ต่อเนื่องที่แถวนี้ — ตรวจตัวเลขก่อนเพิ่ม
+                      </div>
+                    )}
                     </div>
                   ))}
                 </div>

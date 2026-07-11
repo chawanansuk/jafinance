@@ -232,6 +232,61 @@ function monthCoverage(txns: Transaction[], ym: string): number {
 /** A month is incomplete when less than 60% of its spending is visible. */
 const COVERAGE_THRESHOLD = 0.6;
 
+export interface CoverageGap {
+  account: string;
+  from: string; // YYYY-MM-DD inclusive
+  to: string;
+  /** true = no statement after this point yet (trailing), not a hole between two */
+  trailing: boolean;
+}
+
+const dayAfter = (iso: string) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  const dt = new Date(y, m - 1, d + 1);
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+};
+
+/**
+ * Missing statement windows per account: the days between an account's first
+ * covered day and the dataset's last day that no statement window (and no
+ * transaction) covers. This is the "which statement should I go fetch" list —
+ * it exists because coverage holes silently understate every total.
+ */
+export function coverageGaps(txns: Transaction[]): CoverageGap[] {
+  if (txns.length === 0) return [];
+  let maxDate = txns[0].date;
+  for (const t of txns) if (t.date > maxDate) maxDate = t.date;
+
+  const gaps: CoverageGap[] = [];
+  for (const [account, windows] of Object.entries(ACCOUNT_COVERAGE)) {
+    if (windows.length === 0) continue;
+    const covered = new Set<string>();
+    for (const t of txns) if (t.account === account) covered.add(t.date);
+    const first = windows.reduce((m, [lo]) => (lo < m ? lo : m), windows[0][0]);
+    const inWindow = (date: string) => windows.some(([lo, hi]) => lo <= date && date <= hi);
+
+    let d = first;
+    let runStart: string | null = null;
+    while (d <= maxDate) {
+      const ok = inWindow(d) || covered.has(d);
+      if (!ok && runStart === null) runStart = d;
+      if (ok && runStart !== null) {
+        gaps.push({ account, from: runStart, to: prevDay(d), trailing: false });
+        runStart = null;
+      }
+      d = dayAfter(d);
+    }
+    if (runStart !== null) gaps.push({ account, from: runStart, to: maxDate, trailing: true });
+  }
+  return gaps.sort((a, b) => b.from.localeCompare(a.from));
+}
+
+const prevDay = (iso: string) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  const dt = new Date(y, m - 1, d - 1);
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+};
+
 export function aggregateByMonth(txns: Transaction[], opts: EventOptions = {}): MonthAgg[] {
   const events = toSpendingEvents(txns, opts);
   const byMonth = new Map<string, MonthAgg>();

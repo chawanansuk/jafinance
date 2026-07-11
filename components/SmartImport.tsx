@@ -51,14 +51,17 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
   const guess = useMemo(() => guessColumns(grid), [grid]);
   const cols = Math.max(0, ...grid.map((r) => r.length));
 
-  const mapping: PasteMapping = {
-    date: manual.date ?? guess.date,
-    amount: manual.amount ?? guess.amount,
-    merchant: manual.merchant !== undefined ? manual.merchant : guess.merchant,
-    desc: manual.desc !== undefined ? manual.desc : guess.desc,
-    account,
-    directionMode,
-  };
+  const mapping: PasteMapping = useMemo(
+    () => ({
+      date: manual.date ?? guess.date,
+      amount: manual.amount ?? guess.amount,
+      merchant: manual.merchant !== undefined ? manual.merchant : guess.merchant,
+      desc: manual.desc !== undefined ? manual.desc : guess.desc,
+      account,
+      directionMode,
+    }),
+    [manual, guess, account, directionMode],
+  );
 
   useEffect(() => {
     setCatOverrides({});
@@ -66,7 +69,7 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
 
   const raws = useMemo(
     () => rowsFromMapping(grid, mapping, (m, d, amt) => autoCategorize(m, d, rules, amt)),
-    [grid, mapping.date, mapping.amount, mapping.merchant, mapping.desc, mapping.account, mapping.directionMode, rules],
+    [grid, mapping, rules],
   );
   const previewRaws = raws.map((r, i) => (catOverrides[i] ? { ...r, category: catOverrides[i] } : r));
   const result = useMemo(() => dedupe(previewRaws, txns), [previewRaws, txns]);
