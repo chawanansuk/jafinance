@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Receipt, CalendarDays, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { Receipt, CalendarDays, TrendingUp, TrendingDown, Wallet, ImageDown } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
 import { StatCard, SectionTitle, IncompleteBadge, Notice, Money, CountUp, CategoryChip, Skeleton } from '@/components/ui';
 import { MonthSelect, AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
@@ -13,6 +13,7 @@ import {
 } from '@/lib/analytics';
 import { formatMonth, formatTHB } from '@/lib/format';
 import { categoryColor } from '@/lib/categories';
+import { downloadMonthSummaryImage } from '@/lib/share';
 
 type RangeMode = 'month' | '3m' | 'custom';
 
@@ -83,6 +84,25 @@ export default function Dashboard() {
 
   const monthlySeries = monthAggs.map((m) => m.total);
 
+  const shareImage = () =>
+    downloadMonthSummaryImage(
+      {
+        title: range === 'month' ? formatMonth(selected, true) : rangeLabel,
+        total,
+        deltaPct: range === 'month' ? delta ?? null : null,
+        count,
+        avgPerDay,
+        incomplete,
+        split: [
+          { label: 'จำเป็น', value: events.filter((e) => e.group === 'essential').reduce((s2, e) => s2 + e.signed, 0), color: '#16a34a' },
+          { label: 'ลดได้', value: discretionary, color: '#f97316' },
+          { label: 'โอน/ถอน', value: events.filter((e) => e.group === 'transfer').reduce((s2, e) => s2 + e.signed, 0), color: '#2a78d6' },
+        ],
+        cats: catAggs.slice(0, 6).map((c) => ({ name: c.category, total: c.total, share: c.share, color: categoryColor(c.category) })),
+      },
+      `jafinance-${range === 'month' ? selected : 'range'}.png`,
+    );
+
   if (!hydrated) {
     return (
       <div className="space-y-4">
@@ -102,6 +122,10 @@ export default function Dashboard() {
           {incomplete && <IncompleteBadge />}
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <button onClick={shareImage} title="บันทึกรูปสรุปไว้แชร์"
+            className="btn-ghost !py-1.5 !px-2.5 text-xs" aria-label="บันทึกรูปสรุป">
+            <ImageDown size={15} /> <span className="hidden sm:inline">รูปสรุป</span>
+          </button>
           <Segmented<RangeMode> value={range} onChange={setRange}
             options={[{ v: 'month', label: 'เดือน' }, { v: '3m', label: '3 เดือน' }, { v: 'custom', label: 'กำหนดเอง' }]} />
           {range !== 'custom' && <MonthSelect months={months} value={selected} onChange={setMonth} />}

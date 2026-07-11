@@ -61,6 +61,15 @@ export default function BudgetPage() {
       return { ...p, ceiling };
     });
 
+  const prevMonth = months[months.indexOf(selected) - 1] ?? null;
+  const copyPrev = () => {
+    if (!prevMonth) return;
+    const src = budget.byMonth[prevMonth];
+    if (!src || Object.keys(src).length === 0) return;
+    setBudget((p) => ({ ...p, byMonth: { ...p.byMonth, [selected]: { ...src } } }));
+  };
+  const prevHasBudgets = !!prevMonth && Object.keys(budget.byMonth[prevMonth] ?? {}).length > 0;
+
   const autoFill = () => {
     const sug = suggestBudgets(txns);
     setBudget((p) => ({ ...p, byMonth: { ...p.byMonth, [selected]: { ...sug, ...(p.byMonth[selected] ?? {}) } } }));
@@ -229,6 +238,9 @@ export default function BudgetPage() {
       <div className="card card-pad">
         <SectionTitle action={
           <div className="flex gap-2">
+            {prevHasBudgets && (
+              <button onClick={copyPrev} className="btn-ghost !py-1.5 !px-3 text-xs">คัดลอกจาก {prevMonth ? formatMonth(prevMonth) : ''}</button>
+            )}
             <button onClick={autoFill} className="btn-ghost !py-1.5 !px-3 text-xs"><Wand2 size={14} /> เติมงบที่ว่าง</button>
             <button onClick={autoFillAll} className="btn-ghost !py-1.5 !px-3 text-xs">ตั้งใหม่ทั้งหมด</button>
           </div>

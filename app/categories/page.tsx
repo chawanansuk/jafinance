@@ -30,6 +30,34 @@ export default function CategoriesPage() {
 
   const rows = useMemo(() => aggregateByCategory(events).filter((c) => c.count > 0), [events]);
 
+  // previous month's per-category totals for the "เทียบเดือนก่อน" chips
+  const prevMonth = useMemo(() => {
+    const i = months.indexOf(selected);
+    return scope === 'month' && i > 0 ? months[i - 1] : null;
+  }, [months, selected, scope]);
+  const prevByCat = useMemo(() => {
+    if (!prevMonth) return new Map<string, number>();
+    const ev = toSpendingEvents(txns, { account }).filter((e) => e.month === prevMonth);
+    const map = new Map<string, number>();
+    for (const e of ev) map.set(e.category, (map.get(e.category) ?? 0) + e.signed);
+    return map;
+  }, [txns, account, prevMonth]);
+
+  const deltaChip = (category: string, total: number) => {
+    if (!prevMonth) return null;
+    const prev = prevByCat.get(category) ?? 0;
+    if (prev <= 0 && total > 0) return <span className="text-[10px] text-ink-soft">ใหม่</span>;
+    if (prev <= 0) return null;
+    const pct = Math.round(((total - prev) / prev) * 100);
+    if (pct === 0) return null;
+    return (
+      <span className={`text-[10px] tnum font-medium ${pct > 0 ? 'text-rose-500' : 'text-emerald-600 dark:text-emerald-400'}`}
+        title={`เดือนก่อน ${prev.toLocaleString('th-TH')}`}>
+        {pct > 0 ? '▲' : '▼'}{Math.abs(pct)}%
+      </span>
+    );
+  };
+
   const detailTrend = useMemo(
     () => (open ? categoryMonthlyTrend(account === 'all' ? txns : txns.filter((t) => t.account === account), open) : []),
     [open, txns, account],
@@ -91,6 +119,7 @@ export default function CategoriesPage() {
           >
             <span className="min-w-0 flex items-center gap-2">
               <CategoryChip name={c.category} />
+              {deltaChip(c.category, c.total)}
             </span>
             <span className="hidden sm:block text-right text-sm text-ink-soft tnum">{c.count}</span>
             <span className="hidden sm:block text-right text-sm text-ink-soft tnum"><Money value={c.avg} /></span>
