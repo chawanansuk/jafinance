@@ -11,6 +11,7 @@ import {
   splitPasted, rowsFromMapping, dedupe, parseDateLoose, parseAmountLoose,
   type PasteDelimiter, type PasteMapping,
 } from '@/lib/io';
+import { dedupKey } from '@/lib/data';
 
 const CAT_NAMES = CATEGORIES.map((c) => c.name);
 const ACCOUNTS = ['KBank ออมทรัพย์', 'UOB บัตรเครดิต'];
@@ -69,6 +70,23 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
   );
   const previewRaws = raws.map((r, i) => (catOverrides[i] ? { ...r, category: catOverrides[i] } : r));
   const result = useMemo(() => dedupe(previewRaws, txns), [previewRaws, txns]);
+
+  // which preview rows dedupe() will SKIP — mirrors its count-matching so the
+  // user can see (and not waste category edits on) rows that won't be imported
+  const isDup = useMemo(() => {
+    const existing = new Map<string, number>();
+    for (const t of txns) {
+      const k = dedupKey(t);
+      existing.set(k, (existing.get(k) ?? 0) + 1);
+    }
+    const seen = new Map<string, number>();
+    return previewRaws.map((r) => {
+      const k = dedupKey(r);
+      const n = seen.get(k) ?? 0;
+      seen.set(k, n + 1);
+      return n < (existing.get(k) ?? 0);
+    });
+  }, [previewRaws, txns]);
 
   const commit = () => {
     if (result.added.length === 0) { setDone('ไม่มีรายการใหม่ให้เพิ่ม'); return; }
@@ -141,14 +159,18 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
                 <div className="max-h-56 overflow-y-auto rounded-xl border border-line divide-y divide-line/60">
                   {previewRaws.length === 0 && <div className="p-4 text-center text-sm text-ink-soft">ยังแมปคอลัมน์ไม่ได้ — ลองปรับตัวคั่น/คอลัมน์</div>}
                   {previewRaws.slice(0, 50).map((r, i) => (
-                    <div key={i} className="flex items-center gap-2 px-3 py-2 text-sm">
+                    <div key={i} className={`flex items-center gap-2 px-3 py-2 text-sm ${isDup[i] ? 'opacity-45' : ''}`}>
                       <span className="text-xs text-ink-soft w-14 shrink-0">{formatDate(r.date)}</span>
                       <span className="truncate flex-1">{r.merchant}</span>
-                      <select className="input !w-auto !py-1 !px-2 text-xs max-w-[130px]" value={r.category}
-                        onChange={(e) => setCatOverrides((o) => ({ ...o, [i]: e.target.value }))}>
-                        {!CAT_NAMES.includes(r.category) && <option value={r.category}>{r.category}</option>}
-                        {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
-                      </select>
+                      {isDup[i] ? (
+                        <span className="pill bg-surface-2 text-ink-soft shrink-0">ซ้ำ — ไม่นำเข้า</span>
+                      ) : (
+                        <select className="input !w-auto !py-1 !px-2 text-xs max-w-[130px]" value={r.category}
+                          onChange={(e) => setCatOverrides((o) => ({ ...o, [i]: e.target.value }))}>
+                          {!CAT_NAMES.includes(r.category) && <option value={r.category}>{r.category}</option>}
+                          {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      )}
                       <span className={`tnum font-semibold w-16 text-right shrink-0 ${r.direction === 'in' ? 'text-emerald-500' : ''}`}>
                         {r.direction === 'in' ? '+' : ''}{formatTHB(r.amount)}
                       </span>

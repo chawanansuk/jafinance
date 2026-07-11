@@ -147,23 +147,27 @@ export function CountUp({
   className?: string;
 }) {
   const [display, setDisplay] = useState(value);
-  const prevRef = useRef(value);
+  const displayRef = useRef(value);
+  const targetRef = useRef(value);
 
   useEffect(() => {
-    const prev = prevRef.current;
-    prevRef.current = value;
-    if (prev === value) return;
+    if (targetRef.current === value) return;
+    targetRef.current = value;
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      displayRef.current = value;
       setDisplay(value);
       return;
     }
+    const from = displayRef.current; // continue from wherever the digits are
     const t0 = performance.now();
     const dur = 650;
     let raf = 0;
     const tick = (t: number) => {
       const p = Math.min(1, (t - t0) / dur);
       const eased = 1 - Math.pow(1 - p, 3);
-      setDisplay(prev + (value - prev) * eased);
+      const next = from + (value - from) * eased;
+      displayRef.current = next;
+      setDisplay(next);
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -206,6 +210,12 @@ export function Modal({
   maxW?: string;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
+  // the keydown listener below is bound once per open — a plain closure would
+  // freeze onClose (and everything it closes over) at open time
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
 
   useEffect(() => {
     if (!open) return;
@@ -216,7 +226,7 @@ export function Modal({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation();
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (e.key !== 'Tab') return;

@@ -31,8 +31,8 @@ export default function CategoriesPage() {
   const rows = useMemo(() => aggregateByCategory(events).filter((c) => c.count > 0), [events]);
 
   const detailTrend = useMemo(
-    () => (open ? categoryMonthlyTrend(txns, open) : []),
-    [open, txns],
+    () => (open ? categoryMonthlyTrend(account === 'all' ? txns : txns.filter((t) => t.account === account), open) : []),
+    [open, txns, account],
   );
 
   // merchants within the open category
@@ -42,12 +42,13 @@ export default function CategoriesPage() {
     for (const t of txns) {
       if (t.direction !== 'out' || t.category !== open) continue;
       if (account !== 'all' && t.account !== account) continue;
+      if (scope === 'month' && t.date.slice(0, 7) !== selected) continue;
       const m = map.get(t.merchant) ?? { total: 0, count: 0 };
       m.total += t.amount; m.count += 1; map.set(t.merchant, m);
     }
     return [...map.entries()].map(([merchant, v]) => ({ merchant, ...v }))
       .sort((a, b) => b.total - a.total).slice(0, 8);
-  }, [open, txns, account]);
+  }, [open, txns, account, scope, selected]);
 
   const catTxns = useMemo(() => {
     if (!open) return [];

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { formatTHB, formatDate } from '@/lib/format';
 
 const DOW = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
@@ -11,6 +11,8 @@ const DOW = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
  * percentile so a single huge day doesn't flatten everything).
  */
 export function CalendarHeatmap({ data }: { data: { date: string; total: number }[] }) {
+  // title= tooltips don't exist on touch — tapping a cell pins its readout here
+  const [picked, setPicked] = useState<{ date: string; total: number } | null>(null);
   const { weeks, cap, monthLabels } = useMemo(() => {
     if (data.length === 0) return { weeks: [] as { date: string; total: number }[][], cap: 1, monthLabels: [] as { col: number; label: string }[] };
     const byDate = new Map(data.map((d) => [d.date, d.total]));
@@ -68,21 +70,35 @@ export function CalendarHeatmap({ data }: { data: { date: string; total: number 
               {week.map((cell) => {
                 const none = cell.total < 0;
                 const intensity = none ? 0 : Math.min(1, cell.total / cap);
+                const pickedNow = picked?.date === cell.date;
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={cell.date}
+                    aria-label={none ? `${formatDate(cell.date)} ไม่มีข้อมูล` : `${formatDate(cell.date)} ${formatTHB(cell.total)}`}
                     title={none ? `${formatDate(cell.date)} — ไม่มีข้อมูล` : `${formatDate(cell.date)} · ${formatTHB(cell.total)}`}
+                    onClick={() => setPicked(pickedNow ? null : cell)}
                     className="h-3.5 w-3.5 rounded-[3px] shrink-0"
                     style={{
                       background: none
                         ? 'rgb(var(--surface-2))'
                         : `color-mix(in srgb, rgb(var(--brand)) ${12 + intensity * 88}%, rgb(var(--surface-2)))`,
+                      boxShadow: pickedNow ? '0 0 0 2px rgb(var(--brand))' : undefined,
                     }}
                   />
                 );
               })}
             </div>
           ))}
+        </div>
+        <div className="pl-7 pt-1 text-xs h-5">
+          {picked && (
+            <span>
+              <b>{formatDate(picked.date)}</b>{' '}
+              {picked.total < 0 ? <span className="text-ink-soft">ไม่มีข้อมูล</span> : <b className="tnum">{formatTHB(picked.total)}</b>}
+            </span>
+          )}
+          {!picked && <span className="text-ink-soft">แตะช่องเพื่อดูยอดของวันนั้น</span>}
         </div>
         <div className="flex items-center gap-1.5 text-[10px] text-ink-soft pl-7 pt-1">
           น้อย

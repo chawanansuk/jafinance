@@ -16,7 +16,7 @@ function BillRow({ s, onRemove }: { s: Statement; onRemove: (id: string) => void
         <div className="min-w-0 flex-1">
           <div className="font-medium truncate">
             บิล {s.statementDate ? formatMonth(s.statementDate.slice(0, 7)) : '—'}
-            <span className="text-ink-soft font-normal"> · {s.account.startsWith('5271') || s.account.includes('XX') ? 'UOB' : s.account}</span>
+            <span className="text-ink-soft font-normal"> · {s.account.startsWith('UOB') ? 'UOB' : 'KBank'}</span>
           </div>
           <div className="text-xs text-ink-soft">
             {s.count} รายการ · {s.dateFrom ? `${formatDate(s.dateFrom)}–${formatDate(s.dateTo)}` : ''}
