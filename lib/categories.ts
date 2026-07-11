@@ -104,6 +104,11 @@ export const GROUP_COLOR: Record<Group, string> = {
 // always carry a text label. Validated with the dataviz palette checker.
 const DARK_STEP: Record<string, string> = {
   '#22c55e': '#16a34a', // ร้านสะดวกซื้อ
+  // ห้าง/ซูเปอร์'s base green IS ร้านสะดวกซื้อ's dark step — in dark mode the
+  // two everyday categories rendered the identical #16a34a. The dark band is
+  // too narrow for two lightness-separated greens, so supermarket goes gold
+  // in dark (validated: PASS all checks adjacent to #16a34a).
+  '#16a34a': '#b8860b', // ห้าง/ซูเปอร์มาร์เก็ต
   '#e87ba4': '#d55181', // โอนเงิน/บุคคล
   '#14b8a6': '#0d9488', // Grab
   '#f97316': '#d95926', // discretionary group

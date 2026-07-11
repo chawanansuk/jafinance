@@ -22,6 +22,12 @@ function useIsDark(): boolean {
   return dark;
 }
 
+/** SVG paint-server refs (url(#grad)) mean nothing as CSS background. */
+function swatchColor(c: unknown): string {
+  const v = typeof c === 'string' ? c : '';
+  return v && !v.startsWith('url(') ? v : 'rgb(var(--brand))';
+}
+
 function MoneyTooltip({ active, payload, label, labelFmt }: any) {
   if (!active || !payload?.length) return null;
   return (
@@ -29,7 +35,7 @@ function MoneyTooltip({ active, payload, label, labelFmt }: any) {
       {label != null && <div className="font-semibold mb-1">{labelFmt ? labelFmt(label) : label}</div>}
       {payload.map((p: any, i: number) => (
         <div key={i} className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ background: p.color || p.fill || p.payload?.fill }} />
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: swatchColor(p.color || p.fill || p.payload?.fill) }} />
           <span className="text-ink-soft">{p.name}</span>
           <span className="ml-auto font-semibold tnum">{formatTHB(Math.abs(p.value))}</span>
         </div>
@@ -214,12 +220,14 @@ export function GroupSplitBar({
   transfer: number;
 }) {
   const dark = useIsDark();
-  const total = essential + discretionary + transfer;
+  // a refund-heavy month can net a group NEGATIVE; widths must come from the
+  // positive parts only or the segments sum past 100% and clip
   const parts = [
     { key: 'จำเป็น', value: essential, color: '#16a34a' },
     { key: 'ลดได้', value: discretionary, color: dark ? '#d95926' : '#f97316' },
     { key: 'โอน/ถอน', value: transfer, color: '#2a78d6' },
   ].filter((p) => p.value > 0);
+  const total = parts.reduce((s, p) => s + p.value, 0);
   if (total <= 0) return <p className="text-sm text-ink-soft py-3">ไม่มีข้อมูลในช่วงนี้</p>;
   return (
     <div className="space-y-2.5">

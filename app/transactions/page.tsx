@@ -185,10 +185,10 @@ export default function TransactionsPage() {
                     <div className="text-xs text-ink-soft truncate">{t.desc}</div>
                   )}
                   <div className="mt-1.5 flex items-center gap-2">
-                    <span className="text-xs text-ink-soft whitespace-nowrap shrink-0">
+                    <span className="text-xs text-ink-soft whitespace-nowrap truncate">
                       {formatDate(t.date)}{t.time ? ` ${t.time}` : ''} · {t.account.startsWith('KBank') ? 'KBank' : 'UOB'}
                     </span>
-                    <span className="ml-auto min-w-0"><CategorySelect value={t.category} onChange={(v) => setCategory(t.id, v)} /></span>
+                    <span className="ml-auto min-w-0 shrink"><CategorySelect value={t.category} onChange={(v) => setCategory(t.id, v)} /></span>
                   </div>
                   {t.direction === 'in' && t.group !== 'refund' && (
                     <label className="mt-1 inline-flex items-center gap-1.5 text-xs text-ink-soft cursor-pointer">

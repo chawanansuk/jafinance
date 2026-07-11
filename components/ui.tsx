@@ -222,7 +222,9 @@ export function Modal({
     const prev = document.activeElement as HTMLElement | null;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    panelRef.current?.focus();
+    // respect a child's autoFocus (QuickAdd's amount field) — only take focus
+    // if nothing inside the panel already has it
+    if (!panelRef.current?.contains(document.activeElement)) panelRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation();
@@ -233,7 +235,9 @@ export function Modal({
       const nodes = panelRef.current?.querySelectorAll<HTMLElement>(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
-      const focusables = nodes ? [...nodes].filter((el) => !el.hasAttribute('disabled')) : [];
+      const focusables = nodes
+        ? [...nodes].filter((el) => !el.hasAttribute('disabled') && !el.hidden && el.getClientRects().length > 0)
+        : [];
       if (!focusables.length) return;
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
@@ -257,8 +261,16 @@ export function Modal({
 
   if (!open) return null;
   return (
+    // close on backdrop only when the PRESS also started there — a text-drag
+    // that starts inside the panel and releases over the dim fires a click on
+    // the overlay and used to nuke the sheet (SmartImport paste, QuickAdd form)
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4"
-      onClick={onClose}>
+      onMouseDown={(e) => {
+        (e.currentTarget as HTMLElement).dataset.pressStart = e.target === e.currentTarget ? '1' : '0';
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget && (e.currentTarget as HTMLElement).dataset.pressStart === '1') onClose();
+      }}>
       <div
         ref={panelRef}
         tabIndex={-1}
