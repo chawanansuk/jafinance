@@ -47,6 +47,8 @@ export interface AiResult {
   closingBalance?: number | null;
   controlOut?: number | null;
   controlIn?: number | null;
+  controlOutCount?: number | null;
+  controlInCount?: number | null;
   amountDue?: number | null;
   minPayment?: number | null;
   transactions?: AiTxn[];
@@ -217,6 +219,8 @@ export function toStatementResult(r: AiResult): StatementResult {
 export interface AiExtractOptions {
   apiKey: string;
   model: string;
+  /** status line for the import UI while the (possibly two-pass) read runs */
+  onProgress?: (msg: string) => void;
 }
 
 const SYSTEM_PROMPT = `คุณคือผู้ช่วยอ่านสเตทเมนต์ธนาคารไทย (KBank ออมทรัพย์ / UOB บัตรเครดิต) จากรูปภาพอย่างแม่นยำ
@@ -225,7 +229,9 @@ const SYSTEM_PROMPT = `คุณคือผู้ช่วยอ่านสเ
 - อ่านตัวเลขจำนวนเงินและยอดคงเหลือให้ตรงเป๊ะตามภาพ (ทศนิยม 2 ตำแหน่ง) แปลงให้เป็นตัวเลขล้วน ไม่มีเครื่องหมายคอมมา
 - amount เป็นค่าบวกเสมอ ทิศทางเงินบอกผ่าน direction: "out" = เงินออก/ถอน/จ่าย/โอนออก, "in" = เงินเข้า/รับโอน/ฝาก/ดอกเบี้ย/คืนเงิน
 - date เป็นรูปแบบ YYYY-MM-DD (ปีพ.ศ.ในสลิป เช่น 68/2568 ให้แปลงเป็น ค.ศ. โดยลบ 543 — เช่น 12-06-68 → 2025-06-12; ถ้าเป็นปี ค.ศ. 2 หลักเช่น 26 → 2026)
-- เก็บยอดควบคุมถ้ามี: รวมถอนเงิน→controlOut, รวมฝากเงิน→controlIn, ยอดยกมา→openingBalance, ยอดยกไป→closingBalance
+- เก็บยอดควบคุมถ้ามี: รวมถอนเงิน→controlOut (จำนวนรายการ→controlOutCount), รวมฝากเงิน→controlIn (→controlInCount), ยอดยกมา→openingBalance, ยอดยกไป→closingBalance
+- ก่อนตอบ ให้ตรวจงานตัวเอง: (1) ผลรวมแถวถอนต้องเท่ากับ controlOut และแถวฝากเท่ากับ controlIn (2) ยอดคงเหลือแต่ละแถวต้องต่อเนื่อง = ยอดก่อนหน้า ± จำนวนเงิน — ถ้าไม่ตรง ให้กลับไปอ่านภาพซ้ำจนกว่าจะตรง
+- ถ้ามีหลายรูป คือสเตทเมนต์เดียวกันหลายหน้า/หลายช่วง: รวมทุกแถวเรียงตามวันเวลา ห้ามใส่แถวซ้ำที่ปรากฏในสองรูป
 - สำหรับบิลบัตรเครดิต UOB: PREVIOUS BALANCE→openingBalance, TOTAL BALANCE→amountDue, MINIMUM PAYMENT→minPayment และให้ใส่แถว PAYMENT THANK YOU เป็น direction "in" ตามจริง
 - ถ้าไม่แน่ใจค่าใด ให้ใส่ null อย่าเดา`;
 
@@ -243,6 +249,8 @@ const OUTPUT_SCHEMA: Record<string, unknown> = {
     closingBalance: { type: ['number', 'null'] },
     controlOut: { type: ['number', 'null'] },
     controlIn: { type: ['number', 'null'] },
+    controlOutCount: { type: ['integer', 'null'] },
+    controlInCount: { type: ['integer', 'null'] },
     amountDue: { type: ['number', 'null'] },
     minPayment: { type: ['number', 'null'] },
     transactions: {
@@ -297,57 +305,166 @@ async function toApiImage(
   }
 }
 
-/** Read a statement image by calling the Claude API directly from the browser. */
+// ── client-side verification (the checks a careful human transcriber runs) ──
+
+export interface AiVerifyIssue {
+  message: string;
+  rows?: number[]; // 0-based indices into r.transactions
+}
+
+/**
+ * Cross-check the model's transcription the way we do by hand: sums vs the
+ * printed control totals, row counts, and a per-row running-balance walk.
+ * Returns the discrepancies as human-readable hints usable for a re-read.
+ */
+export function verifyAiResult(r: AiResult): { ok: boolean; issues: AiVerifyIssue[] } {
+  const issues: AiVerifyIssue[] = [];
+  const txns = r.transactions ?? [];
+  const r2 = (n: number) => Math.round(n * 100) / 100;
+
+  const outRows = txns.filter((t) => t.direction === 'out');
+  const inRows = txns.filter((t) => t.direction === 'in');
+  const sumOut = r2(outRows.reduce((s, t) => s + Math.abs(t.amount || 0), 0));
+  const sumIn = r2(inRows.reduce((s, t) => s + Math.abs(t.amount || 0), 0));
+
+  if (r.controlOut != null && Math.abs(sumOut - r.controlOut) > 0.05)
+    issues.push({ message: `ผลรวมแถวถอน/จ่ายที่อ่านได้ ${sumOut.toFixed(2)} ไม่เท่ายอดคุมในภาพ ${r.controlOut.toFixed(2)} (ต่าง ${r2(sumOut - r.controlOut).toFixed(2)})` });
+  if (r.controlIn != null && Math.abs(sumIn - r.controlIn) > 0.05)
+    issues.push({ message: `ผลรวมแถวฝาก/รับที่อ่านได้ ${sumIn.toFixed(2)} ไม่เท่ายอดคุมในภาพ ${r.controlIn.toFixed(2)} (ต่าง ${r2(sumIn - r.controlIn).toFixed(2)})` });
+  if (r.controlOutCount != null && outRows.length !== r.controlOutCount)
+    issues.push({ message: `จำนวนแถวถอน/จ่ายที่อ่านได้ ${outRows.length} รายการ แต่ภาพระบุ ${r.controlOutCount} รายการ — อาจอ่านตกหล่นหรือเกิน` });
+  if (r.controlInCount != null && inRows.length !== r.controlInCount)
+    issues.push({ message: `จำนวนแถวฝาก/รับที่อ่านได้ ${inRows.length} รายการ แต่ภาพระบุ ${r.controlInCount} รายการ` });
+
+  // running-balance walk (KBank-style statements); needs most rows to carry
+  // a balance to be meaningful
+  const withBal = txns.filter((t) => t.balance != null).length;
+  if (r.openingBalance != null && txns.length > 0 && withBal >= txns.length * 0.8) {
+    let prev = r.openingBalance;
+    const bad: number[] = [];
+    txns.forEach((t, i) => {
+      const expected = r2(prev + (t.direction === 'in' ? 1 : -1) * Math.abs(t.amount || 0));
+      if (t.balance != null) {
+        if (Math.abs(expected - t.balance) > 0.01) bad.push(i);
+        prev = t.balance; // resync so one bad row doesn't flag the rest
+      } else {
+        prev = expected;
+      }
+    });
+    if (bad.length)
+      issues.push({
+        rows: bad,
+        message: `ยอดคงเหลือไม่ต่อเนื่องที่แถว: ${bad
+          .slice(0, 6)
+          .map((i) => `#${i + 1} (${txns[i].date}${txns[i].time ? ' ' + txns[i].time : ''} จำนวน ${Math.abs(txns[i].amount).toFixed(2)})`)
+          .join(', ')}${bad.length > 6 ? ` และอีก ${bad.length - 6} แถว` : ''}`,
+      });
+    if (r.closingBalance != null && Math.abs(prev - r.closingBalance) > 0.01)
+      issues.push({ message: `เดินยอดถึงแถวสุดท้ายได้ ${prev.toFixed(2)} แต่ยอดยกไปในภาพคือ ${r.closingBalance.toFixed(2)}` });
+  }
+
+  return { ok: issues.length === 0, issues };
+}
+
+/**
+ * Read statement image(s) by calling the Claude API directly from the browser.
+ * Mirrors how a careful human reads: adaptive thinking on, then the result is
+ * cross-checked (control totals, row counts, balance walk) and — if anything
+ * disagrees — the model is asked ONCE to look at the same image(s) again with
+ * the specific discrepancies pointed out.
+ */
 export async function extractStatementWithAI(
-  file: File,
-  { apiKey, model }: AiExtractOptions,
+  fileOrFiles: File | File[],
+  { apiKey, model, onProgress }: AiExtractOptions,
 ): Promise<StatementResult> {
-  const media = IMAGE_MEDIA[file.type.toLowerCase()];
-  if (!media) throw new Error('Cloud AI รองรับเฉพาะรูปภาพ (JPG/PNG/WebP)');
+  const files = (Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles]).slice(0, 4);
+  if (files.length === 0) throw new Error('ยังไม่ได้เลือกรูป');
   const key = apiKey.trim();
   if (!key) throw new Error('ยังไม่ได้ใส่ API key');
 
-  const { data: imageBase64, media: sendMedia } = await toApiImage(file, media);
+  onProgress?.(files.length > 1 ? `เตรียมรูป ${files.length} รูป…` : 'เตรียมรูป…');
+  const images: { type: 'image'; source: { type: 'base64'; media_type: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'; data: string } }[] = [];
+  for (const file of files) {
+    const media = IMAGE_MEDIA[file.type.toLowerCase()];
+    if (!media) throw new Error('Cloud AI รองรับเฉพาะรูปภาพ (JPG/PNG/WebP)');
+    const { data, media: sendMedia } = await toApiImage(file, media);
+    images.push({ type: 'image', source: { type: 'base64', media_type: sendMedia, data } });
+  }
 
   // Lazy-load the SDK so it stays out of the main bundle until Cloud AI is used.
   const { default: Anthropic } = await import('@anthropic-ai/sdk');
   const client = new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true });
 
-  let res;
-  try {
-    res = await client.messages.create({
-      model: model || DEFAULT_AI_MODEL,
-      max_tokens: 16000,
-      system: SYSTEM_PROMPT,
-      output_config: { format: { type: 'json_schema', schema: OUTPUT_SCHEMA } },
-      messages: [
-        {
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: sendMedia, data: imageBase64 } },
-            { type: 'text', text: USER_PROMPT },
-          ],
-        },
-      ],
-    });
-  } catch (e) {
-    if (e instanceof Anthropic.AuthenticationError)
-      throw new Error('API key ไม่ถูกต้อง — ตรวจสอบคีย์อีกครั้ง');
-    if (e instanceof Anthropic.PermissionDeniedError)
-      throw new Error('API key ไม่มีสิทธิ์ใช้โมเดลนี้');
-    if (e instanceof Anthropic.RateLimitError)
-      throw new Error('ถูกจำกัดอัตราการเรียก (rate limit) — ลองใหม่อีกครั้ง');
-    if (e instanceof Anthropic.APIError) throw new Error(`Claude API ผิดพลาด: ${e.message}`);
-    throw e;
+  const chosenModel = model || DEFAULT_AI_MODEL;
+  const params = {
+    model: chosenModel,
+    max_tokens: 20000,
+    system: SYSTEM_PROMPT,
+    output_config: { format: { type: 'json_schema' as const, schema: OUTPUT_SCHEMA } },
+    // adaptive thinking = the single biggest accuracy lever for careful table
+    // transcription (Haiku 4.5 doesn't support adaptive — leave it off there)
+    ...(chosenModel.includes('haiku') ? {} : { thinking: { type: 'adaptive' as const } }),
+  };
+
+  const call = async (messages: any[]) => {
+    let res;
+    try {
+      res = await client.messages.create({ ...params, messages });
+    } catch (e) {
+      if (e instanceof Anthropic.AuthenticationError)
+        throw new Error('API key ไม่ถูกต้อง — ตรวจสอบคีย์อีกครั้ง');
+      if (e instanceof Anthropic.PermissionDeniedError)
+        throw new Error('API key ไม่มีสิทธิ์ใช้โมเดลนี้');
+      if (e instanceof Anthropic.RateLimitError)
+        throw new Error('ถูกจำกัดอัตราการเรียก (rate limit) — ลองใหม่อีกครั้ง');
+      if (e instanceof Anthropic.APIError) throw new Error(`Claude API ผิดพลาด: ${e.message}`);
+      throw e;
+    }
+    if (res.stop_reason === 'max_tokens')
+      throw new Error('สเตทเมนต์มีรายการเยอะเกินคำตอบเดียว — ลองครอปรูปเป็นครึ่งบน/ล่าง แล้วอ่านทีละส่วน');
+    const text = res.content.map((b) => (b.type === 'text' ? b.text : '')).join('').trim();
+    if (!text) throw new Error('AI ไม่ได้ส่งข้อความกลับ (อาจถูกปฏิเสธ)');
+    return { res, parsed: parseJsonLoose(text) };
+  };
+
+  onProgress?.('AI กำลังอ่านรูป…');
+  const firstUser = { role: 'user' as const, content: [...images, { type: 'text' as const, text: USER_PROMPT }] };
+  const first = await call([firstUser]);
+  let best = first.parsed;
+  let retried = false;
+
+  const check = verifyAiResult(best);
+  if (!check.ok) {
+    // point the model at the exact discrepancies and let it re-read the image
+    retried = true;
+    onProgress?.('ยอดไม่ตรง — ให้ AI ตรวจรูปซ้ำ…');
+    const hints = check.issues.map((i) => `- ${i.message}`).join('\n');
+    const correction = `ตรวจสอบผลของคุณกับภาพแล้วพบความไม่สอดคล้อง:\n${hints}\nกรุณาดูภาพอีกครั้งอย่างละเอียด โดยเฉพาะแถวที่ระบุและแถวที่อาจตกหล่น/อ่านตัวเลขผิด แล้วส่ง JSON ฉบับสมบูรณ์ใหม่ทั้งหมดตาม schema เดิม`;
+    const second = await call([
+      firstUser,
+      // echo the full assistant content (incl. thinking blocks) back unchanged
+      { role: 'assistant' as const, content: first.res.content },
+      { role: 'user' as const, content: [{ type: 'text' as const, text: correction }] },
+    ]);
+    const secondCheck = verifyAiResult(second.parsed);
+    // keep the retry when it verifies or at least reduced the discrepancies;
+    // otherwise the first attempt stands
+    best = secondCheck.ok || secondCheck.issues.length < check.issues.length ? second.parsed : first.parsed;
   }
 
-  if (res.stop_reason === 'max_tokens')
-    throw new Error('สเตทเมนต์มีรายการเยอะเกินคำตอบเดียว — ลองครอปรูปเป็นครึ่งบน/ล่าง แล้วอ่านทีละส่วน');
-
-  const text = res.content.map((b) => (b.type === 'text' ? b.text : '')).join('').trim();
-  if (!text) throw new Error('AI ไม่ได้ส่งข้อความกลับ (อาจถูกปฏิเสธ)');
-
-  return toStatementResult(parseJsonLoose(text));
+  const result = toStatementResult(best);
+  // hand the balance-walk hints to the preview so suspect rows get highlighted
+  // (same amber treatment as the PDF path's chainBreaks)
+  const finalCheck = verifyAiResult(best);
+  const chainRows = finalCheck.issues.flatMap((i) => i.rows ?? []);
+  if (chainRows.length) result.chainBreaks = chainRows;
+  if (retried) {
+    result.summaryRows = [
+      ...result.summaryRows,
+      { label: 'การอ่านซ้ำ', value: result.reconciled ? 'AI ตรวจซ้ำแล้วยอดตรง' : 'AI ตรวจซ้ำแล้วยังไม่ตรง — ตรวจแถวที่ไฮไลต์', warn: !result.reconciled },
+    ];
+  }
+  return result;
 }
 
 /** Friendly Thai message for a failed extraction. */

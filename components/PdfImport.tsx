@@ -62,10 +62,10 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
 
   const onPick = (file?: File) => { if (file) { setResult(null); setPassword(''); run(file); } };
 
-  const runCloud = async (file: File) => {
+  const runCloud = async (files: File[]) => {
     setResult(null); setError(''); setDone(''); setBusy('ส่งให้ Cloud AI อ่าน…');
     try {
-      const r = await extractStatementWithAI(file, { apiKey: aiKey, model: aiModel });
+      const r = await extractStatementWithAI(files, { apiKey: aiKey, model: aiModel, onProgress: setBusy });
       if (r.transactions.length === 0) { setError('AI อ่านไม่เจอรายการ — รูปอาจไม่ชัด'); setResult(null); }
       else { setResult(r); setCloud(false); }
       setCatOverrides({});
@@ -76,7 +76,7 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
     }
   };
 
-  const onPickCloud = (file?: File) => { if (file) runCloud(file); };
+  const onPickCloud = (files: File[]) => { if (files.length) runCloud(files); };
 
   // per-row trust flags from the KBank parser: which amounts were repaired
   // from the balance column, and where the chain stops adding up
@@ -140,7 +140,8 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
         <div className="p-4 space-y-4">
           <input ref={pdfRef} type="file" accept="application/pdf,.pdf" hidden onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = ''; }} />
           <input ref={imgRef} type="file" accept="image/*" hidden onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = ''; }} />
-          <input ref={aiRef} type="file" accept="image/*" hidden onChange={(e) => { onPickCloud(e.target.files?.[0]); e.target.value = ''; }} />
+          <input ref={aiRef} type="file" accept="image/*" multiple hidden
+            onChange={(e) => { onPickCloud(e.target.files ? [...e.target.files] : []); e.target.value = ''; }} />
 
           {!result && !needPw && (
             busy ? (
@@ -164,7 +165,7 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
                     </select>
                   </label>
                   <button onClick={() => aiRef.current?.click()} disabled={!aiKey.trim()}
-                    className="btn-primary w-full disabled:opacity-50"><ImageIcon size={16} /> เลือกรูปแล้วอ่านด้วย AI</button>
+                    className="btn-primary w-full disabled:opacity-50"><ImageIcon size={16} /> เลือกรูปแล้วอ่านด้วย AI (เลือกได้หลายรูปถ้ามีหลายหน้า)</button>
                   <p className="text-[11px] text-ink-soft">คีย์เก็บในเบราว์เซอร์ · รูป+คีย์ส่งตรงถึง Claude API ไม่ผ่านเซิร์ฟเวอร์อื่น · ออกคีย์ที่ console.anthropic.com</p>
                 </div>
               </div>

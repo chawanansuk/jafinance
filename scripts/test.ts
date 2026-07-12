@@ -16,7 +16,7 @@ import {
   parseImport, toCSV, splitPasted, parseDateLoose, parseAmountLoose, rowsFromMapping, dedupe,
 } from '@/lib/io';
 import { autoCategorize, refineCategory, repairChannelNoiseCategories } from '@/lib/autocat';
-import { toStatementResult } from '@/lib/ai/statement';
+import { toStatementResult, verifyAiResult } from '@/lib/ai/statement';
 import { parseUobStatement, summarizeBill } from '@/lib/pdf/uob';
 import { parseKbankStatement, classifyKbank } from '@/lib/pdf/kbank';
 import { detectBank, parseStatement } from '@/lib/pdf/statement';
@@ -488,6 +488,44 @@ console.log('\n── AI statement shaping (UOB parity with PDF path) ──');
     transactions: [{ date: '2026-06-01', time: '09:00', type: 'ชำระเงิน', direction: 'out', amount: 100, desc: 'MAKE by KBank ร้าน A' }],
   });
   ok('ai-kbank: one-sided control noted', r.summaryRows.some((x) => x.value.includes('ฝั่งเดียว')));
+}
+
+console.log('\n── AI self-verification (control totals / counts / balance walk) ──');
+{
+  // clean transcription: everything checks out
+  const good = verifyAiResult({
+    bank: 'KBank', openingBalance: 1000, closingBalance: 700, controlOut: 500, controlIn: 200,
+    controlOutCount: 2, controlInCount: 1,
+    transactions: [
+      { date: '2026-06-01', direction: 'out', amount: 300, balance: 700 },
+      { date: '2026-06-02', direction: 'in', amount: 200, balance: 900 },
+      { date: '2026-06-03', direction: 'out', amount: 200, balance: 700 },
+    ],
+  });
+  ok('verify: clean result passes', good.ok);
+
+  // one misread amount (300 -> 30): sum check AND balance walk both fire
+  const bad = verifyAiResult({
+    bank: 'KBank', openingBalance: 1000, closingBalance: 700, controlOut: 500,
+    controlOutCount: 2, controlIn: 200,
+    transactions: [
+      { date: '2026-06-01', direction: 'out', amount: 30, balance: 700 },
+      { date: '2026-06-02', direction: 'in', amount: 200, balance: 900 },
+      { date: '2026-06-03', direction: 'out', amount: 200, balance: 700 },
+    ],
+  });
+  ok('verify: sum mismatch caught', bad.issues.some((i) => i.message.includes('ยอดคุม')));
+  ok('verify: balance walk pinpoints row 1', bad.issues.some((i) => i.rows?.includes(0)));
+
+  // missing row: count check fires even when no balance column exists
+  const miss = verifyAiResult({
+    bank: 'KBank', controlOut: 500, controlOutCount: 3,
+    transactions: [
+      { date: '2026-06-01', direction: 'out', amount: 300 },
+      { date: '2026-06-03', direction: 'out', amount: 200 },
+    ],
+  });
+  ok('verify: missing-row count caught', miss.issues.some((i) => i.message.includes('รายการ')));
 }
 
 console.log('\n── repair of channel-noise mislabels (localStorage migration) ──');
