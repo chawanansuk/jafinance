@@ -63,19 +63,19 @@ const grab = merch.get('Grab')!;
 const seven = merch.get('7-Eleven')!;
 
 console.log('\n── Reconcile against statement baseline ──────────────────────');
-checkInt('record count', rows.length, 729);
-check('UOB gross out', uobGross, 143902.08);
+checkInt('record count', rows.length, 873);
+check('UOB gross out', uobGross, 183957.97);
 check('UOB refund (in)', uobRefund, 10682.02);
-check('UOB net (gross - refund)', uobGross - uobRefund, 133220.06);
+check('UOB net (gross - refund)', uobGross - uobRefund, 173275.95);
 check('KBank out', kbankOut, 50366.10);
-check('essential (out)', essential, 54460.27);
-check('discretionary NET (refund-netted)', discNet, 87097.45);
-check('transfer (out)', transfer, 42028.44);
-check('NET TOTAL spending', netTotal, 183586.16, 1);
-check('top merchant Grab total', grab.amt, 17815, 1);
-checkInt('top merchant Grab count', grab.n, 118);
-check('7-Eleven total', seven.amt, 12906, 1);
-checkInt('7-Eleven count', seven.n, 123);
+check('essential (out)', essential, 75099.40);
+check('discretionary NET (refund-netted)', discNet, 99392.84);
+check('transfer (out)', transfer, 49149.81);
+check('NET TOTAL spending', netTotal, 223642.05, 1);
+check('top merchant Grab total', grab.amt, 24414, 1);
+checkInt('top merchant Grab count', grab.n, 181);
+check('7-Eleven total', seven.amt, 16423, 1);
+checkInt('7-Eleven count', seven.n, 169);
 
 console.log('\n  Top 5 merchants (spend only):');
 for (const [name, m] of top.slice(0, 5)) {

@@ -38,8 +38,8 @@ const base = baseTransactions();
 const txns = materialize(base);
 
 console.log('\n── data / materialize ──');
-ok('729 base rows', base.length === 729);
-ok('all ids unique', new Set(base.map((t) => t.id)).size === 729);
+ok('873 base rows', base.length === 873);
+ok('all ids unique', new Set(base.map((t) => t.id)).size === 873);
 {
   const id = base.find((t) => t.merchant === 'Grab')!.id;
   const m = materialize(base, [], { categoryById: { [id]: 'คาเฟ่/ขนม' }, realIncomeById: {} }, {});
@@ -76,14 +76,14 @@ ok('all ids unique', new Set(base.map((t) => t.id)).size === 729);
 }
 
 console.log('\n── analytics ──');
-eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 183586.16, 0.5);
+eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 223642.05, 0.5);
 {
   // after the Grab-ride rule, 53 Grab rows < ฿120 (3,766) move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
-  eq('essential (+ Grab rides)', g.essential, 58226.27);
-  eq('discretionary net (- Grab rides)', g.discretionary, 83331.45);
-  eq('transfer', g.transfer, 42028.44);
-  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 183586.16, 1);
+  eq('essential (+ Grab rides)', g.essential, 78865.40);
+  eq('discretionary net (- Grab rides)', g.discretionary, 95626.84);
+  eq('transfer', g.transfer, 49149.81);
+  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 223642.05, 1);
 }
 {
   const travel = toSpendingEvents(txns).filter((e) => e.category === 'ที่พัก/ท่องเที่ยว').reduce((s, e) => s + e.signed, 0);
@@ -91,14 +91,14 @@ eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 183586.16, 0
 }
 {
   const months = aggregateByMonth(txns);
-  ok('defaultMonth = 2026-05', defaultMonth(months) === '2026-05');
+  ok('defaultMonth = 2026-06', defaultMonth(months) === '2026-06');
   ok('Feb flagged incomplete', months.find((m) => m.month === '2026-02')!.incomplete);
   ok('Mar complete (UOB carries the weight)', !months.find((m) => m.month === '2026-03')!.incomplete);
   ok('May complete', !months.find((m) => m.month === '2026-05')!.incomplete);
-  ok('June incomplete (zero UOB coverage)', months.find((m) => m.month === '2026-06')!.incomplete);
+  ok('June complete (UOB statement added)', !months.find((m) => m.month === '2026-06')!.incomplete);
 }
 ok('projection Feb unreliable', projectMonth(txns, '2026-02').reliable === false);
-ok('projection June unreliable (missing UOB)', projectMonth(txns, '2026-06').reliable === false);
+ok('projection July unreliable (partial)', projectMonth(txns, '2026-07').reliable === false);
 ok('projection Feb projected=null', projectMonth(txns, '2026-02').projected === null);
 ok('projection May reliable', projectMonth(txns, '2026-05').reliable === true);
 {
@@ -127,7 +127,7 @@ ok('outliers found', detectOutliers(txns).length > 0);
   const ds = dailySpending(txns);
   ok('dailySpending sorted & non-empty', ds.length > 30 && ds[0].date <= ds[ds.length - 1].date);
   const sum = ds.reduce((s, d) => s + d.total, 0);
-  eq('dailySpending sums to net total', sum, 183586.16, 1);
+  eq('dailySpending sums to net total', sum, 223642.05, 1);
   const avg = avgMonthlyByCategory(txns);
   ok('avgMonthlyByCategory has Grab', (avg['Grab/เดลิเวอรี่/แท็กซี่'] ?? 0) > 0);
 }
@@ -161,7 +161,7 @@ console.log('\n── import / export (io) ──');
   const jsonText = JSON.stringify(base.map(({ id, ...r }) => r));
   const res = parseImport(jsonText, txns);
   ok('re-import all -> 0 added', res.added.length === 0);
-  ok('re-import all -> all duplicates', res.duplicates === 729);
+  ok('re-import all -> all duplicates', res.duplicates === 873);
   ok('overlap warned on re-import', res.overlaps.length > 0);
 }
 {
@@ -308,7 +308,7 @@ ok('settlement is transfer group', categoryGroup('ชำระบัตรเค
   const settle = { date: '2026-07-05', time: '', account: 'KBank ออมทรัพย์', direction: 'out' as const,
     amount: 40000, category: 'ชำระบัตรเครดิต', group: 'transfer' as const, merchant: 'UOB', desc: 'ชำระบัตร', id: 'settle1' };
   const m = materialize(base, [settle as any]);
-  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 183586.16, 1);
+  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 223642.05, 1);
   ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
 }
 
@@ -437,6 +437,15 @@ console.log('\n── KBank balance-column self-correction ──');
   ok('clean statement keeps amount column', r.summary.amountSource === 'column' && r.transactions[0].amount === 200);
 }
 
+console.log('\n── autocat: new merchant keywords (UOB import) ──');
+ok('christian hospital -> health', autoCategorize('BANGKOK CHRISTIAN HOSP', 'BANGKOK CHRISTIAN HOSP BANGKOK') === 'โรงพยาบาล/สุขภาพ');
+ok('abbrev HOS. -> health', autoCategorize('BANGKOK CHRISTIAN HOS.', 'BANGKOK CHRISTIAN HOS. BANGKOK') === 'โรงพยาบาล/สุขภาพ');
+ok('izakaya -> restaurant', autoCategorize('KENSHIN IZAKAYA', '') === 'อาหาร/ร้านอาหาร');
+ok('katsu -> restaurant', autoCategorize('KATSU MIDORI', '') === 'อาหาร/ร้านอาหาร');
+ok('black canyon -> cafe', autoCategorize('BLACK CANYON', '') === 'คาเฟ่/ขนม');
+ok('car rent -> transport', autoCategorize('PRIME CAR RENT', '') === 'เดินทาง/ขนส่ง');
+ok('unknown UOB merchant stays fallback', autoCategorize('TMN ISERVICECCP', 'TMN ISERVICECCP BANGKOK') === 'ค่าใช้จ่ายอื่น');
+
 console.log('\n── autocat: channel noise must not drive category ──');
 ok('MAKE by KBank not swallowed', autoCategorize('GOLDEN DONUTS', 'MAKE by KBank GOLDEN DONUTS (THAILAND) CO.,LTD.', {}, 96) === 'ค่าใช้จ่ายอื่น');
 ok('SCB มณี SHOP not swallowed', autoCategorize('อาหารกล่อง BY วาสนา', 'SCB มณี SHOP อาหารกล่อง BY วาสนา', {}, 105) !== 'โอนเงิน/บุคคล');
@@ -547,7 +556,7 @@ console.log('\n── coverage gaps (missing-statement list) ──');
 {
   const gaps = coverageGaps(txns);
   ok('finds the 27-30 Jun KBank hole', gaps.some((g) => g.account.startsWith('KBank') && g.from === '2026-06-27' && g.to === '2026-06-30' && !g.trailing));
-  ok('finds the trailing UOB gap since 21 May', gaps.some((g) => g.account.startsWith('UOB') && g.from === '2026-05-21' && g.trailing));
+  ok('finds the trailing UOB gap since 22 Jun', gaps.some((g) => g.account.startsWith('UOB') && g.from === '2026-06-22' && g.trailing));
   ok('no gap inside a statement window', !gaps.some((g) => g.from >= '2026-07-01' && g.to <= '2026-07-10'));
   ok('sorted newest first', gaps.every((g, i) => i === 0 || gaps[i - 1].from >= g.from));
 }
