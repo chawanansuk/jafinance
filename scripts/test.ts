@@ -7,7 +7,7 @@ import { baseTransactions, materialize, makeId, dropBaseDuplicates } from '@/lib
 import {
   toSpendingEvents, grandTotal, aggregateByGroup, aggregateByCategory,
   aggregateByMonth, defaultMonth, projectMonth, topMerchants,
-  detectRecurring, detectOutliers, fixedVsVariable, dailySpending, avgMonthlyByCategory,
+  detectRecurring, detectOutliers, fixedVsVariable, dailySpending, avgMonthlyByCategory, coverageGaps,
 } from '@/lib/analytics';
 import {
   suggestBudgets, categoryBudgetRows, monthSummary, cumulativeSavings, EMPTY_BUDGET,
@@ -15,11 +15,13 @@ import {
 import {
   parseImport, toCSV, splitPasted, parseDateLoose, parseAmountLoose, rowsFromMapping, dedupe,
 } from '@/lib/io';
-import { autoCategorize, refineCategory } from '@/lib/autocat';
+import { autoCategorize, refineCategory, repairChannelNoiseCategories } from '@/lib/autocat';
+import { toStatementResult, verifyAiResult } from '@/lib/ai/statement';
 import { parseUobStatement, summarizeBill } from '@/lib/pdf/uob';
-import { parseKbankStatement } from '@/lib/pdf/kbank';
+import { parseKbankStatement, classifyKbank } from '@/lib/pdf/kbank';
 import { detectBank, parseStatement } from '@/lib/pdf/statement';
 import { parseReceiptText } from '@/lib/ocr/receipt';
+import { adaptiveThreshold } from '@/lib/ocr/extract';
 import { categoryGroup } from '@/lib/categories';
 import type { Transaction, BudgetState } from '@/lib/types';
 
@@ -36,8 +38,8 @@ const base = baseTransactions();
 const txns = materialize(base);
 
 console.log('\n── data / materialize ──');
-ok('635 base rows', base.length === 635);
-ok('all ids unique', new Set(base.map((t) => t.id)).size === 635);
+ok('940 base rows', base.length === 940);
+ok('all ids unique', new Set(base.map((t) => t.id)).size === 940);
 {
   const id = base.find((t) => t.merchant === 'Grab')!.id;
   const m = materialize(base, [], { categoryById: { [id]: 'คาเฟ่/ขนม' }, realIncomeById: {} }, {});
@@ -74,14 +76,14 @@ ok('all ids unique', new Set(base.map((t) => t.id)).size === 635);
 }
 
 console.log('\n── analytics ──');
-eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 170575.98, 0.5);
+eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 232774.03, 0.5);
 {
   // after the Grab-ride rule, 53 Grab rows < ฿120 (3,766) move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
-  eq('essential (+ Grab rides)', g.essential, 57429.27);
-  eq('discretionary net (- Grab rides)', g.discretionary, 79885.45);
-  eq('transfer', g.transfer, 33261.26);
-  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 170575.98, 1);
+  eq('essential (+ Grab rides)', g.essential, 79568.40);
+  eq('discretionary net (- Grab rides)', g.discretionary, 96698.84);
+  eq('transfer', g.transfer, 56506.79);
+  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 232774.03, 1);
 }
 {
   const travel = toSpendingEvents(txns).filter((e) => e.category === 'ที่พัก/ท่องเที่ยว').reduce((s, e) => s + e.signed, 0);
@@ -89,12 +91,15 @@ eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 170575.98, 0
 }
 {
   const months = aggregateByMonth(txns);
-  ok('defaultMonth = 2026-05', defaultMonth(months) === '2026-05');
+  ok('defaultMonth = 2026-06', defaultMonth(months) === '2026-06');
   ok('Feb flagged incomplete', months.find((m) => m.month === '2026-02')!.incomplete);
-  ok('June flagged incomplete', months.find((m) => m.month === '2026-06')!.incomplete);
+  ok('Mar complete (UOB carries the weight)', !months.find((m) => m.month === '2026-03')!.incomplete);
+  ok('May complete', !months.find((m) => m.month === '2026-05')!.incomplete);
+  ok('June complete (UOB statement added)', !months.find((m) => m.month === '2026-06')!.incomplete);
 }
-ok('projection June unreliable', projectMonth(txns, '2026-06').reliable === false);
-ok('projection June projected=null', projectMonth(txns, '2026-06').projected === null);
+ok('projection Feb unreliable', projectMonth(txns, '2026-02').reliable === false);
+ok('projection July unreliable (partial)', projectMonth(txns, '2026-07').reliable === false);
+ok('projection Feb projected=null', projectMonth(txns, '2026-02').projected === null);
 ok('projection May reliable', projectMonth(txns, '2026-05').reliable === true);
 {
   const top = topMerchants(txns, { limit: 5 });
@@ -105,7 +110,7 @@ ok('projection May reliable', projectMonth(txns, '2026-05').reliable === true);
   const tagged = txns.map((t) => (t.merchant === 'ปรารถนา' && t.group === 'transfer' ? { ...t, transferKind: 'moving' as const } : t));
   const before = grandTotal(toSpendingEvents(tagged));
   const after = grandTotal(toSpendingEvents(tagged, { excludeMovingTransfers: true }));
-  eq('excludeMoving removes ปรารถนา', before - after, 5813.25, 0.5);
+  eq('excludeMoving removes ปรารถนา', before - after, 6613.25, 0.5);
 }
 {
   const before = grandTotal(toSpendingEvents(txns));
@@ -122,7 +127,7 @@ ok('outliers found', detectOutliers(txns).length > 0);
   const ds = dailySpending(txns);
   ok('dailySpending sorted & non-empty', ds.length > 30 && ds[0].date <= ds[ds.length - 1].date);
   const sum = ds.reduce((s, d) => s + d.total, 0);
-  eq('dailySpending sums to net total', sum, 170575.98, 1);
+  eq('dailySpending sums to net total', sum, 232774.03, 1);
   const avg = avgMonthlyByCategory(txns);
   ok('avgMonthlyByCategory has Grab', (avg['Grab/เดลิเวอรี่/แท็กซี่'] ?? 0) > 0);
 }
@@ -156,7 +161,7 @@ console.log('\n── import / export (io) ──');
   const jsonText = JSON.stringify(base.map(({ id, ...r }) => r));
   const res = parseImport(jsonText, txns);
   ok('re-import all -> 0 added', res.added.length === 0);
-  ok('re-import all -> all duplicates', res.duplicates === 635);
+  ok('re-import all -> all duplicates', res.duplicates === 940);
   ok('overlap warned on re-import', res.overlaps.length > 0);
 }
 {
@@ -303,7 +308,7 @@ ok('settlement is transfer group', categoryGroup('ชำระบัตรเค
   const settle = { date: '2026-07-05', time: '', account: 'KBank ออมทรัพย์', direction: 'out' as const,
     amount: 40000, category: 'ชำระบัตรเครดิต', group: 'transfer' as const, merchant: 'UOB', desc: 'ชำระบัตร', id: 'settle1' };
   const m = materialize(base, [settle as any]);
-  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 170575.98, 1);
+  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 232774.03, 1);
   ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
 }
 
@@ -360,6 +365,227 @@ console.log('\n── KBank statement parser ──');
   const u = parseStatement(L);
   ok('parseStatement UOB', u != null && u.bank === 'UOB' && u.transactions.length === 1);
   ok('detectBank unknown -> null', detectBank(['random text 123']) === null);
+}
+
+console.log('\n── OCR preprocess (adaptive binarization) ──');
+{
+  // Synthetic 40x10 image: a left->right brightness gradient (50..200, like an
+  // unevenly-lit photo) with two ink strokes — one in the dark region (x=5),
+  // one in the bright region (x=35), each 45 darker than its local background.
+  const w = 40, h = 10;
+  const gray = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const bg = Math.round(50 + (150 * x) / (w - 1));
+      gray[y * w + x] = x === 5 || x === 35 ? bg - 45 : bg;
+    }
+  }
+  // A single global threshold cannot separate ink from paper across the gradient:
+  // dark-region PAPER (x=4) reads darker than bright-region INK (x=35).
+  ok('global threshold (128) would misclassify both ends', gray[4] < 128 && !(gray[35] < 128));
+
+  const bin = adaptiveThreshold(gray, w, h, 4, 20);
+  ok('adaptive: ink in dark region -> black', bin[5] === 0);
+  ok('adaptive: ink in bright region -> black', bin[35] === 0);
+  ok('adaptive: paper stays white (both ends)', bin[4] === 255 && bin[20] === 255 && bin[36] === 255);
+  ok('adaptive: output is strictly binary', bin.every((v) => v === 0 || v === 255));
+}
+
+console.log('\n── KBank row parser: OCR separator tolerance ──');
+{
+  // OCR often renders the date/time cell with / and . instead of - and :.
+  // The clean PDF-text shape must still parse, and so must the noisy one.
+  const r = parseKbankStatement([
+    '12/06/26 17.37 ชำระเงิน 507.00 2,608.22 MAKE by KBank เพื่อชำระ Ref X3115 ร้านอร่อย',
+  ]);
+  ok('kbank: parses / and . separators', r.transactions.length === 1);
+  ok('kbank: date normalized', r.transactions[0].date === '2026-06-12');
+  ok('kbank: time normalized to HH:MM', r.transactions[0].time === '17:37');
+  ok('kbank: amount intact', r.transactions[0].amount === 507);
+}
+
+console.log('\n── KBank balance-column self-correction ──');
+{
+  // row 2's amount is misread by OCR (300.00 -> 30.00), but the running-balance
+  // column is intact. Control totals don't match the amount column, so the
+  // parser reconstructs amounts from the balance deltas and recovers 300.00.
+  const L = [
+    'ยอดยกมา 1,000.00',
+    'รวมถอนเงิน 2 รายการ 500.00',
+    'รวมฝากเงิน 1 รายการ 150.00',
+    '01-06-26 09:00 ชำระเงิน 200.00 800.00 MAKE by KBank ร้าน A',
+    '02-06-26 09:00 ชำระเงิน 30.00 500.00 MAKE by KBank ร้าน B',
+    '03-06-26 09:00 รับโอนเงิน 150.00 650.00 รับโอน X',
+  ];
+  const r = parseKbankStatement(L);
+  ok('balance-fix: reconciles after correction', r.summary.reconciled === true);
+  ok('balance-fix: amountSource = balance', r.summary.amountSource === 'balance');
+  ok('balance-fix: misread 30 -> 300', r.transactions[1].amount === 300);
+  ok('balance-fix: correct rows untouched', r.transactions[0].amount === 200 && r.transactions[2].amount === 150);
+  eq('balance-fix: parsedOut = control', r.summary.parsedOut, 500);
+  eq('balance-fix: parsedIn = control', r.summary.parsedIn, 150);
+}
+{
+  // when the amount column already reconciles, the balance path is NOT used
+  // (amounts pass through untouched).
+  const L = [
+    'ยอดยกมา 1,000.00',
+    'รวมถอนเงิน 1 รายการ 200.00',
+    '01-06-26 09:00 ชำระเงิน 200.00 800.00 MAKE by KBank ร้าน A',
+  ];
+  const r = parseKbankStatement(L);
+  ok('clean statement keeps amount column', r.summary.amountSource === 'column' && r.transactions[0].amount === 200);
+}
+
+console.log('\n── autocat: new merchant keywords (UOB import) ──');
+ok('christian hospital -> health', autoCategorize('BANGKOK CHRISTIAN HOSP', 'BANGKOK CHRISTIAN HOSP BANGKOK') === 'โรงพยาบาล/สุขภาพ');
+ok('abbrev HOS. -> health', autoCategorize('BANGKOK CHRISTIAN HOS.', 'BANGKOK CHRISTIAN HOS. BANGKOK') === 'โรงพยาบาล/สุขภาพ');
+ok('izakaya -> restaurant', autoCategorize('KENSHIN IZAKAYA', '') === 'อาหาร/ร้านอาหาร');
+ok('katsu -> restaurant', autoCategorize('KATSU MIDORI', '') === 'อาหาร/ร้านอาหาร');
+ok('black canyon -> cafe', autoCategorize('BLACK CANYON', '') === 'คาเฟ่/ขนม');
+ok('car rent -> transport', autoCategorize('PRIME CAR RENT', '') === 'เดินทาง/ขนส่ง');
+ok('unknown UOB merchant stays fallback', autoCategorize('TMN ISERVICECCP', 'TMN ISERVICECCP BANGKOK') === 'ค่าใช้จ่ายอื่น');
+
+console.log('\n── autocat: channel noise must not drive category ──');
+ok('MAKE by KBank not swallowed', autoCategorize('GOLDEN DONUTS', 'MAKE by KBank GOLDEN DONUTS (THAILAND) CO.,LTD.', {}, 96) === 'ค่าใช้จ่ายอื่น');
+ok('SCB มณี SHOP not swallowed', autoCategorize('อาหารกล่อง BY วาสนา', 'SCB มณี SHOP อาหารกล่อง BY วาสนา', {}, 105) !== 'โอนเงิน/บุคคล');
+ok('เพื่อชำระ Ref stripped', autoCategorize('อร่อยแซงคิว', 'MAKE by KBank เพื่อชำระ Ref X3115 อร่อยแซงคิว', {}, 507) === 'ค่าใช้จ่ายอื่น');
+ok('real โอนไป still transfer', autoCategorize('สุรางค์', 'โอนไป พร้อมเพย์ X9709 สุรางค์', {}, 50) === 'โอนเงิน/บุคคล');
+ok('classifyKbank payment not transfer', classifyKbank('ชำระเงิน', 'MAKE by KBank GOLDEN DONUTS', 96).category !== 'โอนเงิน/บุคคล');
+ok('bank keyword still works alone', autoCategorize('', 'โอน KTB ปรารถนา') === 'โอนเงิน/บุคคล');
+
+console.log('\n── Buddhist-era 2-digit years ──');
+ok('parseDateLoose 2-digit BE year', parseDateLoose('14/05/68') === '2025-05-14');
+ok('parseDateLoose 2-digit CE year', parseDateLoose('10/06/26') === '2026-06-10');
+{
+  const r = parseKbankStatement(['12-06-68 17:37 ชำระเงิน 507.00 2,608.22 MAKE by KBank ร้านอร่อย']);
+  ok('kbank: 2-digit BE row year', r.transactions[0]?.date === '2025-06-12');
+  const bad = parseKbankStatement(['99-99-26 25:99 ชำระเงิน 1.00 2.00 ขยะ OCR']);
+  ok('kbank: rejects impossible date/time', bad.transactions.length === 0);
+}
+
+console.log('\n── comma paste with thousand separators ──');
+{
+  const g = splitPasted('10/06/2026, 1,234.50, Grab');
+  ok('amount cell stays whole', g[0].length === 3 && g[0][1] === '1,234.50');
+  ok('small ints still split', splitPasted('a,120,b')[0].length === 3);
+  ok('amount parses after split', parseAmountLoose(g[0][1]).value === 1234.5);
+}
+
+console.log('\n── AI statement shaping (UOB parity with PDF path) ──');
+{
+  const r = toStatementResult({
+    bank: 'UOB', openingBalance: 1000, amountDue: 1300, minPayment: 200,
+    period: '24 MAY 2026',
+    transactions: [
+      { date: '2026-05-15', direction: 'in', amount: 1000, desc: 'PAYMENT THANK YOU - UOBT TMRW APP' },
+      { date: '2026-04-22', direction: 'out', amount: 138, desc: 'WWW.GRAB.COM BANGKOK' },
+      { date: '2026-05-03', direction: 'out', amount: 1200, desc: 'SUSHIRO GH BANGKOK' },
+      { date: '2026-05-05', direction: 'in', amount: 38, desc: 'SOME REFUND' },
+    ],
+  });
+  ok('ai-uob: payment row excluded', r.transactions.length === 3);
+  ok('ai-uob: reconciled via expectedNet', r.reconciled === true);
+  const ref = r.transactions.find((t) => t.direction === 'in')!;
+  ok('ai-uob: credit -> refund group', ref.group === 'refund' && ref.category === 'คืนเงิน (refund)');
+  ok('ai-uob: merchant normalized', r.transactions.some((t) => t.merchant === 'Grab'));
+}
+{
+  // KBank: single control total found -> still reconciles but says so
+  const r = toStatementResult({
+    bank: 'KBank', controlOut: 100, controlIn: null,
+    transactions: [{ date: '2026-06-01', time: '09:00', type: 'ชำระเงิน', direction: 'out', amount: 100, desc: 'MAKE by KBank ร้าน A' }],
+  });
+  ok('ai-kbank: one-sided control noted', r.summaryRows.some((x) => x.value.includes('ฝั่งเดียว')));
+}
+
+console.log('\n── AI self-verification (control totals / counts / balance walk) ──');
+{
+  // clean transcription: everything checks out
+  const good = verifyAiResult({
+    bank: 'KBank', openingBalance: 1000, closingBalance: 700, controlOut: 500, controlIn: 200,
+    controlOutCount: 2, controlInCount: 1,
+    transactions: [
+      { date: '2026-06-01', direction: 'out', amount: 300, balance: 700 },
+      { date: '2026-06-02', direction: 'in', amount: 200, balance: 900 },
+      { date: '2026-06-03', direction: 'out', amount: 200, balance: 700 },
+    ],
+  });
+  ok('verify: clean result passes', good.ok);
+
+  // one misread amount (300 -> 30): sum check AND balance walk both fire
+  const bad = verifyAiResult({
+    bank: 'KBank', openingBalance: 1000, closingBalance: 700, controlOut: 500,
+    controlOutCount: 2, controlIn: 200,
+    transactions: [
+      { date: '2026-06-01', direction: 'out', amount: 30, balance: 700 },
+      { date: '2026-06-02', direction: 'in', amount: 200, balance: 900 },
+      { date: '2026-06-03', direction: 'out', amount: 200, balance: 700 },
+    ],
+  });
+  ok('verify: sum mismatch caught', bad.issues.some((i) => i.message.includes('ยอดคุม')));
+  ok('verify: balance walk pinpoints row 1', bad.issues.some((i) => i.rows?.includes(0)));
+
+  // missing row: count check fires even when no balance column exists
+  const miss = verifyAiResult({
+    bank: 'KBank', controlOut: 500, controlOutCount: 3,
+    transactions: [
+      { date: '2026-06-01', direction: 'out', amount: 300 },
+      { date: '2026-06-03', direction: 'out', amount: 200 },
+    ],
+  });
+  ok('verify: missing-row count caught', miss.issues.some((i) => i.message.includes('รายการ')));
+}
+
+console.log('\n── repair of channel-noise mislabels (localStorage migration) ──');
+{
+  const rows = [
+    { category: 'โอนเงิน/บุคคล', group: 'transfer', merchant: 'GOLDEN DONUTS', desc: 'MAKE by KBank GOLDEN DONUTS', amount: 96 },
+    { category: 'โอนเงิน/บุคคล', group: 'transfer', merchant: 'รัตนา', desc: 'MAKE by KBank โอนไป X5803 นาง รัตนา', amount: 290 },
+    { category: 'คาเฟ่/ขนม', group: 'discretionary', merchant: 'X', desc: 'MAKE by KBank X', amount: 10 },
+  ];
+  const { rows: out, changed } = repairChannelNoiseCategories(rows as any);
+  ok('repair: mislabeled shop fixed', out[0].category === 'ค่าใช้จ่ายอื่น' && out[0].group === 'transfer');
+  ok('repair: real transfer untouched', out[1].category === 'โอนเงิน/บุคคล');
+  ok('repair: non-transfer rows untouched', out[2] === rows[2]);
+  ok('repair: reports 1 change', changed === 1);
+  ok('repair: idempotent', repairChannelNoiseCategories(out as any).changed === 0);
+}
+
+console.log('\n── coverage gaps (missing-statement list) ──');
+{
+  const gaps = coverageGaps(txns);
+  ok('finds the 27-30 Jun KBank hole', gaps.some((g) => g.account.startsWith('KBank') && g.from === '2026-06-27' && g.to === '2026-06-30' && !g.trailing));
+  ok('finds the trailing UOB gap since 22 Jun', gaps.some((g) => g.account.startsWith('UOB') && g.from === '2026-06-22' && g.trailing));
+  ok('no gap inside a statement window', !gaps.some((g) => g.from >= '2026-07-01' && g.to <= '2026-07-10'));
+  ok('sorted newest first', gaps.every((g, i) => i === 0 || gaps[i - 1].from >= g.from));
+}
+
+console.log('\n── KBank trust flags (corrections / chain breaks) ──');
+{
+  // balance-repair case: misread 30 -> real 300; parser reports the fix
+  const r = parseKbankStatement([
+    'ยอดยกมา 1,000.00',
+    'รวมถอนเงิน 2 รายการ 500.00',
+    '01-06-26 09:00 ชำระเงิน 200.00 800.00 MAKE by KBank ร้าน A',
+    '02-06-26 09:00 ชำระเงิน 30.00 500.00 MAKE by KBank ร้าน B',
+  ]);
+  ok('correction reported for the repaired row', r.summary.corrections.length === 1 && r.summary.corrections[0].index === 1
+    && r.summary.corrections[0].from === 30 && r.summary.corrections[0].to === 300);
+  ok('no chain breaks when reconciled', r.summary.chainBreaks.length === 0);
+}
+{
+  // unreconcilable case: row 2's BALANCE is misread (900 instead of 500) so
+  // neither the amount column nor the reconstruction matches the control —
+  // the parser keeps the column but pinpoints where the chain stops adding up
+  const r = parseKbankStatement([
+    'ยอดยกมา 1,000.00',
+    'รวมถอนเงิน 2 รายการ 600.00',
+    '01-06-26 09:00 ชำระเงิน 200.00 800.00 MAKE by KBank ร้าน A',
+    '02-06-26 09:00 ชำระเงิน 300.00 900.00 MAKE by KBank ร้าน B',
+  ]);
+  ok('unreconciled stays column-sourced', r.summary.reconciled === false && r.summary.amountSource === 'column');
+  ok('chain break pinpointed at bad row', r.summary.chainBreaks.length === 1 && r.summary.chainBreaks[0] === 1);
 }
 
 console.log('\n── receipt OCR parser ──');

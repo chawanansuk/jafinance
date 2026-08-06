@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, X, Check, Camera, Loader2, Image as ImageIcon } from 'lucide-react';
 import { useData } from './DataProvider';
+import { Modal } from './ui';
 import { CATEGORIES, categoryGroup } from '@/lib/categories';
 import { makeId } from '@/lib/data';
 import { autoCategorize } from '@/lib/autocat';
@@ -19,9 +20,19 @@ function todayISO() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
+/** Fired on window to open the QuickAdd sheet (e.g. from the desktop header). */
+export const QUICKADD_EVENT = 'jafinance:quickadd';
+
 export function QuickAdd() {
   const { txns, setImported, rules, hydrated } = useData();
   const [open, setOpen] = useState(false);
+
+  // header button (desktop) opens the same sheet via a window event
+  useEffect(() => {
+    const on = () => setOpen(true);
+    window.addEventListener(QUICKADD_EVENT, on);
+    return () => window.removeEventListener(QUICKADD_EVENT, on);
+  }, []);
 
   const [date, setDate] = useState(todayISO());
   const [account, setAccount] = useState(ACCOUNTS[0]);
@@ -36,6 +47,10 @@ export function QuickAdd() {
   const galleryRef = useRef<HTMLInputElement>(null);
   const [scan, setScan] = useState<{ busy: boolean; pct: number; msg: string }>({ busy: false, pct: 0, msg: '' });
   const [scanText, setScanText] = useState('');
+
+  useEffect(() => {
+    if (open) setDate(todayISO());
+  }, [open]);
 
   const onPhoto = async (file?: File) => {
     if (!file) return;
@@ -98,7 +113,7 @@ export function QuickAdd() {
       <button
         onClick={() => setOpen(true)}
         aria-label="เพิ่มรายการ"
-        className="fixed right-4 bottom-20 sm:bottom-6 z-40 h-14 w-14 rounded-2xl text-white shadow-lg grid place-items-center active:scale-95 transition-transform"
+        className="lg:hidden fixed right-4 bottom-20 sm:bottom-6 z-40 h-14 w-14 rounded-2xl text-white shadow-lg grid place-items-center active:scale-95 transition-transform"
         style={{ backgroundImage: 'linear-gradient(135deg, rgb(var(--brand)), rgb(var(--brand-2)))' }}
       >
         <Plus size={26} />
@@ -110,11 +125,9 @@ export function QuickAdd() {
         </div>
       )}
 
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4" onClick={() => setOpen(false)}>
-          <div className="card w-full max-w-md rounded-b-none sm:rounded-2xl max-h-[90dvh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+      <Modal open={open} onClose={() => setOpen(false)} labelledBy="quickadd-title">
             <div className="sticky top-0 bg-surface border-b border-line px-4 py-3 flex items-center justify-between">
-              <h2 className="font-semibold flex items-center gap-2"><Plus size={18} /> เพิ่มรายการ</h2>
+              <h2 id="quickadd-title" className="font-semibold flex items-center gap-2"><Plus size={18} /> เพิ่มรายการ</h2>
               <button aria-label="ปิด" onClick={() => setOpen(false)} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
             </div>
             <div className="p-4 space-y-3">
@@ -200,9 +213,7 @@ export function QuickAdd() {
               </div>
               <p className="text-[11px] text-ink-soft text-center">บันทึกในเครื่อง · สแกนรูปอ่านในเครื่อง ไม่อัปโหลดรูปออกไป</p>
             </div>
-          </div>
-        </div>
-      )}
+      </Modal>
     </>
   );
 }

@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { X, ClipboardPaste, Check, AlertTriangle } from 'lucide-react';
 import { useData } from './DataProvider';
+import { Modal } from './ui';
 import { CATEGORIES } from '@/lib/categories';
 import { autoCategorize } from '@/lib/autocat';
 import { formatTHB, formatDate } from '@/lib/format';
@@ -10,6 +11,7 @@ import {
   splitPasted, rowsFromMapping, dedupe, parseDateLoose, parseAmountLoose,
   type PasteDelimiter, type PasteMapping,
 } from '@/lib/io';
+import { dedupKey } from '@/lib/data';
 
 const CAT_NAMES = CATEGORIES.map((c) => c.name);
 const ACCOUNTS = ['KBank ออมทรัพย์', 'UOB บัตรเครดิต'];
@@ -49,21 +51,45 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
   const guess = useMemo(() => guessColumns(grid), [grid]);
   const cols = Math.max(0, ...grid.map((r) => r.length));
 
-  const mapping: PasteMapping = {
-    date: manual.date ?? guess.date,
-    amount: manual.amount ?? guess.amount,
-    merchant: manual.merchant !== undefined ? manual.merchant : guess.merchant,
-    desc: manual.desc !== undefined ? manual.desc : guess.desc,
-    account,
-    directionMode,
-  };
+  const mapping: PasteMapping = useMemo(
+    () => ({
+      date: manual.date ?? guess.date,
+      amount: manual.amount ?? guess.amount,
+      merchant: manual.merchant !== undefined ? manual.merchant : guess.merchant,
+      desc: manual.desc !== undefined ? manual.desc : guess.desc,
+      account,
+      directionMode,
+    }),
+    [manual, guess, account, directionMode],
+  );
+
+  useEffect(() => {
+    setCatOverrides({});
+  }, [text, delim, account, directionMode, manual]);
 
   const raws = useMemo(
     () => rowsFromMapping(grid, mapping, (m, d, amt) => autoCategorize(m, d, rules, amt)),
-    [grid, mapping.date, mapping.amount, mapping.merchant, mapping.desc, mapping.account, mapping.directionMode, rules],
+    [grid, mapping, rules],
   );
   const previewRaws = raws.map((r, i) => (catOverrides[i] ? { ...r, category: catOverrides[i] } : r));
   const result = useMemo(() => dedupe(previewRaws, txns), [previewRaws, txns]);
+
+  // which preview rows dedupe() will SKIP — mirrors its count-matching so the
+  // user can see (and not waste category edits on) rows that won't be imported
+  const isDup = useMemo(() => {
+    const existing = new Map<string, number>();
+    for (const t of txns) {
+      const k = dedupKey(t);
+      existing.set(k, (existing.get(k) ?? 0) + 1);
+    }
+    const seen = new Map<string, number>();
+    return previewRaws.map((r) => {
+      const k = dedupKey(r);
+      const n = seen.get(k) ?? 0;
+      seen.set(k, n + 1);
+      return n < (existing.get(k) ?? 0);
+    });
+  }, [previewRaws, txns]);
 
   const commit = () => {
     if (result.added.length === 0) { setDone('ไม่มีรายการใหม่ให้เพิ่ม'); return; }
@@ -76,10 +102,9 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
   const colOptions = Array.from({ length: cols }, (_, i) => i);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4" onClick={onClose}>
-      <div className="card w-full max-w-2xl rounded-b-none sm:rounded-2xl max-h-[92dvh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+    <Modal open={open} onClose={onClose} labelledBy="smartimport-title" maxW="max-w-2xl">
         <div className="sticky top-0 bg-surface border-b border-line px-4 py-3 flex items-center justify-between z-10">
-          <h2 className="font-semibold flex items-center gap-2"><ClipboardPaste size={18} /> นำเข้าด้วยการวางข้อความ</h2>
+          <h2 id="smartimport-title" className="font-semibold flex items-center gap-2"><ClipboardPaste size={18} /> นำเข้าด้วยการวางข้อความ</h2>
           <button aria-label="ปิด" onClick={onClose} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
         </div>
 
@@ -137,14 +162,18 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
                 <div className="max-h-56 overflow-y-auto rounded-xl border border-line divide-y divide-line/60">
                   {previewRaws.length === 0 && <div className="p-4 text-center text-sm text-ink-soft">ยังแมปคอลัมน์ไม่ได้ — ลองปรับตัวคั่น/คอลัมน์</div>}
                   {previewRaws.slice(0, 50).map((r, i) => (
-                    <div key={i} className="flex items-center gap-2 px-3 py-2 text-sm">
+                    <div key={i} className={`flex items-center gap-2 px-3 py-2 text-sm ${isDup[i] ? 'opacity-45' : ''}`}>
                       <span className="text-xs text-ink-soft w-14 shrink-0">{formatDate(r.date)}</span>
                       <span className="truncate flex-1">{r.merchant}</span>
-                      <select className="input !w-auto !py-1 !px-2 text-xs max-w-[130px]" value={r.category}
-                        onChange={(e) => setCatOverrides((o) => ({ ...o, [i]: e.target.value }))}>
-                        {!CAT_NAMES.includes(r.category) && <option value={r.category}>{r.category}</option>}
-                        {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
-                      </select>
+                      {isDup[i] ? (
+                        <span className="pill bg-surface-2 text-ink-soft shrink-0">ซ้ำ — ไม่นำเข้า</span>
+                      ) : (
+                        <select className="input !w-auto !py-1 !px-2 text-xs max-w-[130px]" value={r.category}
+                          onChange={(e) => setCatOverrides((o) => ({ ...o, [i]: e.target.value }))}>
+                          {!CAT_NAMES.includes(r.category) && <option value={r.category}>{r.category}</option>}
+                          {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      )}
                       <span className={`tnum font-semibold w-16 text-right shrink-0 ${r.direction === 'in' ? 'text-emerald-500' : ''}`}>
                         {r.direction === 'in' ? '+' : ''}{formatTHB(r.amount)}
                       </span>
@@ -164,7 +193,6 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
             </button>
           </div>
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }

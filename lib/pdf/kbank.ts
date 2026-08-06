@@ -1,5 +1,6 @@
 import { categoryGroup } from '../categories';
 import { autoCategorize } from '../autocat';
+import { fromTwoDigitYear } from '../io';
 import type { RawTransaction } from '../types';
 
 // ── pure KBank (K-DEPOSIT) savings statement parser ─────────────────────────
@@ -10,7 +11,12 @@ import type { RawTransaction } from '../types';
 // (รับโอนเงิน/ฝากเงิน/ดอกเบี้ย) are money in. Control totals (รวมถอนเงิน /
 // รวมฝากเงิน) are used to reconcile.
 
-const ROW_RE = /^(\d{2})-(\d{2})-(\d{2})\s+(\d{1,2}:\d{2})\s+(\S+)\s+([\d,]+\.\d{2})\s+([\d,]+\.\d{2})\s*(.*)$/;
+// Date/time separators are intentionally loose: the clean PDF-text path emits
+// "12-06-26 17:37", but OCR of a photo often renders the same cell as
+// "12/06/26 17.37" (or with dots). Accept -, /, . (and spaced) so a noisy scan
+// still parses into the same row shape.
+const ROW_RE =
+  /^(\d{2})[-/. ](\d{2})[-/. ](\d{2})\s+(\d{1,2})[:.](\d{2})\s+(\S+)\s+([\d,]+\.\d{2})\s+([\d,]+\.\d{2})\s*(.*)$/;
 const IN_TYPES = ['รับโอน', 'ฝาก', 'ดอกเบี้ย', 'เงินเข้า', 'คืนเงิน'];
 
 const num = (s: string) => Number(s.replace(/,/g, ''));
@@ -27,6 +33,13 @@ export interface KbankSummary {
   reconciled: boolean;
   diffOut: number | null;
   diffIn: number | null;
+  /** where row amounts came from: the amount column, or reconstructed from the
+   *  running-balance column when the amount column failed to reconcile. */
+  amountSource: 'column' | 'balance';
+  /** rows whose amount was CHANGED by the balance reconstruction ({index, from, to}) */
+  corrections: { index: number; from: number; to: number }[];
+  /** rows where the balance chain stops matching (amount-column mode, unreconciled) */
+  chainBreaks: number[];
 }
 
 export interface KbankParseResult {
@@ -36,7 +49,7 @@ export interface KbankParseResult {
 }
 
 /** Heuristic merchant from a KBank detail string. */
-function kbankMerchant(desc: string): string {
+export function kbankMerchant(desc: string): string {
   let s = desc
     .replace(/^MAKE by KBank\s*/i, '')
     .replace(/^Internet\/Mobile\s*\w*\s*/i, '')
@@ -49,7 +62,7 @@ function kbankMerchant(desc: string): string {
   return (s || desc).slice(0, 40).trim();
 }
 
-function classify(type: string, desc: string, amount: number): { direction: 'in' | 'out'; category: string } {
+export function classifyKbank(type: string, desc: string, amount: number): { direction: 'in' | 'out'; category: string } {
   const isIn = IN_TYPES.some((k) => type.includes(k));
   if (isIn) return { direction: 'in', category: 'รายรับ (เงินเข้า)' };
   if (/ถอน/.test(type)) return { direction: 'out', category: 'ถอนเงินสด' };
@@ -57,6 +70,38 @@ function classify(type: string, desc: string, amount: number): { direction: 'in'
   // payment: try keyword auto-categorize, else "other"
   const cat = autoCategorize(kbankMerchant(desc), desc, {}, amount);
   return { direction: 'out', category: cat };
+}
+
+/**
+ * Recover row amounts from the running-balance column. Each real transaction
+ * moves the balance by exactly its amount, so |balance[i] - balance[i-1]| is the
+ * amount even when the amount column itself was misread by OCR. The keyword-based
+ * direction is authoritative; if a balance reading disagrees with it (the balance
+ * was the misread cell), that row keeps its amount-column value and the chain
+ * continues from the implied balance instead.
+ */
+function reconstructFromBalance(
+  rows: { direction: 'in' | 'out'; amtCol: number; balance: number }[],
+  opening: number | null,
+): number[] {
+  let prev = opening;
+  if (prev === null && rows.length) {
+    const r0 = rows[0];
+    prev = r0.balance - (r0.direction === 'in' ? r0.amtCol : -r0.amtCol);
+  }
+  const out: number[] = [];
+  for (const r of rows) {
+    const sign = r.direction === 'in' ? 1 : -1;
+    const delta = r.balance - (prev as number);
+    if (sign > 0 ? delta > 0.005 : delta < -0.005) {
+      out.push(Math.round(Math.abs(delta) * 100) / 100);
+      prev = r.balance; // balance reading trusted
+    } else {
+      out.push(r.amtCol); // balance conflicts with direction → distrust it
+      prev = (prev as number) + sign * r.amtCol;
+    }
+  }
+  return out;
 }
 
 export function parseKbankStatement(lines: string[]): KbankParseResult {
@@ -82,40 +127,91 @@ export function parseKbankStatement(lines: string[]): KbankParseResult {
     if (m && !period) period = m[1];
   }
 
-  const transactions: RawTransaction[] = [];
-  let parsedOut = 0;
-  let parsedIn = 0;
+  // First pass: keep BOTH the amount column and the running-balance column for
+  // each row (the statement's built-in redundancy used for self-correction).
+  interface Row {
+    date: string; time: string; desc: string;
+    direction: 'in' | 'out'; category: string; amtCol: number; balance: number;
+  }
+  const rows: Row[] = [];
   for (const raw of lines) {
     const m = raw.trim().match(ROW_RE);
     if (!m) continue;
-    const [, dd, mm, yy, time, type, amtRaw, , descRaw] = m;
-    const amount = num(amtRaw);
-    if (!amount) continue;
-    const date = `20${yy}-${mm}-${dd}`;
+    const [, dd, mm, yy, hh, mi, type, amtRaw, balRaw, descRaw] = m;
+    const amtCol = num(amtRaw);
+    if (!amtCol) continue;
+    // Sanity-check the calendar fields so garbled OCR fragments that happen to
+    // fit ROW_RE's shape don't become fake transactions (and poison the
+    // balance chain used by reconstructFromBalance).
+    if (Number(mm) < 1 || Number(mm) > 12 || Number(dd) < 1 || Number(dd) > 31 || Number(hh) > 23) continue;
+    // 2-digit years may be Buddhist-era (12-06-68 = 2025-06-12).
+    const date = `${fromTwoDigitYear(Number(yy))}-${mm}-${dd}`;
+    const time = `${hh.padStart(2, '0')}:${mi}`;
     const desc = (descRaw || type).trim();
-    const { direction, category } = classify(type, desc, amount);
-    if (direction === 'in') parsedIn += amount; else parsedOut += amount;
-    transactions.push({
-      date, time, account, direction, amount,
-      category, group: categoryGroup(category),
-      merchant: kbankMerchant(desc), desc,
+    const { direction, category } = classifyKbank(type, desc, amtCol);
+    rows.push({ date, time, desc, direction, category, amtCol, balance: num(balRaw) });
+  }
+
+  const dirs = rows.map((r) => r.direction);
+  const recon = (amts: number[]) => {
+    let o = 0, i = 0;
+    amts.forEach((a, k) => (dirs[k] === 'in' ? (i += a) : (o += a)));
+    const dOut = controlOut !== null ? o - controlOut : null;
+    const dIn = controlIn !== null ? i - controlIn : null;
+    const ok =
+      (dOut === null || Math.abs(dOut) < 0.05) &&
+      (dIn === null || Math.abs(dIn) < 0.05) &&
+      (controlOut !== null || controlIn !== null);
+    return { o, i, dOut, dIn, ok };
+  };
+
+  // Trust the amount column first; if it fails to reconcile against the control
+  // totals but the balance-derived amounts DO reconcile, use those instead.
+  let amounts = rows.map((r) => r.amtCol);
+  let amountSource: 'column' | 'balance' = 'column';
+  let chosen = recon(amounts);
+  if (!chosen.ok && rows.length > 0 && (controlOut !== null || controlIn !== null)) {
+    const rebuilt = reconstructFromBalance(rows, openingBalance);
+    const rr = recon(rebuilt);
+    if (rr.ok) {
+      amounts = rebuilt;
+      amountSource = 'balance';
+      chosen = rr;
+    }
+  }
+
+  // trust surface for the preview: which rows were repaired, and (when we
+  // could NOT reconcile) where the balance chain first stops adding up.
+  const corrections =
+    amountSource === 'balance'
+      ? rows.map((r, k) => ({ index: k, from: r.amtCol, to: amounts[k] })).filter((c) => c.from !== c.to)
+      : [];
+  const chainBreaks: number[] = [];
+  if (amountSource === 'column' && !chosen.ok && openingBalance !== null) {
+    let bal = openingBalance;
+    rows.forEach((r, k) => {
+      bal = Math.round((bal + (r.direction === 'in' ? amounts[k] : -amounts[k])) * 100) / 100;
+      if (Math.abs(bal - r.balance) > 0.01) {
+        chainBreaks.push(k);
+        bal = r.balance; // resync so one bad row doesn't flag everything after it
+      }
     });
   }
 
-  const diffOut = controlOut !== null ? parsedOut - controlOut : null;
-  const diffIn = controlIn !== null ? parsedIn - controlIn : null;
-  const reconciled =
-    (diffOut === null || Math.abs(diffOut) < 0.05) &&
-    (diffIn === null || Math.abs(diffIn) < 0.05) &&
-    (controlOut !== null || controlIn !== null);
+  const transactions: RawTransaction[] = rows.map((r, k) => ({
+    date: r.date, time: r.time, account, direction: r.direction, amount: amounts[k],
+    category: r.category, group: categoryGroup(r.category),
+    merchant: kbankMerchant(r.desc), desc: r.desc,
+  }));
 
   return {
     transactions,
     account,
     summary: {
       account, period, openingBalance, closingBalance,
-      controlOut, controlIn, parsedOut, parsedIn,
-      reconciled, diffOut, diffIn,
+      controlOut, controlIn, parsedOut: chosen.o, parsedIn: chosen.i,
+      reconciled: chosen.ok, diffOut: chosen.dOut, diffIn: chosen.dIn, amountSource,
+      corrections, chainBreaks,
     },
   };
 }

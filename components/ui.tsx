@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { TrendingUp, TrendingDown, AlertTriangle, type LucideIcon } from 'lucide-react';
 import { formatTHB, formatDelta } from '@/lib/format';
 import { GROUP_LABEL, GROUP_COLOR, categoryMeta } from '@/lib/categories';
@@ -27,8 +27,12 @@ export function StatCard({
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs text-ink-soft font-medium">{label}</span>
         {Icon && (
-          <span className="grid place-items-center h-7 w-7 rounded-lg shrink-0 shadow-sm"
-            style={{ background: accent, color: '#fff' }}>
+          <span className="grid place-items-center h-7 w-7 rounded-lg shrink-0"
+            style={{
+              background: `color-mix(in srgb, ${accent} 16%, transparent)`,
+              color: accent,
+              boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${accent} 28%, transparent)`,
+            }}>
             <Icon size={15} />
           </span>
         )}
@@ -86,7 +90,7 @@ export function CategoryChip({ name, size = 16 }: { name: string; size?: number 
   const meta = categoryMeta(name);
   const Icon = meta.icon;
   return (
-    <span className="inline-flex items-center gap-2 min-w-0">
+    <span className="inline-flex items-center gap-2 min-w-0 max-w-full">
       <span className="grid place-items-center rounded-lg shrink-0"
         style={{ background: meta.color + '22', color: meta.color, width: size + 12, height: size + 12 }}>
         <Icon size={size} />
@@ -129,6 +133,50 @@ export function Notice({ children, tone = 'info' }: { children: ReactNode; tone?
   );
 }
 
+/**
+ * Animated numeral: eases from the previous value to the new one (~650ms,
+ * cubic ease-out). First render is static (no zero-flash) and the whole thing
+ * degrades to instant text under prefers-reduced-motion. tnum keeps the width
+ * stable while digits roll.
+ */
+export function CountUp({
+  value, format = (n: number) => String(Math.round(n)), className = '',
+}: {
+  value: number;
+  format?: (n: number) => string;
+  className?: string;
+}) {
+  const [display, setDisplay] = useState(value);
+  const displayRef = useRef(value);
+  const targetRef = useRef(value);
+
+  useEffect(() => {
+    if (targetRef.current === value) return;
+    targetRef.current = value;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      displayRef.current = value;
+      setDisplay(value);
+      return;
+    }
+    const from = displayRef.current; // continue from wherever the digits are
+    const t0 = performance.now();
+    const dur = 650;
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const next = from + (value - from) * eased;
+      displayRef.current = next;
+      setDisplay(next);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+
+  return <span className={`tnum ${className}`}>{format(display)}</span>;
+}
+
 export function Money({ value, className = '' }: { value: number; className?: string }) {
   const neg = value < 0;
   return (
@@ -144,4 +192,96 @@ export function EmptyState({ children }: { children: ReactNode }) {
 
 export function Skeleton({ className = '' }: { className?: string }) {
   return <div className={`animate-pulse rounded-xl bg-surface-2 ${className}`} />;
+}
+
+/**
+ * Shared modal: dialog semantics, Escape-to-close, a tab trap, body scroll
+ * lock, and focus restore — the four hand-rolled overlays lacked all of it,
+ * so keyboard users could tab into the page behind and Esc did nothing.
+ * Backdrop click calls onClose; put any discard-confirm inside onClose.
+ */
+export function Modal({
+  open, onClose, children, labelledBy, maxW = 'max-w-md',
+}: {
+  open: boolean;
+  onClose: () => void;
+  children: ReactNode;
+  labelledBy?: string;
+  maxW?: string;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  // the keydown listener below is bound once per open — a plain closure would
+  // freeze onClose (and everything it closes over) at open time
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.activeElement as HTMLElement | null;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    // respect a child's autoFocus (QuickAdd's amount field) — only take focus
+    // if nothing inside the panel already has it
+    if (!panelRef.current?.contains(document.activeElement)) panelRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        onCloseRef.current();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const nodes = panelRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      const focusables = nodes
+        ? [...nodes].filter((el) => !el.hasAttribute('disabled') && !el.hidden && el.getClientRects().length > 0)
+        : [];
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || active === panelRef.current)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+      prev?.focus?.();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  if (!open) return null;
+  return (
+    // close on backdrop only when the PRESS also started there — a text-drag
+    // that starts inside the panel and releases over the dim fires a click on
+    // the overlay and used to nuke the sheet (SmartImport paste, QuickAdd form)
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4"
+      onMouseDown={(e) => {
+        (e.currentTarget as HTMLElement).dataset.pressStart = e.target === e.currentTarget ? '1' : '0';
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget && (e.currentTarget as HTMLElement).dataset.pressStart === '1') onClose();
+      }}>
+      <div
+        ref={panelRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={labelledBy}
+        className={`card w-full ${maxW} rounded-b-none sm:rounded-2xl max-h-[92dvh] overflow-y-auto outline-none`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>
+  );
 }

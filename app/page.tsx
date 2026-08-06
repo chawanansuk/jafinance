@@ -1,18 +1,19 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Receipt, CalendarDays, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { Receipt, CalendarDays, TrendingUp, TrendingDown, Wallet, ImageDown } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
-import { StatCard, SectionTitle, IncompleteBadge, Notice, Money, CategoryChip, Skeleton } from '@/components/ui';
+import { StatCard, SectionTitle, IncompleteBadge, Notice, Money, CountUp, CategoryChip, Skeleton } from '@/components/ui';
 import { MonthSelect, AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
-import { MonthlyBarChart, CategoryDonut } from '@/components/charts';
+import { MonthlyBarChart, CategoryDonut, GroupSplitBar } from '@/components/charts';
 import { Sparkline } from '@/components/Sparkline';
 import {
   aggregateByMonth, aggregateByCategory, toSpendingEvents,
 } from '@/lib/analytics';
 import { formatMonth, formatTHB } from '@/lib/format';
 import { categoryColor } from '@/lib/categories';
+import { downloadMonthSummaryImage } from '@/lib/share';
 
 type RangeMode = 'month' | '3m' | 'custom';
 
@@ -30,12 +31,12 @@ export default function Dashboard() {
   const [to, setTo] = useState('');
 
   const selected = month || defaultMonth || months[months.length - 1] || '';
-  const exFlags = { excludeMovingTransfers: settings.excludeMovingTransfers, excludeOneOff: settings.excludeOneOff };
-
-  const monthAggs = useMemo(
-    () => aggregateByMonth(txns, { account, ...exFlags }),
-    [txns, account, settings.excludeMovingTransfers, settings.excludeOneOff],
+  const exFlags = useMemo(
+    () => ({ excludeMovingTransfers: settings.excludeMovingTransfers, excludeOneOff: settings.excludeOneOff }),
+    [settings.excludeMovingTransfers, settings.excludeOneOff],
   );
+
+  const monthAggs = useMemo(() => aggregateByMonth(txns, { account, ...exFlags }), [txns, account, exFlags]);
 
   // which calendar months fall inside the active range
   const rangeMonths = useMemo(() => {
@@ -47,15 +48,18 @@ export default function Dashboard() {
     return months.filter((m) => (!from || m >= from.slice(0, 7)) && (!to || m <= to.slice(0, 7)));
   }, [range, selected, months, from, to]);
 
-  const inRange = (date: string) => {
-    if (range === 'month') return date.slice(0, 7) === selected;
-    if (range === '3m') return rangeMonths.includes(date.slice(0, 7));
-    return (!from || date >= from) && (!to || date <= to);
-  };
+  const inRange = useCallback(
+    (date: string) => {
+      if (range === 'month') return date.slice(0, 7) === selected;
+      if (range === '3m') return rangeMonths.includes(date.slice(0, 7));
+      return (!from || date >= from) && (!to || date <= to);
+    },
+    [range, selected, rangeMonths, from, to],
+  );
 
   const events = useMemo(
     () => toSpendingEvents(txns, { account, ...exFlags }).filter((e) => inRange(e.date)),
-    [txns, account, selected, range, from, to, rangeMonths, settings.excludeMovingTransfers, settings.excludeOneOff],
+    [txns, account, exFlags, inRange],
   );
 
   const total = events.reduce((s, e) => s + e.signed, 0);
@@ -80,6 +84,25 @@ export default function Dashboard() {
 
   const monthlySeries = monthAggs.map((m) => m.total);
 
+  const shareImage = () =>
+    downloadMonthSummaryImage(
+      {
+        title: range === 'month' ? formatMonth(selected, true) : rangeLabel,
+        total,
+        deltaPct: range === 'month' ? delta ?? null : null,
+        count,
+        avgPerDay,
+        incomplete,
+        split: [
+          { label: 'จำเป็น', value: events.filter((e) => e.group === 'essential').reduce((s2, e) => s2 + e.signed, 0), color: '#16a34a' },
+          { label: 'ลดได้', value: discretionary, color: '#f97316' },
+          { label: 'โอน/ถอน', value: events.filter((e) => e.group === 'transfer').reduce((s2, e) => s2 + e.signed, 0), color: '#2a78d6' },
+        ],
+        cats: catAggs.slice(0, 6).map((c) => ({ name: c.category, total: c.total, share: c.share, color: categoryColor(c.category) })),
+      },
+      `jafinance-${range === 'month' ? selected : 'range'}.png`,
+    );
+
   if (!hydrated) {
     return (
       <div className="space-y-4">
@@ -99,6 +122,10 @@ export default function Dashboard() {
           {incomplete && <IncompleteBadge />}
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <button onClick={shareImage} title="บันทึกรูปสรุปไว้แชร์"
+            className="btn-ghost !py-1.5 !px-2.5 text-xs" aria-label="บันทึกรูปสรุป">
+            <ImageDown size={15} /> <span className="hidden sm:inline">รูปสรุป</span>
+          </button>
           <Segmented<RangeMode> value={range} onChange={setRange}
             options={[{ v: 'month', label: 'เดือน' }, { v: '3m', label: '3 เดือน' }, { v: 'custom', label: 'กำหนดเอง' }]} />
           {range !== 'custom' && <MonthSelect months={months} value={selected} onChange={setMonth} />}
@@ -129,8 +156,9 @@ export default function Dashboard() {
       </div>
 
       {/* hero summary */}
-      <div className="rounded-2xl p-5 relative overflow-hidden animate-rise text-white shadow-lg"
+      <div className="rounded-3xl p-5 sm:p-6 relative overflow-hidden animate-rise text-white shadow-lg"
         style={{ backgroundImage: 'linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%)' }}>
+        <div className="hero-dots absolute inset-0 pointer-events-none" />
         <div className="absolute -top-10 -right-8 h-40 w-40 rounded-full bg-white/15 blur-2xl pointer-events-none" />
         <div className="absolute -bottom-12 -left-6 h-40 w-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
         <div className="relative flex items-end justify-between gap-4">
@@ -138,19 +166,19 @@ export default function Dashboard() {
             <div className="flex items-center gap-2 text-sm text-white/85">
               <Wallet size={15} /> รายจ่าย{range === 'month' ? '' : 'รวม'} {rangeLabel}
             </div>
-            <div className="mt-1 text-4xl sm:text-5xl font-extrabold tnum leading-none drop-shadow-sm">
-              {formatTHB(total)}
+            <div className="mt-1 text-4xl sm:text-5xl font-extrabold tnum leading-none drop-shadow-sm tracking-tight">
+              <CountUp value={total} format={formatTHB} />
             </div>
             <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
-              {delta != null && delta !== 0 && (
-                <span className="inline-flex items-center gap-0.5 font-semibold rounded-full bg-white/20 px-2 py-0.5">
+              {delta != null && Math.round(Math.abs(delta) * 100) >= 1 && (
+                <span className="inline-flex items-center gap-0.5 font-semibold rounded-full bg-white/20 border border-white/20 backdrop-blur-sm px-2 py-0.5">
                   {delta > 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
                   {delta > 0 ? '+' : ''}{Math.round(delta * 100)}%
                   <span className="font-normal text-white/80">เทียบ {prevM ? formatMonth(prevM) : 'ก่อนหน้า'}</span>
                 </span>
               )}
-              <span className="rounded-full bg-white/15 px-2 py-0.5">{count} รายการ</span>
-              <span className="rounded-full bg-white/15 px-2 py-0.5">เฉลี่ย {formatTHB(avgPerDay)}/วัน</span>
+              <span className="rounded-full bg-white/15 border border-white/20 backdrop-blur-sm px-2 py-0.5">{count} รายการ</span>
+              <span className="rounded-full bg-white/15 border border-white/20 backdrop-blur-sm px-2 py-0.5">เฉลี่ย {formatTHB(avgPerDay)}/วัน</span>
             </div>
           </div>
           <div className="hidden xs:block shrink-0 self-center">
@@ -160,16 +188,19 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="เฉลี่ยต่อวัน" value={<Money value={avgPerDay} />} icon={CalendarDays} accent="#06b6d4"
+      {/* stat cards + spending split */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 animate-rise" style={{ animationDelay: '60ms' }}>
+        <StatCard label="เฉลี่ยต่อวัน" value={<CountUp value={avgPerDay} format={formatTHB} />} icon={CalendarDays} accent="#06b6d4"
           sub={`${daysWithData} วันที่มีข้อมูล`} />
-        <StatCard label="จำนวนรายการ" value={String(count)} icon={Receipt} accent="#14b8a6" />
-        <StatCard label="ลดได้ (discretionary)" value={<Money value={discretionary} />} icon={TrendingDown} accent="#f97316"
-          sub={total ? `${Math.round((discretionary / total) * 100)}% ของยอด` : undefined} />
-        <StatCard label="จำเป็น (essential)" value={<Money value={events.filter((e) => e.group === 'essential').reduce((s, e) => s + e.signed, 0)} />}
-          icon={TrendingUp} accent="#10b981"
-          sub={total ? `${Math.round((events.filter((e) => e.group === 'essential').reduce((s, e) => s + e.signed, 0) / total) * 100)}% ของยอด` : undefined} />
+        <StatCard label="จำนวนรายการ" value={<CountUp value={count} />} icon={Receipt} accent="#14b8a6" />
+        <div className="card card-pad col-span-2">
+          <SectionTitle>แบ่งตามลักษณะรายจ่าย</SectionTitle>
+          <GroupSplitBar
+            essential={events.filter((e) => e.group === 'essential').reduce((s, e) => s + e.signed, 0)}
+            discretionary={discretionary}
+            transfer={events.filter((e) => e.group === 'transfer').reduce((s, e) => s + e.signed, 0)}
+          />
+        </div>
       </div>
 
       {incomplete && (
@@ -180,8 +211,8 @@ export default function Dashboard() {
       )}
 
       {/* monthly bar */}
-      <div className="card card-pad">
-        <SectionTitle action={<span className="text-xs text-ink-soft">คลิกแท่งเพื่อเลือกเดือน · แท่งจางคือเดือนข้อมูลไม่ครบ</span>}>
+      <div className="card card-pad animate-rise" style={{ animationDelay: '120ms' }}>
+        <SectionTitle action={<span className="text-xs text-ink-soft">คลิกแท่งเพื่อเลือกเดือน · แท่งลายเส้น = เดือนข้อมูลไม่ครบ</span>}>
           รายจ่ายรายเดือน
         </SectionTitle>
         <MonthlyBarChart
@@ -192,7 +223,7 @@ export default function Dashboard() {
       </div>
 
       {/* donut + top categories */}
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-2 gap-4 animate-rise" style={{ animationDelay: '180ms' }}>
         <div className="card card-pad">
           <SectionTitle>แยกตามหมวด</SectionTitle>
           {catAggs.length ? (

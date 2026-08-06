@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { Wand2, PiggyBank, Target, TrendingUp, AlertTriangle } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
-import { StatCard, SectionTitle, ProgressBar, CategoryChip, Money, Notice, Skeleton, IncompleteBadge } from '@/components/ui';
+import { StatCard, SectionTitle, ProgressBar, CategoryChip, Money, CountUp, Notice, Skeleton, IncompleteBadge } from '@/components/ui';
 import { MonthSelect } from '@/components/Controls';
 import {
   categoryBudgetRows, suggestBudgets, monthSummary, getIncome, getCeiling, cumulativeSavings,
@@ -34,18 +34,41 @@ export default function BudgetPage() {
   const ceiling = getCeiling(budget, selected);
   const savings = useMemo(() => cumulativeSavings(txns, budget), [txns, budget]);
 
+  // clearing a field deletes the key — storing 0 would block the "*" fallback
+  // and make "เติมงบที่ว่าง" skip fields the user cleared.
   const setCatBudget = (category: string, value: number) =>
-    setBudget((p) => ({
-      ...p,
-      byMonth: { ...p.byMonth, [selected]: { ...(p.byMonth[selected] ?? {}), [category]: value } },
-    }));
+    setBudget((p) => {
+      const cur = { ...(p.byMonth[selected] ?? {}) };
+      if (value > 0) cur[category] = value;
+      else delete cur[category];
+      return { ...p, byMonth: { ...p.byMonth, [selected]: cur } };
+    });
 
   const setIncome = (value: number) =>
-    setBudget((p) => ({ ...p, income: { ...p.income, [selected]: value } }));
+    setBudget((p) => {
+      const income = { ...p.income };
+      if (value > 0) income[selected] = value;
+      else delete income[selected];
+      return { ...p, income };
+    });
   const setSavingsGoal = (value: number) =>
     setBudget((p) => ({ ...p, savingsGoal: value || undefined }));
   const setCeiling = (value: number) =>
-    setBudget((p) => ({ ...p, ceiling: { ...p.ceiling, [selected]: value } }));
+    setBudget((p) => {
+      const ceiling = { ...p.ceiling };
+      if (value > 0) ceiling[selected] = value;
+      else delete ceiling[selected];
+      return { ...p, ceiling };
+    });
+
+  const prevMonth = months[months.indexOf(selected) - 1] ?? null;
+  const copyPrev = () => {
+    if (!prevMonth) return;
+    const src = budget.byMonth[prevMonth];
+    if (!src || Object.keys(src).length === 0) return;
+    setBudget((p) => ({ ...p, byMonth: { ...p.byMonth, [selected]: { ...src } } }));
+  };
+  const prevHasBudgets = !!prevMonth && Object.keys(budget.byMonth[prevMonth] ?? {}).length > 0;
 
   const autoFill = () => {
     const sug = suggestBudgets(txns);
@@ -130,7 +153,7 @@ export default function BudgetPage() {
               </div>
             </div>
           </div>
-          {ceiling && summary.remainingPerDayLeft != null && (
+          {!!ceiling && summary.remainingPerDayLeft != null && (
             <p className="text-xs text-ink-soft">เหลือใช้ได้อีก ~{formatTHB(summary.remainingPerDayLeft)}/วัน</p>
           )}
           {!projection.reliable && !ceiling && (
@@ -143,12 +166,17 @@ export default function BudgetPage() {
       </div>
 
       {/* summary cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="งบรวมทั้งเดือน" value={<Money value={summary.totalBudget} />} icon={Target} accent="#8b5cf6" />
-        <StatCard label="ใช้ไปแล้ว" value={<Money value={summary.totalActual} />} icon={TrendingUp} accent="#0ea5e9" />
-        <StatCard label="คงเหลือ" value={<Money value={summary.remaining} />} icon={PiggyBank} accent="#10b981"
-          tone={summary.remaining < 0 ? 'bad' : 'good'} />
-        <StatCard label="หมวดที่เกินงบ" value={String(rows.filter((r) => r.tone === 'over' && r.budget).length)} icon={AlertTriangle} accent="#f43f5e" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 animate-rise" style={{ animationDelay: '60ms' }}>
+        <StatCard label="งบรวมทั้งเดือน" icon={Target} accent="#8b5cf6"
+          value={summary.totalBudget ? <CountUp value={summary.totalBudget} format={formatTHB} /> : 'ยังไม่ตั้ง'}
+          sub={summary.totalBudget ? undefined : 'ใช้ "เติมงบที่ว่าง" ด้านล่าง'} />
+        <StatCard label="ใช้ไปแล้ว" value={<CountUp value={summary.totalActual} format={formatTHB} />} icon={TrendingUp} accent="#0ea5e9" />
+        <StatCard label="คงเหลือ" icon={PiggyBank} accent="#10b981"
+          value={summary.totalBudget ? <CountUp value={summary.remaining} format={formatTHB} /> : '—'}
+          tone={summary.totalBudget && summary.remaining < 0 ? 'bad' : 'good'}
+          sub={summary.totalBudget ? undefined : 'ตั้งงบก่อนจึงจะคำนวณได้'} />
+        <StatCard label="หมวดที่เกินงบ" icon={AlertTriangle} accent="#f43f5e"
+          value={summary.totalBudget ? String(rows.filter((r) => r.tone === 'over' && r.budget).length) : '—'} />
       </div>
 
       {/* essential vs discretionary */}
@@ -210,6 +238,9 @@ export default function BudgetPage() {
       <div className="card card-pad">
         <SectionTitle action={
           <div className="flex gap-2">
+            {prevHasBudgets && (
+              <button onClick={copyPrev} className="btn-ghost !py-1.5 !px-3 text-xs">คัดลอกจาก {prevMonth ? formatMonth(prevMonth) : ''}</button>
+            )}
             <button onClick={autoFill} className="btn-ghost !py-1.5 !px-3 text-xs"><Wand2 size={14} /> เติมงบที่ว่าง</button>
             <button onClick={autoFillAll} className="btn-ghost !py-1.5 !px-3 text-xs">ตั้งใหม่ทั้งหมด</button>
           </div>
@@ -222,7 +253,7 @@ export default function BudgetPage() {
             <li key={r.category} className="space-y-1.5">
               <div className="flex items-center gap-3">
                 <span className="min-w-0 flex-1"><CategoryChip name={r.category} /></span>
-                <span className="text-sm font-semibold tnum"><Money value={r.actual} /></span>
+                <span className="text-sm font-semibold tnum whitespace-nowrap shrink-0"><Money value={r.actual} /></span>
                 <span className="text-ink-soft text-sm">/</span>
                 <input
                   type="number" inputMode="numeric"

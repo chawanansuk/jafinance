@@ -7,7 +7,8 @@ import { SectionTitle, CategoryChip, Money, Skeleton, Notice } from '@/component
 import { Segmented } from '@/components/Controls';
 import { CATEGORIES } from '@/lib/categories';
 import { downloadFile } from '@/lib/io';
-import { formatTHB } from '@/lib/format';
+import { formatTHB, formatDate } from '@/lib/format';
+import { coverageGaps } from '@/lib/analytics';
 import type { TransferKind } from '@/lib/types';
 
 const BACKUP_VERSION = 1;
@@ -39,6 +40,18 @@ export default function ManagePage() {
   const restoreBackup = async (file: File) => {
     try {
       const data = JSON.parse(await file.text());
+      // validate the shape BEFORE touching state — any random JSON (including
+      // the transactions-page export, which is a bare array) used to fall
+      // through every `if` and still report "สำเร็จ" while restoring nothing.
+      const valid =
+        data && typeof data === 'object' && !Array.isArray(data) &&
+        data.version === BACKUP_VERSION &&
+        (data.overrides || data.budget || data.rules || data.settings || Array.isArray(data.imported));
+      if (!valid) {
+        setBackupMsg('ไฟล์นี้ไม่ใช่ไฟล์สำรองของแอพนี้ — ใช้ไฟล์จากปุ่ม "ส่งออกสำรอง" เท่านั้น');
+        return;
+      }
+      if (!confirm('กู้คืนจะทับข้อมูลปัจจุบัน (หมวดที่แก้ / งบ / กฎ / รายการที่นำเข้า) — ดำเนินการต่อ?')) return;
       if (data.overrides) setOverrides(data.overrides);
       if (data.budget) setBudget(data.budget);
       if (data.rules) setRulesAll(data.rules);
@@ -49,6 +62,8 @@ export default function ManagePage() {
       setBackupMsg('กู้คืนไม่สำเร็จ: ไฟล์ต้องเป็น backup JSON ของแอพนี้');
     }
   };
+
+  const gaps = useMemo(() => coverageGaps(txns), [txns]);
 
   // transfer-group merchants, biggest first
   const transferMerchants = useMemo(() => {
@@ -85,13 +100,40 @@ export default function ManagePage() {
       <h1 className="text-xl font-bold">จัดการ & กฎ</h1>
 
       {/* backup / restore / reset */}
+      {/* which statements are still missing — coverage holes silently
+          understate every total, so surface them as a to-fetch list */}
+      <div className="card card-pad">
+        <SectionTitle>ช่วงข้อมูลที่ยังขาด</SectionTitle>
+        {gaps.length === 0 ? (
+          <p className="text-sm text-ink-soft">ครบทุกช่วงแล้ว 🎉</p>
+        ) : (
+          <ul className="space-y-2">
+            {gaps.slice(0, 6).map((g) => (
+              <li key={`${g.account}|${g.from}`} className="flex items-center gap-2 text-sm">
+                <span className={`pill shrink-0 ${g.account.startsWith('UOB') ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400' : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'}`}>
+                  {g.account.startsWith('UOB') ? 'UOB' : 'KBank'}
+                </span>
+                <span className="tnum">{formatDate(g.from)} – {formatDate(g.to)}</span>
+                {g.trailing && <span className="text-xs text-ink-soft">(ยังไม่มีสเตทเมนต์รอบล่าสุด)</span>}
+              </li>
+            ))}
+            {gaps.length > 6 && <li className="text-xs text-ink-soft">…และอีก {gaps.length - 6} ช่วงก่อนหน้า</li>}
+          </ul>
+        )}
+        <p className="text-xs text-ink-soft mt-2">นำเข้าสเตทเมนต์ช่วงเหล่านี้ (หน้า รายการ → สเตทเมนต์) เพื่อให้ยอดรวม/ค่าเฉลี่ยครบจริง</p>
+      </div>
+
       <div className="card card-pad">
         <SectionTitle>สำรอง & กู้คืนข้อมูล</SectionTitle>
         <p className="text-xs text-ink-soft mb-3">สำรองงบ + กฎ + การแก้หมวด + รายการที่ import ทั้งหมดเป็นไฟล์เดียว (เก็บในเครื่อง)</p>
         <div className="flex flex-wrap gap-2 items-center">
           <button onClick={exportBackup} className="btn-ghost !py-1.5 !px-3 text-sm"><Download size={14} /> ส่งออกสำรอง</button>
           <input ref={backupRef} type="file" accept=".json,application/json" hidden
-            onChange={(e) => e.target.files?.[0] && restoreBackup(e.target.files[0])} />
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              e.target.value = ''; // allow re-picking the same file
+              if (f) restoreBackup(f);
+            }} />
           <button onClick={() => backupRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-sm"><Upload size={14} /> กู้คืน</button>
           <button
             onClick={() => { const n = dedupeImported(); setBackupMsg(n > 0 ? `ลบรายการซ้ำ ${n} รายการแล้ว` : 'ไม่พบรายการซ้ำกับข้อมูลเดิม'); }}
