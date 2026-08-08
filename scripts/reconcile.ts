@@ -41,9 +41,13 @@ const uobRefund = sum((r) => r.account.startsWith('UOB') && r.direction === 'in'
 const kbankOut = sum((r) => r.account.startsWith('KBank') && r.direction === 'out');
 
 // ── groups (out) ───────────────────────────────────────────────────────────
+// Card-bill payments (ชำระบัตรเครดิต) are debt settlement, not spending: the
+// card's individual purchases are already itemized, so counting the payment
+// too would double-count. Tracked separately, excluded from transfer/net.
+const settlement = sum((r) => r.direction === 'out' && r.category === 'ชำระบัตรเครดิต');
 const essential = sum((r) => r.direction === 'out' && r.group === 'essential');
 const discGross = sum((r) => r.direction === 'out' && r.group === 'discretionary');
-const transfer = sum((r) => r.direction === 'out' && r.group === 'transfer');
+const transfer = sum((r) => r.direction === 'out' && r.group === 'transfer') - settlement;
 const refundTotal = sum((r) => r.group === 'refund'); // all `in`
 
 // refunds net into discretionary (travel) -> discretionary net
@@ -63,15 +67,16 @@ const grab = merch.get('Grab')!;
 const seven = merch.get('7-Eleven')!;
 
 console.log('\n── Reconcile against statement baseline ──────────────────────');
-checkInt('record count', rows.length, 1055);
+checkInt('record count', rows.length, 1082);
 check('UOB gross out', uobGross, 217846.92);
 check('UOB refund (in)', uobRefund, 10682.02);
 check('UOB net (gross - refund)', uobGross - uobRefund, 207164.90);
-check('KBank out', kbankOut, 59498.08);
-check('essential (out)', essential, 88581.65);
-check('discretionary NET (refund-netted)', discNet, 118063.75);
-check('transfer (out)', transfer, 60017.58);
-check('NET TOTAL spending', netTotal, 266662.98, 1);
+check('KBank out', kbankOut, 83814.33);
+check('card settlement (not spending)', settlement, 20000.00);
+check('essential (out)', essential, 89412.90);
+check('discretionary NET (refund-netted)', discNet, 119828.75);
+check('transfer (out, excl settlement)', transfer, 61737.58);
+check('NET TOTAL spending', netTotal, 270979.23, 1);
 check('top merchant Grab total', grab.amt, 26634, 1);
 checkInt('top merchant Grab count', grab.n, 201);
 check('7-Eleven total', seven.amt, 20137, 1);
