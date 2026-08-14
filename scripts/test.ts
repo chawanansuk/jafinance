@@ -38,8 +38,8 @@ const base = baseTransactions();
 const txns = materialize(base);
 
 console.log('\n── data / materialize ──');
-ok('1082 base rows', base.length === 1082);
-ok('all ids unique', new Set(base.map((t) => t.id)).size === 1082);
+ok('1110 base rows', base.length === 1110);
+ok('all ids unique', new Set(base.map((t) => t.id)).size === 1110);
 {
   const id = base.find((t) => t.merchant === 'Grab')!.id;
   const m = materialize(base, [], { categoryById: { [id]: 'คาเฟ่/ขนม' }, realIncomeById: {} }, {});
@@ -76,14 +76,14 @@ ok('all ids unique', new Set(base.map((t) => t.id)).size === 1082);
 }
 
 console.log('\n── analytics ──');
-eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 270979.23, 0.5);
+eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 273333.23, 0.5);
 {
   // after the Grab-ride rule, cheap Grab rows < ฿120 move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
-  eq('essential (+ Grab rides)', g.essential, 93178.90);
-  eq('discretionary net (- Grab rides)', g.discretionary, 116062.75);
-  eq('transfer (excl card settlement)', g.transfer, 61737.58);
-  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 270979.23, 1);
+  eq('essential (+ Grab rides)', g.essential, 93470.90);
+  eq('discretionary net (- Grab rides)', g.discretionary, 117252.75);
+  eq('transfer (excl card settlement)', g.transfer, 62609.58);
+  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 273333.23, 1);
 }
 {
   const travel = toSpendingEvents(txns).filter((e) => e.category === 'ที่พัก/ท่องเที่ยว').reduce((s, e) => s + e.signed, 0);
@@ -128,7 +128,7 @@ ok('outliers found', detectOutliers(txns).length > 0);
   const ds = dailySpending(txns);
   ok('dailySpending sorted & non-empty', ds.length > 30 && ds[0].date <= ds[ds.length - 1].date);
   const sum = ds.reduce((s, d) => s + d.total, 0);
-  eq('dailySpending sums to net total', sum, 270979.23, 1);
+  eq('dailySpending sums to net total', sum, 273333.23, 1);
   const avg = avgMonthlyByCategory(txns);
   ok('avgMonthlyByCategory has Grab', (avg['Grab/เดลิเวอรี่/แท็กซี่'] ?? 0) > 0);
 }
@@ -162,7 +162,7 @@ console.log('\n── import / export (io) ──');
   const jsonText = JSON.stringify(base.map(({ id, ...r }) => r));
   const res = parseImport(jsonText, txns);
   ok('re-import all -> 0 added', res.added.length === 0);
-  ok('re-import all -> all duplicates', res.duplicates === 1082);
+  ok('re-import all -> all duplicates', res.duplicates === 1110);
   ok('overlap warned on re-import', res.overlaps.length > 0);
 }
 {
@@ -309,7 +309,7 @@ ok('settlement is transfer group', categoryGroup('ชำระบัตรเค
   const settle = { date: '2026-07-05', time: '', account: 'KBank ออมทรัพย์', direction: 'out' as const,
     amount: 40000, category: 'ชำระบัตรเครดิต', group: 'transfer' as const, merchant: 'UOB', desc: 'ชำระบัตร', id: 'settle1' };
   const m = materialize(base, [settle as any]);
-  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 270979.23, 1);
+  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 273333.23, 1);
   ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
 }
 
@@ -450,7 +450,10 @@ ok('unknown UOB merchant stays fallback', autoCategorize('TMN ISERVICECCP', 'TMN
 console.log('\n── autocat: channel noise must not drive category ──');
 ok('MAKE by KBank not swallowed', autoCategorize('GOLDEN DONUTS', 'MAKE by KBank GOLDEN DONUTS (THAILAND) CO.,LTD.', {}, 96) === 'ค่าใช้จ่ายอื่น');
 ok('SCB มณี SHOP not swallowed', autoCategorize('อาหารกล่อง BY วาสนา', 'SCB มณี SHOP อาหารกล่อง BY วาสนา', {}, 105) !== 'โอนเงิน/บุคคล');
-ok('เพื่อชำระ Ref stripped', autoCategorize('อร่อยแซงคิว', 'MAKE by KBank เพื่อชำระ Ref X3115 อร่อยแซงคิว', {}, 507) === 'ค่าใช้จ่ายอื่น');
+// merchant must carry NO keyword of its own, so the only thing that could
+// match without stripping is the 'kbank' bank keyword -> โอนเงิน/บุคคล
+ok('เพื่อชำระ Ref stripped', autoCategorize('ทียนัซ์ เคลี่', 'MAKE by KBank เพื่อชำระ Ref X3115 ทียนัซ์ เคลี่', {}, 57) === 'ค่าใช้จ่ายอื่น');
+ok('อร่อย… -> restaurant even through channel noise', autoCategorize('อร่อยแซงคิว', 'MAKE by KBank เพื่อชำระ Ref X3115 อร่อยแซงคิว', {}, 507) === 'อาหาร/ร้านอาหาร');
 ok('real โอนไป still transfer', autoCategorize('สุรางค์', 'โอนไป พร้อมเพย์ X9709 สุรางค์', {}, 50) === 'โอนเงิน/บุคคล');
 ok('classifyKbank payment not transfer', classifyKbank('ชำระเงิน', 'MAKE by KBank GOLDEN DONUTS', 96).category !== 'โอนเงิน/บุคคล');
 ok('bank keyword still works alone', autoCategorize('', 'โอน KTB ปรารถนา') === 'โอนเงิน/บุคคล');
