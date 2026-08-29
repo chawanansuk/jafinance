@@ -6,14 +6,14 @@ import type { RulesState } from './types';
  * imported rows. First match wins. All matching is case-insensitive substring
  * over "merchant + desc". Purely local — no network.
  */
-const KEYWORD_TABLE: { kw: string[]; category: string }[] = [
+const KEYWORD_TABLE: { kw: string[]; category: string; venue?: true }[] = [
   // debt settlement — must come first so it isn't caught by generic bank/transfer keywords
   { kw: ['ชำระบัตร', 'ชำระค่าบัตร', 'จ่ายบัตร', 'ชำระยอดบัตร', 'บัตรเครดิต', 'credit card payment', 'cc payment', 'uob premier', 'card payment'], category: 'ชำระบัตรเครดิต' },
   { kw: ['grab', 'lineman', 'foodpanda', 'gojek', 'bolt'], category: 'Grab/เดลิเวอรี่/แท็กซี่' },
   { kw: ['7-eleven', '7-11', '7 11', 'seven', 'เซเว่น', 'cj more', 'lawson', 'familymart'], category: 'ร้านสะดวกซื้อ' },
-  { kw: ['lotus', 'โลตัส', 'donki', 'tops', 'big c', 'bigc', 'makro', 'แม็คโคร', 'villa market', 'gourmet', 'food hall', 'foodland', 'tesco', 'grocery', 'supermarket', 'ซูเปอร์'], category: 'ห้าง/ซูเปอร์มาร์เก็ต' },
+  { kw: ['lotus', 'โลตัส', 'donki', 'tops', 'big c', 'bigc', 'makro', 'แม็คโคร', 'villa market', 'gourmet', 'food hall', 'foodland', 'tesco', 'grocery', 'supermarket', 'ซูเปอร์'], category: 'ห้าง/ซูเปอร์มาร์เก็ต', venue: true },
   { kw: ['starbucks', 'cafe', 'café', 'คาเฟ่', 'coffee', 'กาแฟ', 'amazon coffee', 'อเมซอน', 'black canyon', 'bakery', 'ขนม', 'dessert'], category: 'คาเฟ่/ขนม' },
-  { kw: ['sushiro', 'mk ', 'sukishi', 'suki', 'yayoi', 'fast food', 'kfc', 'mcdonald', 'burger', 'pizza', 'ร้านอาหาร', 'restaurant', 'ตามสั่ง', 'noodle', 'ก๋วยเตี๋ยว', 'izakaya', 'katsu', 'shabu', 'fuji', 'maguro', 'rosniyom', 'sushi', 'ramen', 'ราเมน', 'hachiban', 'ฮะจิบัง', 'din tai fung', 'bar b q', 'บาร์บีคิว', 'yamachan', 'oishi', 'อร่อย'], category: 'อาหาร/ร้านอาหาร' },
+  { kw: ['sushiro', 'mk ', 'sukishi', 'suki', 'yayoi', 'fast food', 'kfc', 'mcdonald', 'burger', 'pizza', 'ร้านอาหาร', 'restaurant', 'ตามสั่ง', 'noodle', 'ก๋วยเตี๋ยว', 'izakaya', 'katsu', 'shabu', 'fuji', 'maguro', 'rosniyom', 'sushi', 'ramen', 'ราเมน', 'hachiban', 'ฮะจิบัง', 'din tai fung', 'bar b q', 'บาร์บีคิว', 'yamachan', 'oishi', 'อร่อย', 'curry', 'แกง', 'steak', 'สเต็ก', 'buffet', 'บุฟเฟ่ต์'], category: 'อาหาร/ร้านอาหาร' },
   { kw: ['booking', 'agoda', 'airbnb', 'hotel', 'โรงแรม', 'resort', 'expedia', 'traveloka', 'trip.com'], category: 'ที่พัก/ท่องเที่ยว' },
   { kw: ['shell', 'ptt', 'bsrc', 'esso', 'caltex', 'bangchak', 'บางจาก', 'ปตท', 'ปั๊ม', 'น้ำมัน', 'fuel', 'petrol'], category: 'น้ำมัน/ปั๊ม' },
   { kw: ['hospital', 'hosp', 'christian hos', 'โรงพยาบาล', 'รพ.', 'จิตเวช', 'clinic', 'คลินิก', 'pharma', 'ร้านยา', 'dental', 'ทันตกรรม', 'watsons', 'boots', 'guardian'], category: 'โรงพยาบาล/สุขภาพ' },
@@ -77,8 +77,17 @@ export function autoCategorize(merchant: string, desc: string, rules: RulesState
   if (rule?.category) return rule.category;
   const hay = stripChannelNoise(`${merchant} ${desc}`.toLowerCase());
   let category = 'ค่าใช้จ่ายอื่น';
-  for (const { kw, category: c } of KEYWORD_TABLE) {
-    if (kw.some((k) => hay.includes(k))) { category = c; break; }
+  // Two passes. A VENUE keyword ('lotus', 'big c', 'tops'…) names the place a
+  // charge happened, not what was bought: "SHABUSHI BIG C SARABURI" is a shabu
+  // restaurant inside a Big C, and plain first-match-wins would file it under
+  // ห้าง/ซูเปอร์มาร์เก็ต. So any specific merchant keyword is tried first, and
+  // the venue rows only decide rows nothing else claimed.
+  for (const pass of [false, true]) {
+    for (const { kw, category: c, venue } of KEYWORD_TABLE) {
+      if (!!venue !== pass) continue;
+      if (kw.some((k) => hay.includes(k))) { category = c; break; }
+    }
+    if (category !== 'ค่าใช้จ่ายอื่น') break;
   }
   return amount != null ? refineCategory(merchant, desc, category, amount) : category;
 }

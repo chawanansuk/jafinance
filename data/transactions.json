@@ -93,7 +93,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 774.75,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -159,7 +159,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 682.5,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Tops",
   "desc": "TOPS-PATTAYA BEACH CHONBURI"
@@ -203,7 +203,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 148.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Tops",
   "desc": "TOPS-PATTAYA BEACH CHONBURI"
@@ -302,7 +302,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 694.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -434,7 +434,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 380.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -500,9 +500,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 583.0,
-  "category": "ร้านสะดวกซื้อ",
-  "group": "essential",
-  "merchant": "Lotus",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "Tana Curry House",
   "desc": "TANA CURRY HOUSE-LOTUS NONTHABURI"
  },
  {
@@ -522,7 +522,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 913.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Makro",
   "desc": "MAKRO_SATHORN BANGKOK"
@@ -610,7 +610,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 451.6,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Tops",
   "desc": "TOPS-LAD YA BANGKOK"
@@ -720,7 +720,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 416.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -929,7 +929,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 428.5,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -973,7 +973,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 69.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -1006,7 +1006,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 512.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -1215,7 +1215,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 538.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Makro",
   "desc": "MAKRO_CHARANSANITWONG BANGKOK"
@@ -1325,7 +1325,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 666.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Big C",
   "desc": "BIG C -ISSARAPHAP STOR BANGKOK"
@@ -1611,7 +1611,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 20.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -2095,7 +2095,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 517.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -2656,7 +2656,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 64.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -3206,7 +3206,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 152.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -4086,7 +4086,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 145.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -4570,7 +4570,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 1051.5,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Tops",
   "desc": "TOPS-BANGRAK BANGKOK"
@@ -4889,7 +4889,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 79.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -4977,7 +4977,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 78.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -5076,7 +5076,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 57.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -5087,7 +5087,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 83.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -5384,7 +5384,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 486.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -5417,7 +5417,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 64.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -5505,7 +5505,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 980.75,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -5593,7 +5593,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 125.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -5659,7 +5659,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 83.0,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -5901,9 +5901,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 853.86,
-  "category": "ร้านสะดวกซื้อ",
-  "group": "essential",
-  "merchant": "Big C",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "Shabushi",
   "desc": "SHABUSHI BIG C SARABUR SARABURI"
  },
  {
@@ -5912,7 +5912,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 128.5,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "LOTUS Bangkok"
@@ -6077,7 +6077,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 21.5,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -6297,7 +6297,7 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 983.75,
-  "category": "ร้านสะดวกซื้อ",
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
   "merchant": "Lotus",
   "desc": "TMN LOTUS HYPER BANGKOK"
@@ -7925,9 +7925,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 1677.25,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "THE MALL BANGKAE(FOOD)",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "The Mall Bangkae (Food Hall)",
   "desc": "THE MALL BANGKAE(FOOD) BANGKOK"
  },
  {

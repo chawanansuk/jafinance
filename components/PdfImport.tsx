@@ -10,7 +10,7 @@ import { extractPdfLines, PdfPasswordError } from '@/lib/pdf/extract';
 import { summarizeBill } from '@/lib/pdf/uob';
 import { parseStatement, type StatementResult } from '@/lib/pdf/statement';
 import { ocrImage } from '@/lib/ocr/extract';
-import { extractStatementWithAI, aiErrorMessage, AI_MODELS, DEFAULT_AI_MODEL } from '@/lib/ai/statement';
+import { extractStatementWithAI, aiErrorMessage, AI_MODELS, DEFAULT_AI_MODEL, resolveAiModel } from '@/lib/ai/statement';
 import { useLocalStorage, KEYS } from '@/lib/storage';
 import { Modal } from './ui';
 import type { Statement } from '@/lib/types';
@@ -160,7 +160,7 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
                   </label>
                   <label className="block">
                     <span className="text-xs text-ink-soft">โมเดล</span>
-                    <select className="input mt-1 !py-1.5" value={aiModel} onChange={(e) => setAiModel(e.target.value)}>
+                    <select className="input mt-1 !py-1.5" value={resolveAiModel(aiModel)} onChange={(e) => setAiModel(e.target.value)}>
                       {AI_MODELS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
                     </select>
                   </label>
