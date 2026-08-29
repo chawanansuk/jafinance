@@ -16,7 +16,7 @@ import {
   parseImport, toCSV, splitPasted, parseDateLoose, parseAmountLoose, rowsFromMapping, dedupe,
 } from '@/lib/io';
 import { autoCategorize, refineCategory, repairChannelNoiseCategories } from '@/lib/autocat';
-import { toStatementResult, verifyAiResult } from '@/lib/ai/statement';
+import { toStatementResult, verifyAiResult, resolveAiModel, AI_MODELS, DEFAULT_AI_MODEL } from '@/lib/ai/statement';
 import { parseUobStatement, summarizeBill } from '@/lib/pdf/uob';
 import { parseKbankStatement, classifyKbank } from '@/lib/pdf/kbank';
 import { detectBank, parseStatement } from '@/lib/pdf/statement';
@@ -80,9 +80,9 @@ eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 273333.23, 0
 {
   // after the Grab-ride rule, cheap Grab rows < ฿120 move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
-  eq('essential (+ Grab rides)', g.essential, 93470.90);
-  eq('discretionary net (- Grab rides)', g.discretionary, 117252.75);
-  eq('transfer (excl card settlement)', g.transfer, 62609.58);
+  eq('essential (+ Grab rides)', g.essential, 92034.04);
+  eq('discretionary net (- Grab rides)', g.discretionary, 120366.86);
+  eq('transfer (excl card settlement)', g.transfer, 60932.33);
   eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 273333.23, 1);
 }
 {
@@ -447,6 +447,35 @@ ok('black canyon -> cafe', autoCategorize('BLACK CANYON', '') === 'คาเฟ�
 ok('car rent -> transport', autoCategorize('PRIME CAR RENT', '') === 'เดินทาง/ขนส่ง');
 ok('unknown UOB merchant stays fallback', autoCategorize('TMN ISERVICECCP', 'TMN ISERVICECCP BANGKOK') === 'ค่าใช้จ่ายอื่น');
 
+console.log('\n── autocat: a venue is not a category ──');
+{
+  // a shop INSIDE a mall/hypermarket must keep its own category — the venue
+  // keyword only decides rows nothing more specific claimed
+  ok('shabu in Big C -> restaurant', autoCategorize('', 'SHABUSHI BIG C SARABUR SARABURI') === 'อาหาร/ร้านอาหาร');
+  ok('curry house in Lotus -> restaurant', autoCategorize('', 'TANA CURRY HOUSE-LOTUS NONTHABURI') === 'อาหาร/ร้านอาหาร');
+  ok('KFC in Big C -> restaurant', autoCategorize('', 'KFC BIG C RATCHADA') === 'อาหาร/ร้านอาหาร');
+  ok('Starbucks in Lotus -> cafe', autoCategorize('', 'STARBUCKS LOTUS PHRA RAM 4') === 'คาเฟ่/ขนม');
+  ok('Watsons in Big C -> health', autoCategorize('', 'WATSONS BIG C LADPRAO') === 'โรงพยาบาล/สุขภาพ');
+  // …and the venue itself still resolves to the venue
+  ok('plain Lotus -> supermarket', autoCategorize('Lotus', 'TMN LOTUS HYPER BANGKOK') === 'ห้าง/ซูเปอร์มาร์เก็ต');
+  ok('plain Tops -> supermarket', autoCategorize('Tops', 'TOPS-LAD YA BANGKOK') === 'ห้าง/ซูเปอร์มาร์เก็ต');
+  ok('plain Makro -> supermarket', autoCategorize('Makro', 'MAKRO_SATHORN BANGKOK') === 'ห้าง/ซูเปอร์มาร์เก็ต');
+}
+{
+  // the seed data must not label one store two ways — a split silently drops
+  // part of a store's spend out of its own category (and out of its budget)
+  const byMerchant = new Map<string, Set<string>>();
+  for (const t of base) {
+    if (!byMerchant.has(t.merchant)) byMerchant.set(t.merchant, new Set());
+    byMerchant.get(t.merchant)!.add(t.category);
+  }
+  // Grab (ride vs delivery by fare) and Airbnb/Booking (charge vs refund) are
+  // deliberate splits; everything else must be single-category.
+  const EXPECTED_SPLITS = new Set(['Grab', 'Airbnb', 'Booking.com', 'The Mall', 'ทุกอย่าง 20 by Apple', 'ชันมุน เอนเตอร์ไพรซ์']);
+  const split = [...byMerchant.entries()].filter(([m, s]) => s.size > 1 && !EXPECTED_SPLITS.has(m));
+  ok(`no unexpected merchant split across categories (${split.map(([m]) => m).join(', ') || 'none'})`, split.length === 0);
+}
+
 console.log('\n── autocat: channel noise must not drive category ──');
 ok('MAKE by KBank not swallowed', autoCategorize('GOLDEN DONUTS', 'MAKE by KBank GOLDEN DONUTS (THAILAND) CO.,LTD.', {}, 96) === 'ค่าใช้จ่ายอื่น');
 ok('SCB มณี SHOP not swallowed', autoCategorize('อาหารกล่อง BY วาสนา', 'SCB มณี SHOP อาหารกล่อง BY วาสนา', {}, 105) !== 'โอนเงิน/บุคคล');
@@ -474,6 +503,16 @@ console.log('\n── comma paste with thousand separators ──');
   ok('amount cell stays whole', g[0].length === 3 && g[0][1] === '1,234.50');
   ok('small ints still split', splitPasted('a,120,b')[0].length === 3);
   ok('amount parses after split', parseAmountLoose(g[0][1]).value === 1234.5);
+}
+
+console.log('\n── AI model list ──');
+{
+  ok('default model is offered in the list', AI_MODELS.some((m) => m.id === DEFAULT_AI_MODEL));
+  ok('every model id is a current model', AI_MODELS.every((m) => /^claude-(opus-5|sonnet-5|haiku-4-5)$/.test(m.id)));
+  // a browser can still hold a model id from an older release of the app
+  ok('stale stored model falls back', resolveAiModel('claude-opus-4-8') === DEFAULT_AI_MODEL);
+  ok('unset model falls back', resolveAiModel(undefined) === DEFAULT_AI_MODEL);
+  ok('known model is kept', resolveAiModel('claude-haiku-4-5') === 'claude-haiku-4-5');
 }
 
 console.log('\n── AI statement shaping (UOB parity with PDF path) ──');

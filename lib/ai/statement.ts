@@ -22,12 +22,22 @@ import type { Bank, StatementResult } from '../pdf/statement';
 // no-backend design in the README.
 
 export const AI_MODELS = [
-  { id: 'claude-opus-4-8', label: 'Opus 4.8 · แม่นสุด' },
-  { id: 'claude-sonnet-4-6', label: 'Sonnet 4.6 · คุ้มค่า' },
+  { id: 'claude-opus-5', label: 'Opus 5 · แม่นสุด' },
+  { id: 'claude-sonnet-5', label: 'Sonnet 5 · คุ้มค่า' },
   { id: 'claude-haiku-4-5', label: 'Haiku 4.5 · ประหยัด' },
 ] as const;
 
 export const DEFAULT_AI_MODEL = AI_MODELS[0].id;
+
+/**
+ * The picked model is remembered in localStorage, so a browser can still be
+ * holding an id we no longer offer (e.g. claude-opus-4-8 from before this list
+ * was refreshed). Fall back to the default rather than rendering a <select>
+ * with no matching <option> and sending a stale id to the API.
+ */
+export function resolveAiModel(id: string | undefined | null): string {
+  return AI_MODELS.some((m) => m.id === id) ? (id as string) : DEFAULT_AI_MODEL;
+}
 
 export interface AiTxn {
   date: string;
@@ -395,7 +405,7 @@ export async function extractStatementWithAI(
   const { default: Anthropic } = await import('@anthropic-ai/sdk');
   const client = new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true });
 
-  const chosenModel = model || DEFAULT_AI_MODEL;
+  const chosenModel = resolveAiModel(model);
   const params = {
     model: chosenModel,
     max_tokens: 20000,
@@ -422,6 +432,10 @@ export async function extractStatementWithAI(
     }
     if (res.stop_reason === 'max_tokens')
       throw new Error('สเตทเมนต์มีรายการเยอะเกินคำตอบเดียว — ลองครอปรูปเป็นครึ่งบน/ล่าง แล้วอ่านทีละส่วน');
+    // A safety decline returns HTTP 200 with no usable text; say so plainly
+    // instead of surfacing the generic "ไม่ได้ส่งข้อความกลับ".
+    if (res.stop_reason === 'refusal')
+      throw new Error('AI ปฏิเสธคำขอนี้ — ลองส่งเฉพาะภาพตารางรายการ (ครอปส่วนหัวที่มีเลขบัญชี/ชื่อออก)');
     const text = res.content.map((b) => (b.type === 'text' ? b.text : '')).join('').trim();
     if (!text) throw new Error('AI ไม่ได้ส่งข้อความกลับ (อาจถูกปฏิเสธ)');
     return { res, parsed: parseJsonLoose(text) };
