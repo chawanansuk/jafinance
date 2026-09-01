@@ -23,6 +23,11 @@ import { detectBank, parseStatement } from '@/lib/pdf/statement';
 import { parseReceiptText } from '@/lib/ocr/receipt';
 import { adaptiveThreshold } from '@/lib/ocr/extract';
 import { categoryGroup } from '@/lib/categories';
+import {
+  median, merchantStats, frequentMerchants, searchMerchants, findPossibleDuplicate,
+  amountSteps, quickDates, toISODate, toHHMM,
+} from '@/lib/suggest';
+import { ACCOUNTS, accountLabel } from '@/lib/data';
 import type { Transaction, BudgetState } from '@/lib/types';
 
 let pass = 0, fail = 0;
@@ -505,6 +510,98 @@ console.log('\n── comma paste with thousand separators ──');
   ok('amount cell stays whole', g[0].length === 3 && g[0][1] === '1,234.50');
   ok('small ints still split', splitPasted('a,120,b')[0].length === 3);
   ok('amount parses after split', parseAmountLoose(g[0][1]).value === 1234.5);
+}
+
+console.log('\n── quick-add suggestions (lib/suggest) ──');
+{
+  ok('median odd', median([5, 1, 3]) === 3);
+  ok('median even', median([1, 2, 3, 10]) === 2.5);
+  ok('median empty', median([]) === 0);
+  // median, not mean: one huge outlier must not drag the suggested amount up
+  ok('median ignores an outlier', median([60, 65, 70, 9000]) === 67.5);
+}
+{
+  const rows = merchantStats(txns);
+  const seven = rows.find((r) => r.merchant === '7-Eleven')!;
+  ok('merchantStats finds 7-Eleven', !!seven);
+  ok('7-Eleven count matches the data', seven.count === txns.filter((t) => t.merchant === '7-Eleven' && t.direction === 'out').length);
+  ok('7-Eleven category is its most-used one', seven.category === 'ร้านสะดวกซื้อ');
+  ok('typical amount is a sane round number', seven.typical > 0 && Number.isInteger(seven.typical));
+  ok('ranked by count, descending', rows.every((r, i) => i === 0 || rows[i - 1].count >= r.count));
+  // income and placeholder-merchant rows must never become a tile
+  ok('no income rows leak in', !rows.some((r) => r.category === 'รายรับ (เงินเข้า)'));
+  ok('no placeholder merchant', !rows.some((r) => r.merchant === '—'));
+}
+{
+  const tiles = frequentMerchants(txns, 6);
+  ok('6 tiles', tiles.length === 6);
+  ok('top tile is the most-used merchant', tiles[0].merchant === '7-Eleven');
+  ok('tiles are unique', new Set(tiles.map((t) => t.merchant)).size === 6);
+  // the daily card fee is frequent (17x) but is a bank charge, never something
+  // the user types in — it must not take a tile from a real shop
+  ok('no bank auto-charge takes a tile', !tiles.some((t) => t.category === 'ค่าบริการรายวัน (AUD)' || t.category === 'ชำระบัตรเครดิต'));
+  ok('type-ahead can still reach the auto-charge', searchMerchants(txns, 'ค่าบริการ', 4).some((h) => h.category === 'ค่าบริการรายวัน (AUD)'));
+}
+{
+  const hits = searchMerchants(txns, 'su', 4);
+  ok('search finds Sushiro from a prefix', hits.some((h) => h.merchant === 'Sushiro'));
+  ok('prefix matches rank above mid-string ones', hits[0].merchant.toLowerCase().startsWith('su'));
+  ok('search carries the category through', hits.find((h) => h.merchant === 'Sushiro')!.category === 'อาหาร/ร้านอาหาร');
+  ok('empty query returns nothing', searchMerchants(txns, '   ', 4).length === 0);
+  ok('exact full name is not offered back', !searchMerchants(txns, '7-Eleven', 4).some((h) => h.merchant === '7-Eleven'));
+  ok('thai substring works', searchMerchants(txns, 'รัตนา', 4).some((h) => h.merchant.includes('รัตนา')));
+}
+{
+  const sample = txns.find((t) => t.direction === 'out' && t.merchant !== '—')!;
+  const hit = findPossibleDuplicate(txns, {
+    date: sample.date, amount: sample.amount, merchant: sample.merchant, account: sample.account,
+  });
+  ok('duplicate found for an existing row', hit?.id === sample.id || hit?.amount === sample.amount);
+  ok('different account is not a duplicate', findPossibleDuplicate(txns, {
+    date: sample.date, amount: sample.amount, merchant: sample.merchant, account: 'เงินสด',
+  }) === null);
+  ok('different amount is not a duplicate', findPossibleDuplicate(txns, {
+    date: sample.date, amount: sample.amount + 1, merchant: sample.merchant, account: sample.account,
+  }) === null);
+  ok('blank merchant never warns', findPossibleDuplicate(txns, {
+    date: sample.date, amount: sample.amount, merchant: '  ', account: sample.account,
+  }) === null);
+  ok('zero amount never warns', findPossibleDuplicate(txns, {
+    date: sample.date, amount: 0, merchant: sample.merchant, account: sample.account,
+  }) === null);
+}
+{
+  const steps = amountSteps(txns);
+  ok('4 amount steps', steps.length === 4);
+  ok('steps ascend', steps.every((s, i) => i === 0 || s > steps[i - 1]));
+  ok('steps suit this data (median ~฿69 -> 20/50/100/500)', steps.join() === '20,50,100,500');
+  ok('empty data falls back', amountSteps([]).length === 4);
+}
+{
+  const at = new Date(2026, 8, 1, 9, 47); // 1 Sep 2026, 09:47 local
+  const q = quickDates(at);
+  ok('quickDates today', q[0].date === '2026-09-01');
+  ok('quickDates yesterday', q[1].date === '2026-08-31');   // crosses a month edge
+  ok('quickDates 2 days back', q[2].date === '2026-08-30');
+  ok('toISODate pads', toISODate(new Date(2026, 0, 5)) === '2026-01-05');
+  ok('toHHMM pads', toHHMM(new Date(2026, 0, 5, 9, 7)) === '09:07');
+}
+
+console.log('\n── cash account ──');
+{
+  ok('เงินสด is selectable', (ACCOUNTS as readonly string[]).includes('เงินสด'));
+  ok('short labels', accountLabel('KBank ออมทรัพย์') === 'KBank' && accountLabel('UOB บัตรเครดิต') === 'UOB' && accountLabel('เงินสด') === 'เงินสด');
+  // the whole point: a cash row must not make a covered month look under-covered
+  const cash = {
+    date: '2026-07-05', time: '12:00', account: 'เงินสด', direction: 'out' as const,
+    amount: 250, category: 'อาหาร/ร้านอาหาร', group: 'discretionary' as const,
+    merchant: 'ร้านตามสั่ง', desc: '', id: 'cash1',
+  };
+  const before = aggregateByMonth(txns).find((m) => m.month === '2026-07')!;
+  const after = aggregateByMonth(materialize(base, [cash as any])).find((m) => m.month === '2026-07')!;
+  ok('cash row does not flip a complete month', before.incomplete === false && after.incomplete === false);
+  eq('cash row is counted in the month total', after.total - before.total, 250, 0.01);
+  ok('cash account raises no coverage gap', !coverageGaps(materialize(base, [cash as any])).some((g) => g.account === 'เงินสด'));
 }
 
 console.log('\n── AI model list ──');

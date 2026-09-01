@@ -103,7 +103,22 @@ export function allMonths(txns: Transaction[]): string[] {
   return [...new Set(txns.map((t) => t.date.slice(0, 7)))].sort();
 }
 
-export const ACCOUNTS = ['KBank ออมทรัพย์', 'UOB บัตรเครดิต'] as const;
+/**
+ * Accounts a row can belong to. The first two come from bank statements; เงินสด
+ * exists only for rows the user types in by hand — cash pulled from an ATM
+ * leaves the statement world entirely, so without it that spending is invisible.
+ * It deliberately has NO entry in ACCOUNT_COVERAGE below: month-completeness is
+ * weighted only over accounts we can get statements for, so adding a cash
+ * account must never make a month look under-covered.
+ */
+export const ACCOUNTS = ['KBank ออมทรัพย์', 'UOB บัตรเครดิต', 'เงินสด'] as const;
+
+/** Short label for tight UI (segmented controls, chips). */
+export function accountLabel(account: string): string {
+  if (account.startsWith('KBank')) return 'KBank';
+  if (account.startsWith('UOB')) return 'UOB';
+  return account;
+}
 
 // KBank coverage windows (from the source statements). Feeds ACCOUNT_COVERAGE
 // below, which drives the month-completeness flag in analytics.
