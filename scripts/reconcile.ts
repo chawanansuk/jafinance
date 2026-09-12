@@ -67,18 +67,18 @@ const grab = merch.get('Grab')!;
 const seven = merch.get('7-Eleven')!;
 
 console.log('\n── Reconcile against statement baseline ──────────────────────');
-checkInt('record count', rows.length, 1275);
+checkInt('record count', rows.length, 1304);
 check('UOB gross out', uobGross, 250761.35);
 check('UOB refund (in)', uobRefund, 10682.02);
 check('UOB net (gross - refund)', uobGross - uobRefund, 240079.33);
-check('KBank out', kbankOut, 91461.49);
+check('KBank out', kbankOut, 96240.49);
 check('card settlement (not spending)', settlement, 20000.00);
-check('essential (out)', essential, 100253.11);
-check('discretionary NET (refund-netted)', discNet, 149224.03);
-check('transfer (out, excl settlement)', transfer, 62063.68);
-check('NET TOTAL spending', netTotal, 311540.82, 1);
-check('top merchant Grab total', grab.amt, 29566, 1);
-checkInt('top merchant Grab count', grab.n, 228);
+check('essential (out)', essential, 100553.11);
+check('discretionary NET (refund-netted)', discNet, 150098.03);
+check('transfer (out, excl settlement)', transfer, 65668.68);
+check('NET TOTAL spending', netTotal, 316319.82, 1);
+check('top merchant Grab total', grab.amt, 29759, 1);
+checkInt('top merchant Grab count', grab.n, 229);
 check('7-Eleven total', seven.amt, 23872, 1);
 checkInt('7-Eleven count', seven.n, 262);
 

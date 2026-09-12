@@ -1206,7 +1206,7 @@
   "amount": 300.0,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "TMN MRT BANGKOK"
  },
  {
@@ -1690,7 +1690,7 @@
   "amount": 56.0,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "BTS TIM TVM"
  },
  {
@@ -1932,7 +1932,7 @@
   "amount": 17.0,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "BTS TIM TVM"
  },
  {
@@ -1943,7 +1943,7 @@
   "amount": 28.0,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "BTS TIM TVM"
  },
  {
@@ -1954,7 +1954,7 @@
   "amount": 25.0,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "BTS TIM TVM"
  },
  {
@@ -2634,9 +2634,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 16.0,
-  "category": "อาหาร/ร้านอาหาร",
-  "group": "discretionary",
-  "merchant": "SUPER TURTLE PUBLIC",
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "Super Turtle",
   "desc": "SUPER TURTLE PUBLIC"
  },
  {
@@ -2845,7 +2845,7 @@
   "amount": 40.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "มัลลวีร์ อนุธิ",
+  "merchant": "มัลลวีร์ อนุธร",
   "desc": "พร้อมเพย์ มัลลวีร์ อนุธิ"
  },
  {
@@ -3263,7 +3263,7 @@
   "amount": 156.4,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "BUS/MRT 834343926 SINGAPORE SGD6.00"
  },
  {
@@ -4132,7 +4132,7 @@
   "amount": 40.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "มัลลวีร์ อนุธิ",
+  "merchant": "มัลลวีร์ อนุธร",
   "desc": "พร้อมเพย์ มัลลวีร์ อนุธิ"
  },
  {
@@ -5023,7 +5023,7 @@
   "amount": 300.0,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "BTS Thai QR A920"
  },
  {
@@ -5342,7 +5342,7 @@
   "amount": 22.0,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "MRT-BEM Bangkok"
  },
  {
@@ -6068,7 +6068,7 @@
   "amount": 65.0,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "BTS TIM TVM"
  },
  {
@@ -6541,7 +6541,7 @@
   "amount": 40.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "มัลลวีร์ อนุธิ",
+  "merchant": "มัลลวีร์ อนุธร",
   "desc": "พร้อมเพย์ มัลลวีร์ อนุธิ"
  },
  {
@@ -6618,7 +6618,7 @@
   "amount": 200.0,
   "category": "เดินทาง/ขนส่ง",
   "group": "essential",
-  "merchant": "BTS/รถไฟฟ้า",
+  "merchant": "BTS",
   "desc": "BTS Thai QR A920"
  },
  {
@@ -6651,7 +6651,7 @@
   "amount": 40.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "มัลลวีร์ อนุธิ",
+  "merchant": "มัลลวีร์ อนุธร",
   "desc": "พร้อมเพย์ มัลลวีร์ อนุธิ"
  },
  {
@@ -14023,5 +14023,324 @@
   "group": "discretionary",
   "merchant": "Thai Hachiban",
   "desc": "เพื่อชำระ Ref X2575 THAIHACHIBAN CO.,LTD"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "16:55",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 150.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "Thai Hachiban",
+  "desc": "เพื่อชำระ Ref X2575 THAIHACHIBAN CO.,LTD"
+ },
+ {
+  "date": "2026-09-01",
+  "time": "07:50",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 80.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ร้านน้องแมง",
+  "desc": "เพื่อชำระ Ref X7978 ร้านค้าอุดมสิน มหานคร (ร้านน้องแมง)"
+ },
+ {
+  "date": "2026-09-01",
+  "time": "08:00",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 55.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "หอมกรุ่น ทองม้วนสด",
+  "desc": "เพื่อชำระ Ref X2914 SCB มณี SHOP (หอมกรุ่น ทองม้วนสด)"
+ },
+ {
+  "date": "2026-09-01",
+  "time": "08:14",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 1500.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
+  "desc": "รับโอน SCB X5730 นาย ชวมันท์ สุรพรรษ"
+ },
+ {
+  "date": "2026-09-01",
+  "time": "10:23",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 1000.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปรวิไลทย์ งามว",
+  "desc": "โอนไป KTB X6486 น.ส. ปรวิไลทย์ งามว"
+ },
+ {
+  "date": "2026-09-01",
+  "time": "10:23",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 500.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "พิพัตร์ เหตุทอง",
+  "desc": "โอนไป KTB X8570 นาย พิพัตร์ เหตุทอง"
+ },
+ {
+  "date": "2026-09-01",
+  "time": "12:34",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 1000.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-09-01",
+  "time": "12:35",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 500.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน ปรารถนา",
+  "desc": "รับโอน SCB X8487 นางสาว ปรารถนา บุญ"
+ },
+ {
+  "date": "2026-09-01",
+  "time": "18:16",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 40.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "Jim Thai Desserts",
+  "desc": "เพื่อชำระ Ref X8503 jimthaidesserts"
+ },
+ {
+  "date": "2026-09-02",
+  "time": "07:06",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 24.0,
+  "category": "ค่าบริการรายวัน (AUD)",
+  "group": "discretionary",
+  "merchant": "ค่าบริการรายวัน AUD",
+  "desc": "เพื่อชำระ Ref X1606 AUD"
+ },
+ {
+  "date": "2026-09-02",
+  "time": "07:08",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 30.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ร้านพี่นก",
+  "desc": "เพื่อชำระ Ref X8118 ร้านค้าอุดมสิน มหานคร (ร้านพี่นก)"
+ },
+ {
+  "date": "2026-09-02",
+  "time": "07:45",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 60.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "วิเชียร ศรน",
+  "desc": "โอนไป SCB X0998 นาย วิเชียร ศรน"
+ },
+ {
+  "date": "2026-09-02",
+  "time": "16:56",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 60.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ยายามา",
+  "desc": "เพื่อชำระ Ref X2001 ยายามา"
+ },
+ {
+  "date": "2026-09-02",
+  "time": "17:00",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 10.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ยายามา",
+  "desc": "เพื่อชำระ Ref X2001 ยายามา"
+ },
+ {
+  "date": "2026-09-02",
+  "time": "19:30",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 160.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน ปรารถนา",
+  "desc": "รับโอน SCB X8487 นางสาว ปรารถนา บุญ"
+ },
+ {
+  "date": "2026-09-03",
+  "time": "06:01",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 160.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-09-03",
+  "time": "07:49",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 60.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "วิเชียร ศรน",
+  "desc": "โอนไป SCB X0998 นาย วิเชียร ศรน"
+ },
+ {
+  "date": "2026-09-03",
+  "time": "07:59",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 500.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน TTB ปริณัฑร สวณาระ",
+  "desc": "รับโอน TTB X1979 น.ส. ปริณัฑร สวณาระ"
+ },
+ {
+  "date": "2026-09-03",
+  "time": "08:19",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 400.0,
+  "category": "ถอนเงินสด",
+  "group": "transfer",
+  "merchant": "ถอนเงิน ATM",
+  "desc": "ATM 7-11 สาทร 10 (7227) บางรัก กทม. รหัสอ้างอิง ATMC4529"
+ },
+ {
+  "date": "2026-09-03",
+  "time": "10:08",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 193.0,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "เพื่อชำระ Ref X0266 แกร็บแท็กซี่ (ประเทศไทย)"
+ },
+ {
+  "date": "2026-09-03",
+  "time": "15:59",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 30.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "กาแฟโบราณ สาทรซอย 10",
+  "desc": "เพื่อชำระ Ref X3752 ถุงเงิน (กาแฟโบราณสาทรซอย10)"
+ },
+ {
+  "date": "2026-09-04",
+  "time": "07:45",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 60.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ซูศรี จักรจ",
+  "desc": "โอนไป พร้อมเพย์ X1098 นางสาว ซูศรี จักรจ"
+ },
+ {
+  "date": "2026-09-04",
+  "time": "08:19",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 173.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านครัวเจ",
+  "desc": "เพื่อชำระ Ref X0302 SCB มณี SHOP (ร้านครัวเจ)"
+ },
+ {
+  "date": "2026-09-04",
+  "time": "08:23",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 15.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "มัลลวีร์ อนุธร",
+  "desc": "โอนไป พร้อมเพย์ X1711 น.ส. มัลลวีร์ อนุธร"
+ },
+ {
+  "date": "2026-09-04",
+  "time": "08:30",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 180.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "P.P.Prime Energy",
+  "desc": "เพื่อชำระ Ref X9598 P.P.PRIME ENERGY COMPANY LIMITED"
+ },
+ {
+  "date": "2026-09-04",
+  "time": "09:27",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 61.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ประกาจิต อ่อน",
+  "desc": "โอนไป พร้อมเพย์ X9327 นาย ประกาจิต อ่อน"
+ },
+ {
+  "date": "2026-09-04",
+  "time": "15:18",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 300.0,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "BTS",
+  "desc": "เพื่อชำระ Ref X4594 BTS Thai QR A920"
+ },
+ {
+  "date": "2026-09-04",
+  "time": "15:44",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 93.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "Super Turtle",
+  "desc": "เพื่อชำระ Ref X3744 SUPER TURTLE PUBLIC LIMITED"
+ },
+ {
+  "date": "2026-09-04",
+  "time": "16:25",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 45.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "กาแฟโบราณ สาทรซอย 10",
+  "desc": "เพื่อชำระ Ref X3752 ถุงเงิน (กาแฟโบราณสาทรซอย10)"
  }
 ]
