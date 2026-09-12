@@ -7155,9 +7155,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 951.93,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "ISERVICECCP",
+  "category": "โรงพยาบาล/สุขภาพ",
+  "group": "essential",
+  "merchant": "iServiceCCP",
   "desc": "TMN ISERVICECCP BANGKOK"
  },
  {
@@ -7408,9 +7408,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 1012.68,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "DESIGN VILLAGE PHUTTAMONTBANGKOK",
+  "category": "เสื้อผ้า/แฟชั่น",
+  "group": "discretionary",
+  "merchant": "Design Village",
   "desc": "DESIGN VILLAGE PHUTTAMONTBANGKOK"
  },
  {
@@ -8904,9 +8904,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 1383.51,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "DESIGN VILLAGE PHUTTAMONTBANGKOK",
+  "category": "เสื้อผ้า/แฟชั่น",
+  "group": "discretionary",
+  "merchant": "Design Village",
   "desc": "DESIGN VILLAGE PHUTTAMONTBANGKOK"
  },
  {
@@ -9168,9 +9168,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 961.93,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "ISERVICECCP",
+  "category": "โรงพยาบาล/สุขภาพ",
+  "group": "essential",
+  "merchant": "iServiceCCP",
   "desc": "TMN ISERVICECCP BANGKOK"
  },
  {
@@ -10477,9 +10477,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 568.11,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "DESIGN VILLAGE PHUTTAMONTBANGKOK",
+  "category": "เสื้อผ้า/แฟชั่น",
+  "group": "discretionary",
+  "merchant": "Design Village",
   "desc": "DESIGN VILLAGE PHUTTAMONTBANGKOK"
  },
  {
@@ -10598,9 +10598,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 1140,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "SRIBUSANA LIMITED PART",
+  "category": "เสื้อผ้า/แฟชั่น",
+  "group": "discretionary",
+  "merchant": "ศรีบุษณา",
   "desc": "SRIBUSANA LIMITED PART BANGKOK"
  },
  {
@@ -10692,6 +10692,17 @@
   "desc": "FAST FOOD Bangkok"
  },
  {
+  "date": "2026-07-15",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 79,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
   "date": "2026-07-16",
   "time": "",
   "account": "UOB บัตรเครดิต",
@@ -10734,6 +10745,28 @@
   "group": "essential",
   "merchant": "HOMEY DENTAL CLINIC-I",
   "desc": "HOMEY DENTAL CLINIC-I BANGKOK"
+ },
+ {
+  "date": "2026-07-16",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 106,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-16",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 107,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
  },
  {
   "date": "2026-07-17",
@@ -10877,6 +10910,17 @@
   "group": "discretionary",
   "merchant": "Grab",
   "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-07-18",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 52,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
  },
  {
   "date": "2026-07-18",
@@ -11034,6 +11078,50 @@
  },
  {
   "date": "2026-07-20",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 12,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-20",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 12,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-20",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 50,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-20",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 59,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-20",
   "time": "08:12",
   "account": "KBank ออมทรัพย์",
   "direction": "out",
@@ -11053,6 +11141,17 @@
   "group": "discretionary",
   "merchant": "ร้านถุงเงิน น้ำเต้าหู้คลองสาม",
   "desc": "ร้านถุงเงิน (น้ำเต้าหู้คลองสาม)"
+ },
+ {
+  "date": "2026-07-21",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 227,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
  },
  {
   "date": "2026-07-21",
@@ -11086,6 +11185,61 @@
   "group": "transfer",
   "merchant": "ธนภาพนัด จิระช",
   "desc": "โอนไป ธนภาพนัด จิระช"
+ },
+ {
+  "date": "2026-07-22",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 37,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-22",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 47.5,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-07-22",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 71,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-22",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 80,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-22",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 1002.06,
+  "category": "โรงพยาบาล/สุขภาพ",
+  "group": "essential",
+  "merchant": "ISERVICECCP",
+  "desc": "TMN ISERVICECCP BANGKOK"
  },
  {
   "date": "2026-07-22",
@@ -11141,6 +11295,28 @@
   "group": "essential",
   "merchant": "ร้านยา เอซี ฟาร์ม่า",
   "desc": "SCB มณี SHOP ร้านยา เอซี ฟาร์ม่า"
+ },
+ {
+  "date": "2026-07-23",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 360,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "YAYOI(Y217)-I'M CHINAT",
+  "desc": "YAYOI(Y217)-I'M CHINAT BANGKOK"
+ },
+ {
+  "date": "2026-07-23",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 57,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
  },
  {
   "date": "2026-07-23",
@@ -11218,6 +11394,61 @@
   "group": "discretionary",
   "merchant": "I AM Chinatown",
   "desc": "I AM CHINATOWN CO., LTD"
+ },
+ {
+  "date": "2026-07-24",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 44,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-24",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 60,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-07-24",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 75,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-24",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 100,
+  "category": "โรงพยาบาล/สุขภาพ",
+  "group": "essential",
+  "merchant": "ISERVICECCP",
+  "desc": "TMN ISERVICECCP BANGKOK"
+ },
+ {
+  "date": "2026-07-24",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 119,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
  },
  {
   "date": "2026-07-24",
@@ -11309,6 +11540,61 @@
  },
  {
   "date": "2026-07-25",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 35,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-07-25",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 45,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-07-25",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 125,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-07-25",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 231,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-07-25",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 876,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-07-25",
   "time": "10:26",
   "account": "KBank ออมทรัพย์",
   "direction": "out",
@@ -11386,6 +11672,116 @@
  },
  {
   "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 41,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 127,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 676.86,
+  "category": "เสื้อผ้า/แฟชั่น",
+  "group": "discretionary",
+  "merchant": "Design Village",
+  "desc": "DESIGN VILLAGE PHUTTAMONTBANGKOK"
+ },
+ {
+  "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 1869.08,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "MAGURO-DESIGN VILLAGE",
+  "desc": "MAGURO-DESIGN VILLAGE BANGKOK"
+ },
+ {
+  "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 12,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 65,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 100,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 163,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 365,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-26",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 454,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-07-26",
   "time": "18:40",
   "account": "KBank ออมทรัพย์",
   "direction": "out",
@@ -11408,6 +11804,61 @@
  },
  {
   "date": "2026-07-27",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 12,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-27",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 21,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-27",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 29,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-27",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 48,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-07-27",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 65,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-07-27",
   "time": "10:03",
   "account": "KBank ออมทรัพย์",
   "direction": "in",
@@ -11427,6 +11878,83 @@
   "group": "discretionary",
   "merchant": "สินเอร ฟู้ด มาร์เก็ต",
   "desc": "บริษัท สินเอร ฟู้ด มาร์เก็ต จำกัด"
+ },
+ {
+  "date": "2026-07-28",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 12,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-28",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 14,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-07-28",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 20,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-07-28",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 26,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-07-28",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 30,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-28",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 60,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-07-28",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 64,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
  },
  {
   "date": "2026-07-28",
@@ -11485,6 +12013,39 @@
  },
  {
   "date": "2026-07-29",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 765.05,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "KIN DONBURI CAFE-I'M P",
+  "desc": "KIN DONBURI CAFE-I'M P BANGKOK"
+ },
+ {
+  "date": "2026-07-29",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 15,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-29",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 109,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-29",
   "time": "09:13",
   "account": "KBank ออมทรัพย์",
   "direction": "out",
@@ -11507,6 +12068,50 @@
  },
  {
   "date": "2026-07-30",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 505,
+  "category": "โรงพยาบาล/สุขภาพ",
+  "group": "essential",
+  "merchant": "Watsons",
+  "desc": "3144 WATSONS I M PARK BANGKOK"
+ },
+ {
+  "date": "2026-07-30",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 1122,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "Sushiro",
+  "desc": "SUSHIRO GH (TH)-MBK CE BANGKOK"
+ },
+ {
+  "date": "2026-07-30",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 30,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-30",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 73,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-30",
   "time": "19:28",
   "account": "KBank ออมทรัพย์",
   "direction": "out",
@@ -11515,6 +12120,28 @@
   "group": "discretionary",
   "merchant": "ตั้วเหลา",
   "desc": "ตั้วเหลา"
+ },
+ {
+  "date": "2026-07-31",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 103,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-07-31",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 110,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
  },
  {
   "date": "2026-07-31",
@@ -11537,6 +12164,61 @@
   "group": "transfer",
   "merchant": "TrueMoney",
   "desc": "ทรู มันนี่ E-MON"
+ },
+ {
+  "date": "2026-08-01",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 35,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-08-01",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 79,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-01",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 175,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-01",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 376,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "HCB00017-TP03",
+  "desc": "HCB00017-TP03 BANGKOK"
+ },
+ {
+  "date": "2026-08-01",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 1100.4,
+  "category": "ห้าง/ช้อปปิ้ง",
+  "group": "discretionary",
+  "merchant": "The Mall",
+  "desc": "THE MALL-THAPRA BANGKOK"
  },
  {
   "date": "2026-08-01",
@@ -11603,6 +12285,204 @@
   "group": "essential",
   "merchant": "THE MALL GROUP",
   "desc": "THE MALL GROUP CO., LTD. BRANCH 00004"
+ },
+ {
+  "date": "2026-08-02",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 136,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-02",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 160,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-02",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 954,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "BAR BQ PLAZA-L.RATCHAP NONTHABURI",
+  "desc": "BAR BQ PLAZA-L.RATCHAP NONTHABURI"
+ },
+ {
+  "date": "2026-08-02",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 1160,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "EKNANTAROJ CO.,LTD. NONTHABURI",
+  "desc": "EKNANTAROJ CO.,LTD. NONTHABURI"
+ },
+ {
+  "date": "2026-08-02",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 10,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-02",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 49,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-08-03",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 258,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-03",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 87,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-03",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 150,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-08-04",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 12,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-04",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 38,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-04",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 39,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-04",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 42,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-04",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 602,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "HCB00152-IMCN",
+  "desc": "HCB00152-IMCN BANGKOK"
+ },
+ {
+  "date": "2026-08-04",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 39,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-04",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 65,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-04",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 130,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-04",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 289,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
  },
  {
   "date": "2026-08-04",
@@ -11694,6 +12574,17 @@
  },
  {
   "date": "2026-08-05",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 51,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-05",
   "time": "08:57",
   "account": "KBank ออมทรัพย์",
   "direction": "out",
@@ -11713,6 +12604,28 @@
   "group": "discretionary",
   "merchant": "พี่ผึ้งข้าวไก่ทอด",
   "desc": "เพื่อชำระ Ref X9240 พี่ผึ้งข้าวไก่ทอด"
+ },
+ {
+  "date": "2026-08-06",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 1232,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "Sushiro",
+  "desc": "SUSHIRO GH (TH) C.BANG BANGKOK"
+ },
+ {
+  "date": "2026-08-06",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 91,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
  },
  {
   "date": "2026-08-06",
@@ -11859,6 +12772,28 @@
  },
  {
   "date": "2026-08-07",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 35,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-07",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 167,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-07",
   "time": "07:57",
   "account": "KBank ออมทรัพย์",
   "direction": "in",
@@ -11900,6 +12835,83 @@
   "group": "transfer",
   "merchant": "ปรารถนา",
   "desc": "โอนไป พร้อมเพย์ ปรารถนา"
+ },
+ {
+  "date": "2026-08-08",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 31.25,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-08-08",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 60,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-08",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 76,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-08",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 118,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-08",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 148,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-08",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 299.75,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "ACROSS",
+  "desc": "ACROSS BANGKOK"
+ },
+ {
+  "date": "2026-08-08",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 1480.35,
+  "category": "ที่พัก/ท่องเที่ยว",
+  "group": "discretionary",
+  "merchant": "Booking.com",
+  "desc": "Partners on Booking BV Amsterdam"
  },
  {
   "date": "2026-08-08",
@@ -11947,6 +12959,94 @@
  },
  {
   "date": "2026-08-09",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 40,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-09",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 42,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-09",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 249,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-09",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 390,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "NEIL S TAVERN (1974) C",
+  "desc": "NEIL S TAVERN (1974) C BANGKOK"
+ },
+ {
+  "date": "2026-08-09",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 583,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "SIAM PARAGON FOOD HALL",
+  "desc": "SIAM PARAGON FOOD HALL BANGKOK"
+ },
+ {
+  "date": "2026-08-09",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 2063,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "NICHIJO",
+  "desc": "NICHIJO BANGKOK"
+ },
+ {
+  "date": "2026-08-09",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 133,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-09",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 330,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-09",
   "time": "11:58",
   "account": "KBank ออมทรัพย์",
   "direction": "out",
@@ -11977,6 +13077,28 @@
   "group": "discretionary",
   "merchant": "ร้านซาลาเปาไต้หวัน",
   "desc": "เพื่อชำระ Ref X4205 SCB มณี SHOP (ร้านซาลาเปาไต้หวัน)"
+ },
+ {
+  "date": "2026-08-10",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 60,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-10",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 94,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
  },
  {
   "date": "2026-08-10",
@@ -12068,6 +13190,39 @@
  },
  {
   "date": "2026-08-11",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 66,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-11",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 77,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-11",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 890,
+  "category": "เสื้อผ้า/แฟชั่น",
+  "group": "discretionary",
+  "merchant": "SRIBUSANA LIMITED PART",
+  "desc": "SRIBUSANA LIMITED PART BANGKOK"
+ },
+ {
+  "date": "2026-08-11",
   "time": "07:34",
   "account": "KBank ออมทรัพย์",
   "direction": "out",
@@ -12156,6 +13311,39 @@
  },
  {
   "date": "2026-08-12",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 306,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-12",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 52,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-08-12",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 161,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-12",
   "time": "07:27",
   "account": "KBank ออมทรัพย์",
   "direction": "out",
@@ -12175,6 +13363,72 @@
   "group": "discretionary",
   "merchant": "Thai Hachiban",
   "desc": "เพื่อชำระ Ref X0031 THAIHACHIBAN CO.,LTD"
+ },
+ {
+  "date": "2026-08-13",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 29,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-13",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 58,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-08-13",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 59,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-13",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 69,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-13",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 122,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-13",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 327,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
  },
  {
   "date": "2026-08-13",
@@ -12208,6 +13462,215 @@
   "group": "transfer",
   "merchant": "ศรีพร วารินทร์",
   "desc": "โอนไป พร้อมเพย์ X1324 นาง ศรีพร วารินทร์"
+ },
+ {
+  "date": "2026-08-14",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 39,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-14",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 56,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-14",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 77,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-14",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 90,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-14",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 116.25,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-08-15",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 31,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "LOTUS Bangkok"
+ },
+ {
+  "date": "2026-08-15",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 68,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-15",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 129,
+  "category": "Grab/เดลิเวอรี่/แท็กซี่",
+  "group": "discretionary",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-15",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 355.13,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "KIN DONBURI CAFE-I'M P",
+  "desc": "KIN DONBURI CAFE-I'M P BANGKOK"
+ },
+ {
+  "date": "2026-08-15",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 671,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-16",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 760,
+  "category": "การศึกษา/เด็ก",
+  "group": "essential",
+  "merchant": "KIDZOONA CENTRAL NORTH NONTHABURI",
+  "desc": "KIDZOONA CENTRAL NORTH NONTHABURI"
+ },
+ {
+  "date": "2026-08-16",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 775,
+  "category": "เสื้อผ้า/แฟชั่น",
+  "group": "discretionary",
+  "merchant": "MC Shop",
+  "desc": "MC SHOP CO.,LTD BANGKOK"
+ },
+ {
+  "date": "2026-08-16",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 1320,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "KATSU MIDORI SUSHI CEN NONTHABURI",
+  "desc": "KATSU MIDORI SUSHI CEN NONTHABURI"
+ },
+ {
+  "date": "2026-08-16",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 114,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-16",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 629,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านอาหาร/ตามสั่ง",
+  "desc": "TMN FAST FOOD BANGKOK"
+ },
+ {
+  "date": "2026-08-17",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 92.25,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "7-Eleven",
+  "desc": "TMN 7-11 BANGKOK"
+ },
+ {
+  "date": "2026-08-17",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 124.5,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "Lotus",
+  "desc": "TMN LOTUS HYPER BANGKOK"
+ },
+ {
+  "date": "2026-08-18",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 119,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "Grab",
+  "desc": "WWW.GRAB.COM BANGKOK"
+ },
+ {
+  "date": "2026-08-20",
+  "time": "",
+  "account": "UOB บัตรเครดิต",
+  "direction": "out",
+  "amount": 199,
+  "category": "ซับสคริปชั่น/ดิจิทัล",
+  "group": "discretionary",
+  "merchant": "Google YouTube Mountain View",
+  "desc": "Google YouTube Mountain View"
  },
  {
   "date": "2026-08-23",
