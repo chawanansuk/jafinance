@@ -3736,7 +3736,7 @@
   "amount": 95.0,
   "category": "อาหาร/ร้านอาหาร",
   "group": "discretionary",
-  "merchant": "วราภรณ์ ซาลาเปา-ทอร์โร่ ซีโน",
+  "merchant": "วราภรณ์ ซาลาเปา",
   "desc": "วราภรณ์ ซาลาเปา-ทอร์โร่ ซีโน่"
  },
  {
@@ -9786,7 +9786,7 @@
   "amount": 105.0,
   "category": "คาเฟ่/ขนม",
   "group": "discretionary",
-  "merchant": "เต๋ คอฟฟี่ แอนด์พาร์ค",
+  "merchant": "เต๋ คอฟฟี่ แอนด์ทาร์ต",
   "desc": "LINE Pay เต๋ คอฟฟี่ แอนด์พาร์ค จุฬา"
  },
  {
@@ -10017,7 +10017,7 @@
   "amount": 60.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "พรฤดี อาชาวรรณ",
+  "merchant": "พรฤดี อาชาวรญ",
   "desc": "โอนไป พรฤดี อาชาวรรณ"
  },
  {
@@ -14342,5 +14342,258 @@
   "group": "discretionary",
   "merchant": "กาแฟโบราณ สาทรซอย 10",
   "desc": "เพื่อชำระ Ref X3752 ถุงเงิน (กาแฟโบราณสาทรซอย10)"
+ },
+ {
+  "date": "2026-09-07",
+  "time": "11:38",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 3000.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
+  "desc": "รับโอน SCB X5730 นาย ชวมันท์ สุรพรรษ"
+ },
+ {
+  "date": "2026-09-07",
+  "time": "15:33",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 100.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "MR. YEP WEI ZHI",
+  "desc": "โอนไป พร้อมเพย์ X2953 MR. YEP WEI ZHI"
+ },
+ {
+  "date": "2026-09-08",
+  "time": "08:09",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 150.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-09-08",
+  "time": "08:28",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 55.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "พรฤดี อาชาวรญ",
+  "desc": "โอนไป X9433 น.ส. พรฤดี อาชาวรญ"
+ },
+ {
+  "date": "2026-09-08",
+  "time": "08:31",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 70.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ก๋วยจั๊บน้ำข้นวัดแขก",
+  "desc": "เพื่อชำระ Ref X0962 SCB มณี SHOP (ก๋วยจั๊บน้ำข้นวัดแขก)"
+ },
+ {
+  "date": "2026-09-08",
+  "time": "08:32",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 25.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "อภิชา นาวาอนุร",
+  "desc": "โอนไป พร้อมเพย์ X6461 นาย อภิชา นาวาอนุร"
+ },
+ {
+  "date": "2026-09-08",
+  "time": "09:36",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 51.75,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-09-10",
+  "time": "07:27",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 17.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-09-10",
+  "time": "08:04",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "เติมเงิน/วอลเล็ต",
+  "group": "transfer",
+  "merchant": "TrueMoney",
+  "desc": "เพื่อชำระ Ref X9465 บจก. ทรู มันนี่ เพื่อเก็บรักษาเงินรับล่วงหน้าของธุรกิจ E-MON"
+ },
+ {
+  "date": "2026-09-10",
+  "time": "18:25",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 280.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "จิรภา นิลอบ",
+  "desc": "โอนไป พร้อมเพย์ X8524 นางสาว จิรภา นิลอบ"
+ },
+ {
+  "date": "2026-09-10",
+  "time": "21:26",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-09-11",
+  "time": "09:49",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-09-11",
+  "time": "17:10",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 79.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "Thai Hachiban",
+  "desc": "เพื่อชำระ Ref X2575 THAIHACHIBAN CO.,LTD"
+ },
+ {
+  "date": "2026-09-12",
+  "time": "08:58",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 150.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-09-12",
+  "time": "10:31",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 105.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "เต๋ คอฟฟี่ แอนด์ทาร์ต",
+  "desc": "เพื่อชำระ Ref X1080 LinePay (เต๋ คอฟฟี่ แอนด์ทาร์ต จุฬา)"
+ },
+ {
+  "date": "2026-09-12",
+  "time": "10:32",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 110.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "เต๋ คอฟฟี่ แอนด์ทาร์ต",
+  "desc": "เพื่อชำระ Ref X1438 LinePay (เต๋ คอฟฟี่ แอนด์ทาร์ต จุฬา)"
+ },
+ {
+  "date": "2026-09-12",
+  "time": "10:34",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 179.76,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "AIM DHRAM",
+  "desc": "เพื่อชำระ Ref X1683 AIM DHRAM CO.,LTD."
+ },
+ {
+  "date": "2026-09-12",
+  "time": "13:26",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 130.0,
+  "category": "ธุรกิจ/บริการ",
+  "group": "transfer",
+  "merchant": "คลีน สตาร์ท โซลูชั่น",
+  "desc": "เพื่อชำระ Ref X2556 บริษัท คลีน สตาร์ท โซลูชั่น จำกัด"
+ },
+ {
+  "date": "2026-09-12",
+  "time": "13:28",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 140.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปิติมา ยมเปลี่",
+  "desc": "โอนไป X4881 น.ส. ปิติมา ยมเปลี่"
+ },
+ {
+  "date": "2026-09-12",
+  "time": "14:53",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 225.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "Wongnai Merchant QR",
+  "desc": "เพื่อชำระ Ref XURQG Wongnai Merchant (QR by ttb)"
+ },
+ {
+  "date": "2026-09-12",
+  "time": "14:54",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 53.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "วราภรณ์ ซาลาเปา",
+  "desc": "เพื่อชำระ Ref X7001 วราภรณ์ ซาลาเปา-บางกอก"
+ },
+ {
+  "date": "2026-09-12",
+  "time": "15:01",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 160.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "Wongnai Merchant QR",
+  "desc": "เพื่อชำระ Ref X2KB0 Wongnai Merchant (QR by ttb)"
+ },
+ {
+  "date": "2026-09-14",
+  "time": "17:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 235.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "สุรสิทธิ์ งามร",
+  "desc": "โอนไป X0718 นาย สุรสิทธิ์ งามร"
  }
 ]
