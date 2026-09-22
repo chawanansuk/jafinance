@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Search, Upload, Download, ArrowUpDown, Wand2, Check, ClipboardPaste, FileText } from 'lucide-react';
+import { Search, Upload, Download, ArrowUpDown, Wand2, Check, ClipboardPaste, FileText, ChevronDown } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
-import { SectionTitle, Money, Skeleton, Notice, GroupBadge } from '@/components/ui';
+import { SectionTitle, Money, Skeleton, Notice } from '@/components/ui';
 import { AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
 import { SmartImport } from '@/components/SmartImport';
 import { PdfImport } from '@/components/PdfImport';
@@ -17,13 +17,27 @@ type Dir = 'in' | 'out' | 'all';
 
 const CAT_NAMES = CATEGORIES.map((c) => c.name);
 
+/** V2: still a native <select> — same keyboard, same screen-reader behaviour —
+ *  but painted as a category chip so a 120-row table stops reading as 120 form
+ *  controls. The dot carries the category colour used everywhere else. */
 function CategorySelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const color = categoryMeta(value).color;
   return (
-    <select value={value} onChange={(e) => onChange(e.target.value)}
-      className="input !py-1 !px-2 text-xs !w-auto max-w-[150px]">
-      {!CAT_NAMES.includes(value) && <option value={value}>{value}</option>}
-      {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
-    </select>
+    <span className="relative inline-flex items-center gap-1.5 rounded-full pl-2.5 pr-1.5 py-1 max-w-full"
+      style={{ background: `color-mix(in srgb, ${color} 12%, transparent)` }}>
+      <span aria-hidden className="h-[7px] w-[7px] rounded-full shrink-0" style={{ background: color }} />
+      <span className="text-caption truncate">{value}</span>
+      <ChevronDown size={12} className="text-ink-soft shrink-0" aria-hidden />
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label="เปลี่ยนหมวด"
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      >
+        {!CAT_NAMES.includes(value) && <option value={value}>{value}</option>}
+        {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
+      </select>
+    </span>
   );
 }
 
@@ -153,17 +167,21 @@ export default function TransactionsPage() {
         </div>
       </details>
 
-      <div className="flex items-center justify-between gap-2 text-sm text-ink-soft px-1">
-        <span className="shrink-0">{filtered.length} รายการ</span>
-        <span className="sm:hidden flex gap-1">
+      {/* V2: on mobile these three fought for one line and the sort buttons broke
+          across two. Sort gets its own row; the count and total share the next. */}
+      <div className="space-y-2 px-1">
+        <div className="sm:hidden inline-flex rounded-md bg-surface-2 p-1">
           <button onClick={() => toggleSort('date')} className={`seg ${sortKey === 'date' ? 'seg-on' : 'seg-off'}`}>
-            วันที่ <ArrowUpDown size={11} className="inline" />
+            <span className="inline-flex items-center gap-1 whitespace-nowrap">วันที่ <ArrowUpDown size={12} aria-hidden /></span>
           </button>
           <button onClick={() => toggleSort('amount')} className={`seg ${sortKey === 'amount' ? 'seg-on' : 'seg-off'}`}>
-            จำนวน <ArrowUpDown size={11} className="inline" />
+            <span className="inline-flex items-center gap-1 whitespace-nowrap">จำนวน <ArrowUpDown size={12} aria-hidden /></span>
           </button>
-        </span>
-        <span className="text-right">รวมรายจ่าย <b className="tnum text-ink"><Money value={totalShown} /></b></span>
+        </div>
+        <div className="flex items-baseline justify-between gap-3 text-body-sm text-ink-soft">
+          <span className="shrink-0">{filtered.length.toLocaleString('th-TH')} รายการ</span>
+          <span className="text-right">รวมรายจ่าย <b className="tnum text-ink text-h3"><Money value={totalShown} /></b></span>
+        </div>
       </div>
 
       {/* mobile: 2-line cards (the table squeezes unreadably at 390px) */}
@@ -208,44 +226,48 @@ export default function TransactionsPage() {
         {filtered.length === 0 && <li className="px-4 py-10 text-center text-sm text-ink-soft">ไม่พบรายการที่ตรงเงื่อนไข</li>}
       </ul>
 
-      {/* desktop table */}
-      <div className="hidden sm:block card overflow-x-auto no-scrollbar">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-xs text-ink-soft border-b border-line">
-              <th className="text-left font-medium px-3 py-2.5 cursor-pointer" onClick={() => toggleSort('date')}>
-                <span className="inline-flex items-center gap-1">วันที่ <ArrowUpDown size={12} /></span>
+      {/* desktop table — V2: the header sticks, rows are one line tall, and the
+          group badge is gone (it only restated the category beside it) */}
+      {/* no overflow-hidden here: it would make the card a scroll container and
+          silently kill the sticky header. Corners are rounded on the cells. */}
+      <div className="hidden sm:block card">
+        <table className="w-full border-separate border-spacing-0">
+          <thead className="sticky top-15 z-10 [&_th]:bg-surface-2 [&_th:first-child]:rounded-tl-lg [&_th:last-child]:rounded-tr-lg">
+            <tr className="text-ink-soft [&_th]:border-b [&_th]:border-line">
+              <th scope="col" className="text-left px-4 py-3 cursor-pointer w-[112px]" onClick={() => toggleSort('date')}>
+                <span className="inline-flex items-center gap-1 text-label">วันที่ <ArrowUpDown size={12} aria-hidden /></span>
               </th>
-              <th className="text-left font-medium px-3 py-2.5">ร้าน / รายละเอียด</th>
-              <th className="text-left font-medium px-3 py-2.5 hidden sm:table-cell">หมวด</th>
-              <th className="text-right font-medium px-3 py-2.5 cursor-pointer" onClick={() => toggleSort('amount')}>
-                <span className="inline-flex items-center gap-1">จำนวน <ArrowUpDown size={12} /></span>
+              <th scope="col" className="text-left px-4 py-3 text-label">ร้าน / รายละเอียด</th>
+              <th scope="col" className="text-left px-4 py-3 text-label w-[220px]">หมวด</th>
+              <th scope="col" className="text-right px-4 py-3 cursor-pointer w-[130px]" onClick={() => toggleSort('amount')}>
+                <span className="inline-flex items-center gap-1 text-label">จำนวน <ArrowUpDown size={12} aria-hidden /></span>
               </th>
             </tr>
           </thead>
           <tbody>
             {filtered.slice(0, limit).map((t) => (
-              <tr key={t.id} className="border-b border-line/50 last:border-0 hover:bg-surface-2/60">
-                <td className="px-3 py-2.5 whitespace-nowrap align-top">
-                  <div>{formatDate(t.date)}</div>
-                  <div className="text-xs text-ink-soft">{t.time || (t.account.startsWith('KBank') ? 'KBank' : 'UOB')}</div>
+              <tr key={t.id} className="[&_td]:border-b [&_td]:border-line hover:[&_td]:bg-surface-2/60">
+                <td className="px-4 py-2.5 whitespace-nowrap align-middle">
+                  <div className="text-body-sm">{formatDate(t.date)}</div>
+                  <div className="text-caption text-ink-soft">{t.time || (t.account.startsWith('KBank') ? 'KBank' : 'UOB')}</div>
                 </td>
-                <td className="px-3 py-2.5 align-top max-w-[200px]">
-                  <div className="truncate font-medium">{t.merchant || '—'}</div>
-                  <div className="text-xs text-ink-soft truncate">{t.desc}</div>
+                <td className="px-4 py-2.5 align-middle max-w-0">
+                  <div className="truncate text-body">{t.merchant || '—'}</div>
+                  {t.desc && t.desc !== t.merchant && (
+                    <div className="text-caption text-ink-soft truncate">{t.desc}</div>
+                  )}
                   {t.direction === 'in' && t.group !== 'refund' && (
-                    <label className="mt-1 inline-flex items-center gap-1.5 text-xs text-ink-soft cursor-pointer">
+                    <label className="mt-1 inline-flex items-center gap-1.5 text-caption text-ink-soft cursor-pointer">
                       <input type="checkbox" checked={!!t.isRealIncome} onChange={() => toggleRealIncome(t.id)} />
                       เป็นรายได้จริง
                     </label>
                   )}
                 </td>
-                <td className="px-3 py-2.5 align-top hidden sm:table-cell">
+                <td className="px-4 py-2.5 align-middle">
                   <CategorySelect value={t.category} onChange={(v) => setCategory(t.id, v)} />
-                  <div className="mt-1"><GroupBadge group={t.group} /></div>
                 </td>
-                <td className="px-3 py-2.5 text-right align-top whitespace-nowrap font-semibold tnum">
-                  <span className={t.direction === 'in' ? 'text-emerald-500' : ''}>
+                <td className="px-4 py-2.5 text-right align-middle whitespace-nowrap text-h3 font-semibold tnum">
+                  <span className={t.direction === 'in' ? 'text-success' : ''}>
                     {t.direction === 'in' ? '+' : ''}<Money value={t.amount} />
                   </span>
                 </td>
@@ -253,10 +275,25 @@ export default function TransactionsPage() {
             ))}
           </tbody>
         </table>
-        {filtered.length === 0 && <div className="px-4 py-10 text-center text-sm text-ink-soft">ไม่พบรายการที่ตรงเงื่อนไข</div>}
+        {filtered.length === 0 && <div className="px-4 py-12 text-center text-body-sm text-ink-soft">ไม่พบรายการที่ตรงเงื่อนไข</div>}
+        {/* V2: how many of how many, where you can actually see it */}
+        {filtered.length > 0 && (
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-b-lg border-t border-line bg-surface-2 px-4 py-3">
+            <span className="text-body-sm text-ink-soft">
+              แสดง {Math.min(limit, filtered.length).toLocaleString('th-TH')} จาก {filtered.length.toLocaleString('th-TH')} รายการ
+            </span>
+            {filtered.length > limit && (
+              <button onClick={() => setLimit((l) => l + 200)} className="btn-secondary !py-2 !px-3">
+                โหลดเพิ่ม 200 รายการ
+              </button>
+            )}
+          </div>
+        )}
       </div>
       {filtered.length > limit && (
-        <button onClick={() => setLimit((l) => l + 200)} className="btn-ghost w-full">โหลดเพิ่ม ({filtered.length - limit} รายการ)</button>
+        <button onClick={() => setLimit((l) => l + 200)} className="sm:hidden btn-secondary w-full">
+          โหลดเพิ่ม ({(filtered.length - limit).toLocaleString('th-TH')} รายการ)
+        </button>
       )}
 
       <SmartImport open={smartOpen} onClose={() => setSmartOpen(false)} />
