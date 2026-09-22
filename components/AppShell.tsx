@@ -46,7 +46,7 @@ function StorageAlert() {
   }, []);
   if (!failed) return null;
   return (
-    <div className="bg-red-600 text-white text-xs text-center px-3 py-2">
+    <div role="alert" className="bg-error text-white text-caption text-center px-3 py-2">
       ⚠ บันทึกลงเครื่องไม่สำเร็จ (พื้นที่เต็มหรือโหมดส่วนตัว) — การเปลี่ยนแปลงล่าสุดอาจหายเมื่อรีโหลด
       แนะนำให้ไปหน้า จัดการ → สำรองข้อมูล เก็บไฟล์ไว้ก่อน
     </div>
@@ -56,46 +56,57 @@ function StorageAlert() {
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+  // V2 grid: the transactions table earns the extra width; reading pages don't
+  const wide = pathname.startsWith('/transactions');
+  const container = wide ? 'max-w-wide' : 'max-w-content';
 
   return (
     <div className="min-h-dvh flex flex-col">
       <StorageAlert />
       {/* top bar */}
-      <header className="sticky top-0 z-30 border-b border-line bg-surface/70 backdrop-blur-xl">
-        <div className="mx-auto max-w-5xl px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <span className="grid place-items-center h-8 w-8 rounded-xl text-white shadow-sm"
-              style={{ backgroundImage: 'linear-gradient(135deg, rgb(var(--brand)), rgb(var(--brand-2)))' }}>
-              <Wallet2 size={18} />
+      <header className="sticky top-0 z-30 border-b border-line bg-surface/85 backdrop-blur-xl">
+        <div className={`mx-auto ${container} px-4 sm:px-6 h-15 flex items-center justify-between`}>
+          <Link href="/" className="flex items-center gap-2.5 font-semibold">
+            <span className="grid place-items-center h-7 w-7 rounded-sm bg-brand text-white">
+              <Wallet2 size={16} />
             </span>
-            <span className="tracking-tight">วางแผนค่าใช้จ่าย</span>
+            <span className="text-h3 tracking-tight">วางแผนค่าใช้จ่าย</span>
           </Link>
-          <div className="flex items-center gap-2">
-            {/* desktop nav */}
-            <nav className="hidden sm:flex items-center gap-1">
-              {NAV.map(({ href, label, icon: Icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`seg flex items-center gap-1.5 ${isActive(href) ? 'seg-on' : 'seg-off'}`}
-                >
-                  <Icon size={15} /> {label}
-                </Link>
-              ))}
+          <div className="flex items-center gap-5">
+            {/* desktop nav — underline marks the active route instead of a raised box */}
+            <nav className="hidden sm:flex items-end gap-1">
+              {NAV.map(({ href, label, icon: Icon }) => {
+                const on = isActive(href);
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    aria-current={on ? 'page' : undefined}
+                    className={`flex flex-col items-center gap-1.5 px-2.5 pt-2.5 text-label font-medium transition-colors ${
+                      on ? 'text-ink' : 'text-ink-soft hover:text-ink'
+                    }`}
+                  >
+                    <span className="flex items-center gap-1.5"><Icon size={15} aria-hidden /> {label}</span>
+                    <span className={`h-0.5 w-full rounded-full ${on ? 'bg-brand' : 'bg-transparent'}`} />
+                  </Link>
+                );
+              })}
             </nav>
-            <button
-              onClick={() => window.dispatchEvent(new Event(QUICKADD_EVENT))}
-              className="hidden lg:inline-flex btn-primary !py-1.5 !px-3 text-sm"
-            >
-              <Plus size={16} /> เพิ่มรายการ
-            </button>
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => window.dispatchEvent(new Event(QUICKADD_EVENT))}
+                className="hidden lg:inline-flex btn-primary !py-2 !px-4"
+              >
+                <Plus size={16} aria-hidden /> เพิ่มรายการ
+              </button>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>
 
       {/* content */}
-      <main className="flex-1 mx-auto w-full max-w-5xl px-4 py-5 pb-24 sm:pb-8">
+      <main className={`flex-1 mx-auto w-full ${container} px-4 sm:px-6 py-6 sm:py-8 pb-28 sm:pb-10`}>
         {children}
       </main>
 
@@ -105,19 +116,20 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* mobile bottom nav */}
       <nav className="sm:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface/90 backdrop-blur-xl"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-        <div className="mx-auto max-w-5xl grid grid-cols-6">
+        <div className="mx-auto max-w-content grid grid-cols-6">
           {NAV.map(({ href, label, icon: Icon }) => {
             const on = isActive(href);
             return (
               <Link
                 key={href}
                 href={href}
-                className={`flex flex-col items-center gap-0.5 py-2 text-[11px] transition-colors ${
-                  on ? 'text-brand font-medium' : 'text-ink-soft'
+                aria-current={on ? 'page' : undefined}
+                className={`flex flex-col items-center gap-1 py-2.5 text-caption transition-colors ${
+                  on ? 'text-ink font-medium' : 'text-ink-soft'
                 }`}
               >
-                <span className={`grid place-items-center h-7 w-12 rounded-full transition-colors ${on ? 'bg-brand/15' : ''}`}>
-                  <Icon size={20} strokeWidth={on ? 2.4 : 2} />
+                <span className={`grid place-items-center h-7 w-12 rounded-full transition-colors ${on ? 'bg-brand/15 text-brand' : ''}`}>
+                  <Icon size={20} strokeWidth={on ? 2.4 : 2} aria-hidden />
                 </span>
                 {label}
               </Link>

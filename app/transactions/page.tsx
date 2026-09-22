@@ -95,18 +95,22 @@ export default function TransactionsPage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-bold">รายการธุรกรรม</h1>
-        <div className="flex gap-2">
+        {/* V2: import and export were five identical ghost buttons in one
+            unwrapped row — it overflowed 390px and gave no hierarchy. Now they
+            wrap, and the two jobs are visually separated. */}
+        <div className="flex flex-wrap items-center gap-2">
           <input ref={fileRef} type="file" accept=".csv,.json,application/json,text/csv" hidden
             onChange={(e) => {
               const f = e.target.files?.[0];
               e.target.value = ''; // allow re-picking the same file
               if (f) onFile(f);
             }} />
-          <button onClick={() => setPdfOpen(true)} className="btn-ghost !py-1.5 !px-3 text-xs"><FileText size={14} /> สเตทเมนต์</button>
-          <button onClick={() => setSmartOpen(true)} className="btn-ghost !py-1.5 !px-3 text-xs"><ClipboardPaste size={14} /> วางข้อความ</button>
-          <button onClick={() => fileRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-xs"><Upload size={14} /> ไฟล์</button>
-          <button onClick={() => downloadFile('transactions.csv', toCSV(filtered), 'text/csv')} className="btn-ghost !py-1.5 !px-3 text-xs"><Download size={14} /> CSV</button>
-          <button onClick={() => downloadFile('jafinance-transactions.json', JSON.stringify(txns, null, 2), 'application/json')} className="btn-ghost !py-1.5 !px-3 text-xs"><Download size={14} /> JSON</button>
+          <button onClick={() => setPdfOpen(true)} className="btn-secondary !py-2 !px-3"><FileText size={15} aria-hidden /> สเตทเมนต์</button>
+          <button onClick={() => setSmartOpen(true)} className="btn-secondary !py-2 !px-3"><ClipboardPaste size={15} aria-hidden /> วางข้อความ</button>
+          <button onClick={() => fileRef.current?.click()} className="btn-secondary !py-2 !px-3"><Upload size={15} aria-hidden /> ไฟล์</button>
+          <span aria-hidden className="hidden sm:block h-5 w-px bg-line" />
+          <button onClick={() => downloadFile('transactions.csv', toCSV(filtered), 'text/csv')} className="btn-ghost !py-2 !px-3"><Download size={15} aria-hidden /> CSV</button>
+          <button onClick={() => downloadFile('jafinance-transactions.json', JSON.stringify(txns, null, 2), 'application/json')} className="btn-ghost !py-2 !px-3"><Download size={15} aria-hidden /> JSON</button>
         </div>
       </div>
 
