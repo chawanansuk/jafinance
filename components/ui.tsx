@@ -21,32 +21,29 @@ export function StatCard({
 }) {
   const d = delta != null ? formatDelta(delta) : null;
   return (
-    <div className="card card-pad card-hover relative overflow-hidden"
-      style={{ background: `linear-gradient(165deg, color-mix(in srgb, ${accent} 10%, rgb(var(--surface))), rgb(var(--surface)) 70%)` }}>
-      <span className="absolute inset-x-0 top-0 h-1" style={{ backgroundImage: `linear-gradient(90deg, ${accent}, color-mix(in srgb, ${accent} 45%, transparent))` }} />
+    // V2: one card treatment. The tinted gradient ground and the coloured top
+    // rule are gone — `accent` now only tints the icon, where it still helps
+    // you find a card by sight. The prop stays so callers don't change.
+    <div className="card card-pad card-hover">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs text-ink-soft font-medium">{label}</span>
+        <span className="text-label text-ink-soft">{label}</span>
         {Icon && (
-          <span className="grid place-items-center h-7 w-7 rounded-lg shrink-0"
-            style={{
-              background: `color-mix(in srgb, ${accent} 16%, transparent)`,
-              color: accent,
-              boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${accent} 28%, transparent)`,
-            }}>
-            <Icon size={15} />
+          <span className="grid place-items-center h-7 w-7 rounded-sm shrink-0"
+            style={{ background: `color-mix(in srgb, ${accent} 14%, transparent)`, color: accent }}>
+            <Icon size={15} aria-hidden />
           </span>
         )}
       </div>
-      <div className={`mt-2 text-[1.6rem] leading-tight font-bold tnum ${
-        tone === 'good' ? 'text-emerald-500' : tone === 'bad' ? 'text-rose-500' : ''
+      <div className={`mt-2 text-h1 font-bold tnum ${
+        tone === 'good' ? 'text-success' : tone === 'bad' ? 'text-error' : ''
       }`}>{value}</div>
-      <div className="mt-1 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-xs text-ink-soft min-w-0">
+      <div className="mt-1.5 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-caption text-ink-soft min-w-0">
           {d && d.dir !== 'flat' && (
             <span className={`inline-flex items-center gap-0.5 font-semibold ${
-              d.dir === 'up' ? 'text-rose-500' : 'text-emerald-500'
+              d.dir === 'up' ? 'text-error' : 'text-success'
             }`}>
-              {d.dir === 'up' ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
+              {d.dir === 'up' ? <TrendingUp size={13} aria-hidden /> : <TrendingDown size={13} aria-hidden />}
               {d.text}
             </span>
           )}
@@ -102,11 +99,10 @@ export function CategoryChip({ name, size = 16 }: { name: string; size?: number 
 
 export function SectionTitle({ children, action }: { children: ReactNode; action?: ReactNode }) {
   return (
-    <div className="flex items-center justify-between mb-3 gap-2">
-      <h2 className="text-base font-semibold flex items-center gap-2">
-        <span className="h-4 w-1.5 rounded-full" style={{ backgroundImage: 'linear-gradient(to bottom, rgb(var(--brand)), rgb(var(--brand-2)))' }} />
-        {children}
-      </h2>
+    // V2: the decorative brand bar that preceded every card title is gone —
+    // hierarchy comes from the type ramp, not from an ornament.
+    <div className="flex flex-wrap items-center justify-between mb-4 gap-2">
+      <h2 className="card-title">{children}</h2>
       {action}
     </div>
   );
@@ -114,8 +110,8 @@ export function SectionTitle({ children, action }: { children: ReactNode; action
 
 export function IncompleteBadge({ label = 'ข้อมูลไม่ครบ' }: { label?: string }) {
   return (
-    <span className="pill bg-amber-500/15 text-amber-600 dark:text-amber-400">
-      <AlertTriangle size={12} /> {label}
+    <span className="pill bg-warning/12 text-warning">
+      <AlertTriangle size={12} aria-hidden /> {label}
     </span>
   );
 }

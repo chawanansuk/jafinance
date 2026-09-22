@@ -2,16 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Design tokens — V2. Names match the Figma Variables in
+   "jafinance — Audit & V2 Redesign" › 02 — FOUNDATIONS. */
 :root {
   --surface: 255 255 255;
   --surface-2: 244 249 247;
   --ink: 15 28 24;
-  --ink-soft: 100 116 110;
+  --ink-soft: 93 111 104;   /* darkened from 100 116 110 — contrast 4.9 -> 5.3:1 */
   --line: 224 235 230;
+  --line-strong: 205 223 216;
   --brand: 16 185 129;
   --brand-2: 6 182 212;
-  --bg: 240 248 245;
+  --bg: 241 246 244;
   --accent: 16 185 129;
+  --success: 5 150 105;
+  --warning: 180 83 9;
+  --error: 220 38 38;
 }
 
 .dark {
@@ -20,10 +26,14 @@
   --ink: 233 241 238;
   --ink-soft: 152 170 163;
   --line: 45 60 55;
+  --line-strong: 59 79 72;
   --brand: 52 211 153;
   --brand-2: 45 212 191;
-  --bg: 9 18 15;
+  --bg: 13 21 18;
   --accent: 52 211 153;
+  --success: 52 211 153;
+  --warning: 251 191 36;
+  --error: 248 113 113;
 }
 
 html {
@@ -31,15 +41,12 @@ html {
 }
 
 body {
-  /* fresh green/teal wash */
-  background:
-    radial-gradient(900px 520px at 100% -8%, rgb(16 185 129 / 0.13), transparent 58%),
-    radial-gradient(820px 480px at -8% 4%, rgb(6 182 212 / 0.11), transparent 55%),
-    radial-gradient(760px 560px at 50% 108%, rgb(132 204 22 / 0.08), transparent 60%),
-    radial-gradient(700px 460px at 110% 60%, rgb(20 184 166 / 0.08), transparent 55%),
-    rgb(var(--bg));
-  background-attachment: fixed;
+  /* V2: flat ground. The four stacked radial gradients were the busiest thing
+     on every screen and repainted on scroll (background-attachment: fixed). */
+  background: rgb(var(--bg));
   color: rgb(var(--ink));
+  font-size: 15px;           /* V2 body step — production default was 14px */
+  line-height: 1.65;         /* Thai needs more leading than Latin at a size */
   font-feature-settings: 'tnum' 1; /* tabular numerals for money columns */
   -webkit-tap-highlight-color: transparent;
 }
@@ -65,57 +72,40 @@ body {
 }
 
 @layer components {
+  /* V2: ONE card treatment. Production had four (plain white, four tinted
+     gradient variants, the gradient hero, and bare sections) with no rule
+     for which to use where. */
   .card {
-    @apply rounded-2xl bg-surface border border-line/80;
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.6),
-      0 1px 2px rgb(15 23 42 / 0.04),
-      0 12px 30px -18px rgb(15 23 42 / 0.18);
+    @apply rounded-lg bg-surface border border-line shadow-soft;
   }
-  .dark .card {
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.06),
-      0 1px 2px rgb(0 0 0 / 0.35),
-      0 16px 36px -20px rgb(0 0 0 / 0.55);
-  }
-  .card-hover { @apply transition-all duration-200 hover:-translate-y-0.5; }
-  .card-hover:hover {
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.6),
-      0 2px 6px rgb(15 23 42 / 0.06),
-      0 18px 40px -20px rgb(15 23 42 / 0.28);
-  }
-  .dark .card-hover:hover {
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.07),
-      0 2px 6px rgb(0 0 0 / 0.4),
-      0 22px 44px -22px rgb(0 0 0 / 0.65);
-  }
-  .card-pad { @apply p-4 sm:p-5; }
+  .card-hover { @apply transition-colors duration-200 hover:border-line-strong; }
+  .card-pad { @apply p-5 sm:p-6; }
 
-  .pill { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium; }
+  /* Card heading. The decorative teal bar that used to precede every title is
+     gone — hierarchy comes from the type ramp instead. */
+  .card-title { @apply text-h2 font-semibold text-ink; }
+
+  .pill { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption font-medium; }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-medium
-           transition-all active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-label font-medium
+           transition-colors active:scale-[0.98] disabled:opacity-45 disabled:pointer-events-none;
   }
-  .btn-primary {
-    @apply btn text-white;
-    background-image: linear-gradient(120deg, rgb(var(--brand)), rgb(var(--brand-2)));
-    box-shadow: 0 1px 2px rgb(15 23 42 / 0.12), 0 8px 18px -8px rgb(var(--brand) / 0.55);
-  }
-  .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
-  .btn-primary:active { transform: translateY(0) scale(0.97); }
+  /* flat brand fill — the gradient + glow read as decoration, not as "primary" */
+  .btn-primary { @apply btn bg-brand text-white hover:brightness-[1.06]; }
+  .btn-secondary { @apply btn bg-surface text-ink border border-line-strong hover:bg-surface-2; }
   .btn-ghost { @apply btn bg-surface-2 text-ink hover:bg-line/60; }
 
-  .seg { @apply text-xs font-medium px-3 py-1.5 rounded-lg transition-all; }
-  .seg-on { @apply bg-surface text-ink; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05), 0 4px 12px -6px rgb(15 23 42 / 0.18); }
+  /* py-2 keeps segmented controls ~36px tall so they stay comfortable on touch */
+  .seg { @apply text-label font-medium px-3.5 py-2 rounded-sm transition-colors; }
+  .seg-on { @apply bg-surface text-ink shadow-sm; }
   .seg-off { @apply text-ink-soft hover:text-ink; }
 
   .input {
-    @apply rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink
+    @apply rounded-md border border-line-strong bg-surface px-3.5 py-2.5 text-body text-ink
            outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/25 w-full;
   }
+  .field-label { @apply block text-label font-medium text-ink-soft mb-1.5; }
 }
 
 /* Recharts theming */
@@ -130,13 +120,6 @@ body {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-.hero-dots {
-  background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1.4px);
-  background-size: 16px 16px;
-  mask-image: linear-gradient(115deg, transparent 30%, black 85%);
-  -webkit-mask-image: linear-gradient(115deg, transparent 30%, black 85%);
-}
 
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .animate-rise { animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both; }

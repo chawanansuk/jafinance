@@ -54,16 +54,11 @@ export function MonthlyBarChart({
   active?: string;
 }) {
   const uid = useId().replace(/:/g, '');
-  const gradId = `barGrad-${uid}`;
   const hatchId = `barHatch-${uid}`;
   return (
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={data} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
         <defs>
-          <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgb(var(--brand))" stopOpacity={1} />
-            <stop offset="100%" stopColor="rgb(var(--brand-2))" stopOpacity={0.88} />
-          </linearGradient>
           {/* diagonal hatch = "ข้อมูลไม่ครบ" — texture so the state survives
               CVD/print and can't be confused with the faded unselected months */}
           <pattern id={hatchId} patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
@@ -78,8 +73,11 @@ export function MonthlyBarChart({
           {data.map((d) => (
             <Cell
               key={d.month}
-              fill={d.incomplete ? `url(#${hatchId})` : `url(#${gradId})`}
-              fillOpacity={active && active !== d.month ? 0.4 : 1}
+              // V2: flat brand fill. The vertical gradient was decoration —
+              // the encodings that carry meaning (hatch = incomplete month,
+              // dimmed = not the selected month) are unchanged.
+              fill={d.incomplete ? `url(#${hatchId})` : 'rgb(var(--brand))'}
+              fillOpacity={active && active !== d.month ? 0.38 : 1}
             />
           ))}
         </Bar>
