@@ -87,6 +87,10 @@ body {
   .card-hover { @apply transition-shadow duration-200 hover:shadow-lg; }
   .card-pad { @apply p-6 sm:p-7; }
 
+  /* Page heading. One class because the six pages had drifted: the dashboard
+     used text-h1 (26px) and the other five text-xl (20px). */
+  .page-title { @apply text-h1 font-bold text-ink; }
+
   /* Card heading. The decorative teal bar that used to precede every title is
      gone — hierarchy comes from the type ramp instead. */
   .card-title { @apply text-h2 font-semibold text-ink; }
@@ -102,13 +106,24 @@ body {
   .btn-secondary { @apply btn bg-surface text-ink border border-line-strong hover:bg-surface-2; }
   .btn-ghost { @apply btn bg-surface-2 text-ink hover:bg-line/60; }
 
+  /* Sizes. Default .btn is 38px tall; these are the only two others. They
+     replace per-site !py-1.5 / !py-2 / !px-* overrides that had produced 30,
+     34 and 36px buttons side by side. Defined after the variants so they win
+     on source order without !important. */
+  .btn-sm { @apply px-3 py-2; }   /* 34px — toolbars and inline row actions */
+  .btn-icon { @apply p-2.5; }     /* 38px square — icon-only: close, delete, theme */
+
   /* py-2 keeps segmented controls ~36px tall so they stay comfortable on touch */
   .seg { @apply text-label font-medium px-4 py-2 rounded-full transition-colors; }
   .seg-on { @apply bg-surface text-ink shadow-sm; }
   .seg-off { @apply text-ink-soft hover:text-ink; }
 
+  /* 16px below sm: iOS Safari zooms the whole page when an input under 16px
+     takes focus, and doesn't zoom back out. From sm up it drops to the body
+     step. Sites must not override this with a smaller size — that
+     reintroduces the zoom. */
   .input {
-    @apply rounded-lg border border-line-strong bg-surface px-4 py-2.5 text-body text-ink
+    @apply rounded-lg border border-line-strong bg-surface px-4 py-2.5 text-body-lg sm:text-body text-ink
            outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/25 w-full;
   }
   .field-label { @apply block text-label font-medium text-ink-soft mb-1.5; }

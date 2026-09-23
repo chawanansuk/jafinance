@@ -3,8 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { X, ClipboardPaste, Check, AlertTriangle } from 'lucide-react';
 import { useData } from './DataProvider';
-import { Modal } from './ui';
-import { CATEGORIES } from '@/lib/categories';
+import { Modal, CategorySelect } from './ui';
 import { autoCategorize } from '@/lib/autocat';
 import { formatTHB, formatDate } from '@/lib/format';
 import {
@@ -13,7 +12,6 @@ import {
 } from '@/lib/io';
 import { dedupKey } from '@/lib/data';
 
-const CAT_NAMES = CATEGORIES.map((c) => c.name);
 const ACCOUNTS = ['KBank ออมทรัพย์', 'UOB บัตรเครดิต'];
 
 /** Guess which column holds the date / amount by scanning the grid. */
@@ -105,14 +103,14 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
     <Modal open={open} onClose={onClose} labelledBy="smartimport-title" maxW="max-w-2xl">
         <div className="sticky top-0 bg-surface border-b border-line px-4 py-3 flex items-center justify-between z-10">
           <h2 id="smartimport-title" className="font-semibold flex items-center gap-2"><ClipboardPaste size={18} /> นำเข้าด้วยการวางข้อความ</h2>
-          <button aria-label="ปิด" onClick={onClose} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
+          <button aria-label="ปิด" onClick={onClose} className="btn-ghost btn-icon"><X size={18} /></button>
         </div>
 
         <div className="p-4 space-y-4">
           <div>
-            <p className="text-xs text-ink-soft mb-1.5">วางรายการจาก statement (บรรทัดละ 1 รายการ) — รองรับคั่นด้วย comma / tab / ช่องว่าง</p>
+            <p className="text-caption text-ink-soft mb-1.5">วางรายการจาก statement (บรรทัดละ 1 รายการ) — รองรับคั่นด้วย comma / tab / ช่องว่าง</p>
             <textarea
-              className="input font-mono text-xs h-28 resize-y"
+              className="input font-mono sm:text-body-sm h-28 resize-y"
               placeholder={'2026-06-10, 120, Grab, ค่าเดินทาง\n2026-06-11, 89, 7-Eleven, ของใช้'}
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -122,59 +120,58 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
           {grid.length > 0 && (
             <>
               {/* mapping controls */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
-                <label className="block"><span className="text-xs text-ink-soft">ตัวคั่น</span>
-                  <select className="input mt-1 !py-1.5" value={delim} onChange={(e) => setDelim(e.target.value as PasteDelimiter)}>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <label className="block"><span className="field-label">ตัวคั่น</span>
+                  <select className="input !py-1.5" value={delim} onChange={(e) => setDelim(e.target.value as PasteDelimiter)}>
                     <option value="auto">อัตโนมัติ</option><option value="comma">comma</option><option value="tab">tab</option><option value="space">ช่องว่าง</option>
                   </select></label>
-                <label className="block"><span className="text-xs text-ink-soft">คอลัมน์ วันที่</span>
-                  <select className="input mt-1 !py-1.5" value={mapping.date} onChange={(e) => setManual((m) => ({ ...m, date: Number(e.target.value) }))}>
+                <label className="block"><span className="field-label">คอลัมน์ วันที่</span>
+                  <select className="input !py-1.5" value={mapping.date} onChange={(e) => setManual((m) => ({ ...m, date: Number(e.target.value) }))}>
                     {colOptions.map((i) => <option key={i} value={i}>คอลัมน์ {i + 1}</option>)}</select></label>
-                <label className="block"><span className="text-xs text-ink-soft">คอลัมน์ จำนวนเงิน</span>
-                  <select className="input mt-1 !py-1.5" value={mapping.amount} onChange={(e) => setManual((m) => ({ ...m, amount: Number(e.target.value) }))}>
+                <label className="block"><span className="field-label">คอลัมน์ จำนวนเงิน</span>
+                  <select className="input !py-1.5" value={mapping.amount} onChange={(e) => setManual((m) => ({ ...m, amount: Number(e.target.value) }))}>
                     {colOptions.map((i) => <option key={i} value={i}>คอลัมน์ {i + 1}</option>)}</select></label>
-                <label className="block"><span className="text-xs text-ink-soft">คอลัมน์ ร้าน</span>
-                  <select className="input mt-1 !py-1.5" value={mapping.merchant ?? -1} onChange={(e) => setManual((m) => ({ ...m, merchant: Number(e.target.value) < 0 ? null : Number(e.target.value) }))}>
+                <label className="block"><span className="field-label">คอลัมน์ ร้าน</span>
+                  <select className="input !py-1.5" value={mapping.merchant ?? -1} onChange={(e) => setManual((m) => ({ ...m, merchant: Number(e.target.value) < 0 ? null : Number(e.target.value) }))}>
                     <option value={-1}>ไม่ใช้คอลัมน์นี้</option>{colOptions.map((i) => <option key={i} value={i}>คอลัมน์ {i + 1}</option>)}</select></label>
-                <label className="block"><span className="text-xs text-ink-soft">คอลัมน์ รายละเอียด</span>
-                  <select className="input mt-1 !py-1.5" value={mapping.desc ?? -1} onChange={(e) => setManual((m) => ({ ...m, desc: Number(e.target.value) < 0 ? null : Number(e.target.value) }))}>
+                <label className="block"><span className="field-label">คอลัมน์ รายละเอียด</span>
+                  <select className="input !py-1.5" value={mapping.desc ?? -1} onChange={(e) => setManual((m) => ({ ...m, desc: Number(e.target.value) < 0 ? null : Number(e.target.value) }))}>
                     <option value={-1}>ไม่ใช้คอลัมน์นี้</option>{colOptions.map((i) => <option key={i} value={i}>คอลัมน์ {i + 1}</option>)}</select></label>
-                <label className="block"><span className="text-xs text-ink-soft">บัญชี</span>
-                  <select className="input mt-1 !py-1.5" value={account} onChange={(e) => setAccount(e.target.value)}>
+                <label className="block"><span className="field-label">บัญชี</span>
+                  <select className="input !py-1.5" value={account} onChange={(e) => setAccount(e.target.value)}>
                     {ACCOUNTS.map((a) => <option key={a} value={a}>{a.startsWith('KBank') ? 'KBank' : 'UOB'}</option>)}</select></label>
-                <label className="block col-span-2 sm:col-span-3"><span className="text-xs text-ink-soft">ทิศทางเงิน</span>
-                  <select className="input mt-1 !py-1.5" value={directionMode} onChange={(e) => setDirectionMode(e.target.value as any)}>
+                <label className="block col-span-2 sm:col-span-3"><span className="field-label">ทิศทางเงิน</span>
+                  <select className="input !py-1.5" value={directionMode} onChange={(e) => setDirectionMode(e.target.value as any)}>
                     <option value="out">จ่ายออกทั้งหมด</option><option value="in">รับเข้าทั้งหมด</option><option value="sign">ตามเครื่องหมาย (ติดลบ = จ่าย)</option>
                   </select></label>
               </div>
 
               {/* preview */}
               <div>
-                <div className="flex items-center justify-between mb-2 text-sm">
+                <div className="flex items-center justify-between mb-2 text-body-sm">
                   <span className="font-medium">ตัวอย่าง ({result.added.length} ใหม่ · {result.duplicates} ซ้ำ)</span>
-                  <span className="text-ink-soft text-xs">หมวดจัดอัตโนมัติ แก้ได้</span>
+                  <span className="text-ink-soft text-caption">หมวดจัดอัตโนมัติ แก้ได้</span>
                 </div>
                 {result.overlaps.length > 0 && (
-                  <div className="text-xs text-amber-600 dark:text-amber-400 flex gap-1.5 items-start mb-2">
+                  <div className="text-caption text-warning flex gap-1.5 items-start mb-2">
                     <AlertTriangle size={13} className="mt-0.5 shrink-0" /><span>{result.overlaps.join(' · ')}</span>
                   </div>
                 )}
                 <div className="max-h-56 overflow-y-auto rounded-xl border border-line divide-y divide-line/60">
-                  {previewRaws.length === 0 && <div className="p-4 text-center text-sm text-ink-soft">ยังแมปคอลัมน์ไม่ได้ — ลองปรับตัวคั่น/คอลัมน์</div>}
+                  {previewRaws.length === 0 && <div className="p-4 text-center text-body-sm text-ink-soft">ยังแมปคอลัมน์ไม่ได้ — ลองปรับตัวคั่น/คอลัมน์</div>}
                   {previewRaws.slice(0, 50).map((r, i) => (
-                    <div key={i} className={`flex items-center gap-2 px-3 py-2 text-sm ${isDup[i] ? 'opacity-45' : ''}`}>
-                      <span className="text-xs text-ink-soft w-14 shrink-0">{formatDate(r.date)}</span>
+                    <div key={i} className={`flex items-center gap-2 px-3 py-2 text-body-sm ${isDup[i] ? 'opacity-45' : ''}`}>
+                      <span className="text-caption text-ink-soft w-14 shrink-0">{formatDate(r.date)}</span>
                       <span className="truncate flex-1">{r.merchant}</span>
                       {isDup[i] ? (
                         <span className="pill bg-surface-2 text-ink-soft shrink-0">ซ้ำ — ไม่นำเข้า</span>
                       ) : (
-                        <select className="input !w-auto !py-1 !px-2 text-xs max-w-[130px]" value={r.category}
-                          onChange={(e) => setCatOverrides((o) => ({ ...o, [i]: e.target.value }))}>
-                          {!CAT_NAMES.includes(r.category) && <option value={r.category}>{r.category}</option>}
-                          {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
-                        </select>
+                        <span className="max-w-36 min-w-0 shrink">
+                          <CategorySelect value={r.category}
+                            onChange={(v) => setCatOverrides((o) => ({ ...o, [i]: v }))} />
+                        </span>
                       )}
-                      <span className={`tnum font-semibold w-16 text-right shrink-0 ${r.direction === 'in' ? 'text-emerald-500' : ''}`}>
+                      <span className={`tnum font-semibold w-16 text-right shrink-0 ${r.direction === 'in' ? 'text-success' : ''}`}>
                         {r.direction === 'in' ? '+' : ''}{formatTHB(r.amount)}
                       </span>
                     </div>
@@ -184,7 +181,7 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
             </>
           )}
 
-          {done && <div className="text-sm text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5"><Check size={15} /> {done}</div>}
+          {done && <div className="text-body-sm text-success flex items-center gap-1.5"><Check size={15} /> {done}</div>}
 
           <div className="flex gap-2">
             <button onClick={onClose} className="btn-ghost flex-1">ปิด</button>

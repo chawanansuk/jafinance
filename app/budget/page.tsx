@@ -9,7 +9,7 @@ import {
   categoryBudgetRows, suggestBudgets, monthSummary, getIncome, getCeiling, cumulativeSavings,
 } from '@/lib/budget';
 import { projectMonth, aggregateByMonth, aggregateByGroup, toSpendingEvents } from '@/lib/analytics';
-import { TrendLineChart } from '@/components/charts';
+import { TrendLineChart, GroupSplitBar } from '@/components/charts';
 import { formatTHB, formatMonth, formatPct } from '@/lib/format';
 
 export default function BudgetPage() {
@@ -90,20 +90,20 @@ export default function BudgetPage() {
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold">งบประมาณ</h1>
+          <h1 className="page-title">งบประมาณ</h1>
           {incomplete && <IncompleteBadge />}
         </div>
         <MonthSelect months={months} value={selected} onChange={setMonth} />
       </div>
 
       {/* income + savings */}
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 gap-5">
         <div className="card card-pad space-y-3">
           <SectionTitle>รายได้ & เงินเก็บ</SectionTitle>
-          <label className="block text-sm">
-            <span className="text-ink-soft">รายได้จริงเดือนนี้ (กรอกเอง)</span>
+          <label className="block">
+            <span className="field-label">รายได้จริงเดือนนี้ (กรอกเอง)</span>
             <input
-              type="number" inputMode="numeric" className="input mt-1"
+              type="number" inputMode="numeric" className="input"
               placeholder="เช่น 50000"
               value={income || ''}
               onChange={(e) => setIncome(Number(e.target.value) || 0)}
@@ -131,10 +131,10 @@ export default function BudgetPage() {
 
         <div className="card card-pad space-y-3">
           <SectionTitle>เพดานใช้จ่าย & คาดการณ์</SectionTitle>
-          <label className="block text-sm">
-            <span className="text-ink-soft">เพดานใช้จ่ายรวมเดือนนี้</span>
+          <label className="block">
+            <span className="field-label">เพดานใช้จ่ายรวมเดือนนี้</span>
             <input
-              type="number" inputMode="numeric" className="input mt-1"
+              type="number" inputMode="numeric" className="input"
               placeholder="เช่น 40000"
               value={ceiling || ''}
               onChange={(e) => setCeiling(Number(e.target.value) || 0)}
@@ -142,8 +142,8 @@ export default function BudgetPage() {
           </label>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <div className="text-xs text-ink-soft">ใช้ไปแล้ว</div>
-              <div className="text-lg font-bold tnum">{formatTHB(summary.totalActual)}</div>
+              <div className="text-label text-ink-soft">ใช้ไปแล้ว</div>
+              <div className="text-h2 font-bold tnum">{formatTHB(summary.totalActual)}</div>
             </div>
             <div>
               <div className="text-label text-ink-soft">{ceiling ? 'เหลือใช้ได้' : 'คาดการณ์สิ้นเดือน'}</div>
@@ -157,10 +157,10 @@ export default function BudgetPage() {
             </div>
           </div>
           {!!ceiling && summary.remainingPerDayLeft != null && (
-            <p className="text-xs text-ink-soft">เหลือใช้ได้อีก ~{formatTHB(summary.remainingPerDayLeft)}/วัน</p>
+            <p className="text-caption text-ink-soft">เหลือใช้ได้อีก ~{formatTHB(summary.remainingPerDayLeft)}/วัน</p>
           )}
           {!projection.reliable && !ceiling && (
-            <p className="text-xs text-amber-600 dark:text-amber-400 flex gap-1.5 items-start">
+            <p className="text-caption text-warning flex gap-1.5 items-start">
               <AlertTriangle size={13} className="mt-0.5 shrink-0" />
               ข้อมูลเดือนนี้ไม่พอพยากรณ์ (ครบ {projection.daysElapsed}/{projection.daysInMonth} วัน)
             </p>
@@ -169,7 +169,7 @@ export default function BudgetPage() {
       </div>
 
       {/* summary cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 animate-rise" style={{ animationDelay: '60ms' }}>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 animate-rise" style={{ animationDelay: '60ms' }}>
         <StatCard label="งบรวมทั้งเดือน" icon={Target} accent="rgb(var(--brand-2))"
           value={summary.totalBudget ? <CountUp value={summary.totalBudget} format={formatTHB} /> : <Pending>ยังไม่ได้ตั้งงบ</Pending>}
           sub={summary.totalBudget ? undefined : 'กด "เติมงบที่ว่าง" ด้านล่าง'} />
@@ -188,18 +188,14 @@ export default function BudgetPage() {
       {/* These two were consecutive full-width cards, but the split is short
           and the savings goal is tall — pairing them narrow + wide stops the
           page reading as one long column. */}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-5 lg:grid-cols-3">
       {/* essential vs discretionary */}
       <div className="card card-pad space-y-3">
         <SectionTitle>จำเป็น vs ลดได้</SectionTitle>
-        <div className="flex h-3 rounded-full overflow-hidden bg-surface-2">
-          <div className="bg-emerald-500" style={{ width: `${pct(essential, essential + discretionary)}%` }} />
-          <div className="bg-orange-500" style={{ width: `${pct(discretionary, essential + discretionary)}%` }} />
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full bg-emerald-500 inline-block" /> จำเป็น <b className="tnum">{formatTHB(essential)}</b></span>
-          <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full bg-orange-500 inline-block" /> ลดได้ <b className="tnum">{formatTHB(discretionary)}</b></span>
-        </div>
+        {/* The shared split bar, not a local copy: the copy drew จำเป็น in
+            emerald-500 while the dashboard and share image use the group
+            colour, so the same group was two greens a page apart. */}
+        <GroupSplitBar essential={essential} discretionary={discretionary} transfer={0} />
         {discretionary > 0 && (
           <Notice>
             ถ้าลดรายจ่าย “ลดได้” ลง 20% เดือนนี้ จะเก็บเพิ่มได้ราว <b>{formatTHB(saveIfCut)}</b>
@@ -220,7 +216,7 @@ export default function BudgetPage() {
           </label>
           <div>
             <div className="text-label text-ink-soft">เก็บได้แล้ว (เดือนที่กรอกรายได้)</div>
-            <div className={`text-xl font-bold tnum ${savings.totalSaved >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+            <div className={`text-h2 font-bold tnum ${savings.totalSaved >= 0 ? 'text-success' : 'text-error'}`}>
               {formatTHB(savings.totalSaved)}
             </div>
           </div>
@@ -229,18 +225,18 @@ export default function BudgetPage() {
           <div className="flex items-center gap-2">
             <ProgressBar value={Math.max(0, savings.totalSaved)} max={budget.savingsGoal}
               tone={savings.totalSaved >= budget.savingsGoal ? 'safe' : 'warn'} />
-            <span className="text-xs tnum w-12 text-right text-ink-soft">
+            <span className="text-caption tnum w-12 text-right text-ink-soft">
               {Math.round((savings.totalSaved / budget.savingsGoal) * 100)}%
             </span>
           </div>
         ) : (
-          <p className="text-xs text-ink-soft">ตั้งเป้าหมายเพื่อดูความคืบหน้า · กรอกรายได้ในแต่ละเดือนเพื่อให้คำนวณได้</p>
+          <p className="text-caption text-ink-soft">ตั้งเป้าหมายเพื่อดูความคืบหน้า · กรอกรายได้ในแต่ละเดือนเพื่อให้คำนวณได้</p>
         )}
         {savings.points.length > 0 && (
           <TrendLineChart data={savings.points.map((p) => ({ month: p.month, total: p.cumulative }))} />
         )}
         {savings.points.length === 0 && (
-          <p className="text-xs text-ink-soft">ยังไม่มีเดือนที่กรอกรายได้ — กรอกรายได้ด้านบนก่อน</p>
+          <p className="text-caption text-ink-soft">ยังไม่มีเดือนที่กรอกรายได้ — กรอกรายได้ด้านบนก่อน</p>
         )}
       </div>
       </div>
@@ -250,26 +246,27 @@ export default function BudgetPage() {
         <SectionTitle action={
           <div className="flex gap-2">
             {prevHasBudgets && (
-              <button onClick={copyPrev} className="btn-ghost !py-1.5 !px-3 text-xs">คัดลอกจาก {prevMonth ? formatMonth(prevMonth) : ''}</button>
+              <button onClick={copyPrev} className="btn-ghost btn-sm">คัดลอกจาก {prevMonth ? formatMonth(prevMonth) : ''}</button>
             )}
-            <button onClick={autoFill} className="btn-ghost !py-1.5 !px-3 text-xs"><Wand2 size={14} /> เติมงบที่ว่าง</button>
-            <button onClick={autoFillAll} className="btn-ghost !py-1.5 !px-3 text-xs">ตั้งใหม่ทั้งหมด</button>
+            <button onClick={autoFill} className="btn-ghost btn-sm"><Wand2 size={14} /> เติมงบที่ว่าง</button>
+            <button onClick={autoFillAll} className="btn-ghost btn-sm">ตั้งใหม่ทั้งหมด</button>
           </div>
         }>
           งบต่อหมวด ({formatMonth(selected)})
         </SectionTitle>
-        <p className="text-xs text-ink-soft mb-3">“ตั้งงบอัตโนมัติ” = ค่าเฉลี่ยรายจ่ายจริงย้อนหลังของหมวดนั้น (เฉพาะเดือนข้อมูลครบ)</p>
+        <p className="text-caption text-ink-soft mb-3">“ตั้งงบอัตโนมัติ” = ค่าเฉลี่ยรายจ่ายจริงย้อนหลังของหมวดนั้น (เฉพาะเดือนข้อมูลครบ)</p>
         <ul className="space-y-3.5">
           {rows.map((r) => (
             <li key={r.category} className="space-y-1.5">
               <div className="flex items-center gap-3">
                 <span className="min-w-0 flex-1"><CategoryChip name={r.category} /></span>
-                <span className="text-sm font-semibold tnum whitespace-nowrap shrink-0"><Money value={r.actual} /></span>
-                <span className="text-ink-soft text-sm">/</span>
+                <span className="text-body font-semibold tnum whitespace-nowrap shrink-0"><Money value={r.actual} /></span>
+                <span className="text-ink-soft text-body">/</span>
                 <input
                   type="number" inputMode="numeric"
-                  className="input !w-24 !py-1 text-right text-sm"
+                  className="input !w-24 !py-1 text-right"
                   placeholder="ตั้งงบ"
+                  aria-label={`งบหมวด ${r.category}`}
                   value={r.budget ?? ''}
                   onChange={(e) => setCatBudget(r.category, Number(e.target.value) || 0)}
                 />
@@ -277,8 +274,8 @@ export default function BudgetPage() {
               {r.budget ? (
                 <div className="flex items-center gap-2">
                   <ProgressBar value={r.actual} max={r.budget} tone={r.tone} />
-                  <span className={`text-xs tnum w-12 text-right ${
-                    r.tone === 'over' ? 'text-rose-500' : r.tone === 'warn' ? 'text-amber-500' : 'text-ink-soft'
+                  <span className={`text-caption tnum w-12 text-right ${
+                    r.tone === 'over' ? 'text-error' : r.tone === 'warn' ? 'text-warning' : 'text-ink-soft'
                   }`}>{Math.round(r.pct * 100)}%</span>
                 </div>
               ) : (
@@ -286,13 +283,10 @@ export default function BudgetPage() {
               )}
             </li>
           ))}
-          {rows.length === 0 && <li className="text-center text-sm text-ink-soft py-6">ไม่มีข้อมูลในเดือนนี้</li>}
+          {rows.length === 0 && <li className="text-center text-body-sm text-ink-soft py-6">ไม่มีข้อมูลในเดือนนี้</li>}
         </ul>
       </div>
     </div>
   );
 }
 
-function pct(part: number, whole: number) {
-  return whole > 0 ? (part / whole) * 100 : 0;
-}

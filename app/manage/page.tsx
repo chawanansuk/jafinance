@@ -97,7 +97,7 @@ export default function ManagePage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-bold">จัดการ & กฎ</h1>
+      <h1 className="page-title">จัดการ & กฎ</h1>
 
       {/* backup / restore / reset */}
       {/* which statements are still missing — coverage holes silently
@@ -105,43 +105,43 @@ export default function ManagePage() {
       <div className="card card-pad">
         <SectionTitle>ช่วงข้อมูลที่ยังขาด</SectionTitle>
         {gaps.length === 0 ? (
-          <p className="text-sm text-ink-soft">ครบทุกช่วงแล้ว 🎉</p>
+          <p className="text-body-sm text-ink-soft">ครบทุกช่วงแล้ว 🎉</p>
         ) : (
           <ul className="space-y-2">
             {gaps.slice(0, 6).map((g) => (
-              <li key={`${g.account}|${g.from}`} className="flex items-center gap-2 text-sm">
+              <li key={`${g.account}|${g.from}`} className="flex items-center gap-2 text-body">
                 <span className={`pill shrink-0 ${g.account.startsWith('UOB') ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400' : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'}`}>
                   {g.account.startsWith('UOB') ? 'UOB' : 'KBank'}
                 </span>
                 <span className="tnum">{formatDate(g.from)} – {formatDate(g.to)}</span>
-                {g.trailing && <span className="text-xs text-ink-soft">(ยังไม่มีสเตทเมนต์รอบล่าสุด)</span>}
+                {g.trailing && <span className="text-caption text-ink-soft">(ยังไม่มีสเตทเมนต์รอบล่าสุด)</span>}
               </li>
             ))}
-            {gaps.length > 6 && <li className="text-xs text-ink-soft">…และอีก {gaps.length - 6} ช่วงก่อนหน้า</li>}
+            {gaps.length > 6 && <li className="text-caption text-ink-soft">…และอีก {gaps.length - 6} ช่วงก่อนหน้า</li>}
           </ul>
         )}
-        <p className="text-xs text-ink-soft mt-2">นำเข้าสเตทเมนต์ช่วงเหล่านี้ (หน้า รายการ → สเตทเมนต์) เพื่อให้ยอดรวม/ค่าเฉลี่ยครบจริง</p>
+        <p className="text-caption text-ink-soft mt-2">นำเข้าสเตทเมนต์ช่วงเหล่านี้ (หน้า รายการ → สเตทเมนต์) เพื่อให้ยอดรวม/ค่าเฉลี่ยครบจริง</p>
       </div>
 
       <div className="card card-pad">
         <SectionTitle>สำรอง & กู้คืนข้อมูล</SectionTitle>
-        <p className="text-xs text-ink-soft mb-3">สำรองงบ + กฎ + การแก้หมวด + รายการที่ import ทั้งหมดเป็นไฟล์เดียว (เก็บในเครื่อง)</p>
+        <p className="text-caption text-ink-soft mb-3">สำรองงบ + กฎ + การแก้หมวด + รายการที่ import ทั้งหมดเป็นไฟล์เดียว (เก็บในเครื่อง)</p>
         <div className="flex flex-wrap gap-2 items-center">
-          <button onClick={exportBackup} className="btn-ghost !py-1.5 !px-3 text-sm"><Download size={14} /> ส่งออกสำรอง</button>
+          <button onClick={exportBackup} className="btn-ghost btn-sm"><Download size={14} /> ส่งออกสำรอง</button>
           <input ref={backupRef} type="file" accept=".json,application/json" hidden
             onChange={(e) => {
               const f = e.target.files?.[0];
               e.target.value = ''; // allow re-picking the same file
               if (f) restoreBackup(f);
             }} />
-          <button onClick={() => backupRef.current?.click()} className="btn-ghost !py-1.5 !px-3 text-sm"><Upload size={14} /> กู้คืน</button>
+          <button onClick={() => backupRef.current?.click()} className="btn-ghost btn-sm"><Upload size={14} /> กู้คืน</button>
           <button
             onClick={() => { const n = dedupeImported(); setBackupMsg(n > 0 ? `ลบรายการซ้ำ ${n} รายการแล้ว` : 'ไม่พบรายการซ้ำกับข้อมูลเดิม'); }}
-            className="btn-ghost !py-1.5 !px-3 text-sm"><Eraser size={14} /> ลบรายการซ้ำที่นำเข้า</button>
+            className="btn-ghost btn-sm"><Eraser size={14} /> ลบรายการซ้ำที่นำเข้า</button>
           <button
             onClick={() => { if (confirm('ล้างงบ/กฎ/การแก้หมวด/รายการที่ import ทั้งหมด? (ข้อมูลธุรกรรมต้นฉบับไม่หาย)')) { resetAll(); setBackupMsg('ล้างการตั้งค่าทั้งหมดแล้ว'); } }}
-            className="btn-ghost !py-1.5 !px-3 text-sm text-rose-500"><RotateCcw size={14} /> รีเซ็ตทั้งหมด</button>
-          {backupMsg && <span className="text-xs text-ink-soft">{backupMsg}</span>}
+            className="btn-ghost btn-sm text-error"><RotateCcw size={14} /> รีเซ็ตทั้งหมด</button>
+          {backupMsg && <span className="text-caption text-ink-soft">{backupMsg}</span>}
         </div>
       </div>
 
@@ -158,13 +158,13 @@ export default function ManagePage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 my-4">
           {(['unknown', 'spending', 'moving', 'supplier'] as TransferKind[]).map((k) => (
             <div key={k} className="rounded-xl bg-surface-2 px-3 py-2">
-              <div className="text-xs text-ink-soft">{KIND_LABEL[k]}</div>
+              <div className="text-caption text-ink-soft">{KIND_LABEL[k]}</div>
               <div className="font-bold tnum">{formatTHB(kindTotals[k])}</div>
             </div>
           ))}
         </div>
         {kindTotals.moving > 0 && (
-          <p className="text-xs text-ink-soft mb-3 flex items-start gap-1.5">
+          <p className="text-caption text-ink-soft mb-3 flex items-start gap-1.5">
             <Info size={13} className="mt-0.5 shrink-0" />
             “ย้ายเงิน” {formatTHB(kindTotals.moving)} จะถูกตัดออกจากรายจ่ายเมื่อเปิดสวิตช์ในหน้าภาพรวม/งบประมาณ
           </p>
@@ -177,7 +177,7 @@ export default function ManagePage() {
               <li key={m.merchant} className="py-3 flex flex-col sm:flex-row sm:items-center gap-2">
                 <div className="min-w-0 flex-1">
                   <div className="font-medium truncate">{m.merchant || '—'}</div>
-                  <div className="text-xs text-ink-soft tnum">{m.count}× · <Money value={m.total} /></div>
+                  <div className="text-caption text-ink-soft tnum">{m.count}× · <Money value={m.total} /></div>
                 </div>
                 <Segmented<TransferKind>
                   value={kind}
@@ -192,27 +192,27 @@ export default function ManagePage() {
               </li>
             );
           })}
-          {transferMerchants.length === 0 && <li className="py-6 text-center text-sm text-ink-soft">ไม่มีรายการกลุ่มโอน</li>}
+          {transferMerchants.length === 0 && <li className="py-6 text-center text-body-sm text-ink-soft">ไม่มีรายการกลุ่มโอน</li>}
         </ul>
       </div>
 
       {/* merchant rules */}
       <div className="card card-pad">
         <SectionTitle action={<Wand2 size={16} className="text-ink-soft" />}>กฎจัดหมวดตามร้าน</SectionTitle>
-        <p className="text-xs text-ink-soft mb-3">ตั้งกฎ “ร้าน → หมวด” ใช้กับทุกรายการของร้านนั้น (รวมข้อมูลที่ import เข้ามาใหม่)</p>
+        <p className="text-caption text-ink-soft mb-3">ตั้งกฎ “ร้าน → หมวด” ใช้กับทุกรายการของร้านนั้น (รวมข้อมูลที่ import เข้ามาใหม่)</p>
 
         <div className="flex flex-wrap gap-2 items-center mb-4">
-          <input list="merchant-list" className="input !w-48 !py-1.5 text-sm" placeholder="ชื่อร้าน"
+          <input list="merchant-list" aria-label="ชื่อร้าน" className="input !w-48 !py-1.5" placeholder="ชื่อร้าน"
             value={addMerchant} onChange={(e) => setAddMerchant(e.target.value)} />
           <datalist id="merchant-list">
             {merchantOptions.slice(0, 200).map((m) => <option key={m} value={m} />)}
           </datalist>
-          <span className="text-sm text-ink-soft">→</span>
-          <select className="input !w-auto !py-1.5 text-sm" value={addCat} onChange={(e) => setAddCat(e.target.value)}>
+          <span className="text-body-sm text-ink-soft">→</span>
+          <select aria-label="หมวดของกฎ" className="input !w-auto !py-1.5" value={addCat} onChange={(e) => setAddCat(e.target.value)}>
             {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
           <button
-            className="btn-primary !py-1.5 !px-3 text-sm"
+            className="btn-primary btn-sm"
             disabled={!addMerchant.trim()}
             onClick={() => { setRule(addMerchant.trim(), { category: addCat }); setAddMerchant(''); }}
           ><Plus size={14} /> เพิ่มกฎ</button>
@@ -220,7 +220,7 @@ export default function ManagePage() {
 
         <ul className="divide-y divide-line/60">
           {activeRules.map((r) => (
-            <li key={r.merchant} className="py-2.5 flex items-center gap-3 text-sm">
+            <li key={r.merchant} className="py-2.5 flex items-center gap-3 text-body">
               <span className="font-medium truncate max-w-[40%]">{r.merchant}</span>
               <span className="text-ink-soft">→</span>
               <span className="min-w-0 flex-1 flex flex-wrap items-center gap-2">
@@ -229,12 +229,12 @@ export default function ManagePage() {
                   <span className="pill bg-surface-2 text-ink-soft">{KIND_LABEL[r.transferKind]}</span>
                 )}
               </span>
-              <button onClick={() => setRule(r.merchant, null)} className="btn-ghost !px-2 !py-1.5" aria-label="ลบกฎ">
+              <button onClick={() => setRule(r.merchant, null)} className="btn-ghost btn-icon" aria-label="ลบกฎ">
                 <Trash2 size={15} />
               </button>
             </li>
           ))}
-          {activeRules.length === 0 && <li className="py-6 text-center text-sm text-ink-soft">ยังไม่มีกฎ</li>}
+          {activeRules.length === 0 && <li className="py-6 text-center text-body-sm text-ink-soft">ยังไม่มีกฎ</li>}
         </ul>
       </div>
     </div>

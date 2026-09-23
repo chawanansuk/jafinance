@@ -12,7 +12,7 @@ import {
   aggregateByMonth, aggregateByCategory, toSpendingEvents,
 } from '@/lib/analytics';
 import { formatMonth, formatTHB } from '@/lib/format';
-import { categoryColor } from '@/lib/categories';
+import { categoryColor, GROUP_COLOR } from '@/lib/categories';
 import { downloadMonthSummaryImage } from '@/lib/share';
 
 type RangeMode = 'month' | '3m' | 'custom';
@@ -97,9 +97,9 @@ export default function Dashboard() {
         avgPerDay,
         incomplete,
         split: [
-          { label: 'จำเป็น', value: events.filter((e) => e.group === 'essential').reduce((s2, e) => s2 + e.signed, 0), color: '#16a34a' },
-          { label: 'ลดได้', value: discretionary, color: '#f97316' },
-          { label: 'โอน/ถอน', value: events.filter((e) => e.group === 'transfer').reduce((s2, e) => s2 + e.signed, 0), color: '#2a78d6' },
+          { label: 'จำเป็น', value: events.filter((e) => e.group === 'essential').reduce((s2, e) => s2 + e.signed, 0), color: GROUP_COLOR.essential },
+          { label: 'ลดได้', value: discretionary, color: GROUP_COLOR.discretionary },
+          { label: 'โอน/ถอน', value: events.filter((e) => e.group === 'transfer').reduce((s2, e) => s2 + e.signed, 0), color: GROUP_COLOR.transfer },
         ],
         cats: catAggs.slice(0, 6).map((c) => ({ name: c.category, total: c.total, share: c.share, color: categoryColor(c.category) })),
       },
@@ -120,11 +120,11 @@ export default function Dashboard() {
   const transfer = events.filter((e) => e.group === 'transfer').reduce((s2, e) => s2 + e.signed, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* V2: two toolbar rows replace the four stacked control rows */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <h1 className="text-h1 font-bold">ภาพรวม</h1>
+          <h1 className="page-title">ภาพรวม</h1>
           {incomplete && <IncompleteBadge />}
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -152,7 +152,7 @@ export default function Dashboard() {
             onChange={(v) => setSettings((st) => ({ ...st, excludeOneOff: v }))}>
             ตัดก้อนใหญ่/ไม่ประจำ
           </FilterToggle>
-          <button onClick={shareImage} className="btn-secondary !py-2 !px-3" aria-label="บันทึกรูปสรุป">
+          <button onClick={shareImage} className="btn-secondary btn-sm" aria-label="บันทึกรูปสรุป">
             <ImageDown size={15} aria-hidden /> <span className="hidden sm:inline">บันทึกเป็นรูป</span>
           </button>
         </div>
@@ -218,7 +218,7 @@ export default function Dashboard() {
           screen. The six-row category list and the three stat cards run to
           about the same height, so they share a row from lg up rather than
           each taking a turn at full width. */}
-      <div className="grid gap-4 lg:grid-cols-3 animate-rise" style={{ animationDelay: '120ms' }}>
+      <div className="grid gap-5 lg:grid-cols-3 animate-rise" style={{ animationDelay: '120ms' }}>
       {/* order: on one column the stat cards stay high, where they were before
           this row existed, rather than sinking below the long category list. */}
       <section className="card card-pad order-2 lg:order-1 lg:col-span-2">
@@ -262,7 +262,7 @@ export default function Dashboard() {
         </Link>
       </section>
 
-        <div className="order-1 lg:order-2 grid grid-cols-2 gap-4 lg:grid-cols-1 lg:content-start">
+        <div className="order-1 lg:order-2 grid grid-cols-2 gap-5 lg:grid-cols-1 lg:content-start">
           <StatCard label="เฉลี่ยต่อวัน" value={<CountUp value={avgPerDay} format={formatTHB} />} icon={CalendarDays}
             accent="rgb(var(--brand-2))" sub={`จาก ${daysWithData} วันที่มีข้อมูล`} />
           <StatCard label="จำนวนรายการ" value={<CountUp value={count} />} icon={Receipt}
@@ -289,7 +289,7 @@ function FilterToggle({ checked, onChange, children }: {
       checked ? 'border-brand bg-brand/10 text-ink' : 'border-line-strong bg-surface text-ink-soft hover:bg-surface-2'
     }`}>
       <input type="checkbox" className="sr-only" checked={checked} onChange={(e) => onChange(e.target.checked)} />
-      <span aria-hidden className={`grid place-items-center h-4 w-4 rounded-[4px] border ${
+      <span aria-hidden className={`grid place-items-center h-4 w-4 rounded-xs border ${
         checked ? 'border-brand bg-brand text-white' : 'border-line-strong'
       }`}>{checked ? '✓' : ''}</span>
       {children}

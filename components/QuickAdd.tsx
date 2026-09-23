@@ -162,7 +162,7 @@ export function QuickAdd() {
         }`}
       >
         <Icon size={18} style={{ color: meta.color }} aria-hidden />
-        <span className={`text-[10px] leading-tight ${on ? 'font-semibold text-ink' : 'text-ink-soft'}`}>
+        <span className={`text-micro ${on ? 'font-semibold text-ink' : 'text-ink-soft'}`}>
           {c.replace('/เดลิเวอรี่/แท็กซี่', '').replace('มาร์เก็ต', '').replace(' (AUD)', '')}
         </span>
       </button>
@@ -171,12 +171,12 @@ export function QuickAdd() {
 
   return (
     <>
-      {/* FAB */}
+      {/* FAB — flat brand fill like every other primary action; it was the
+          last decorative gradient left after the V2 pass */}
       <button
         onClick={() => setOpen(true)}
         aria-label="เพิ่มรายการ"
-        className="lg:hidden fixed right-4 bottom-20 sm:bottom-6 z-40 h-14 w-14 rounded-2xl text-white shadow-lg grid place-items-center active:scale-95 transition-transform"
-        style={{ backgroundImage: 'linear-gradient(135deg, rgb(var(--brand)), rgb(var(--brand-2)))' }}
+        className="lg:hidden fixed right-4 bottom-20 sm:bottom-6 z-40 h-14 w-14 rounded-2xl bg-brand text-white shadow-lg grid place-items-center active:scale-95 transition-transform"
       >
         <Plus size={26} />
       </button>
@@ -184,7 +184,7 @@ export function QuickAdd() {
       {saved && (
         <div
           role="status"
-          className="fixed left-1/2 -translate-x-1/2 bottom-28 sm:bottom-24 z-50 rounded-full bg-emerald-600 text-white text-sm px-4 py-2 shadow-lg flex items-center gap-1.5 animate-rise"
+          className="fixed left-1/2 -translate-x-1/2 bottom-28 sm:bottom-24 z-50 rounded-full bg-emerald-600 text-white text-body-sm px-4 py-2 shadow-lg flex items-center gap-1.5 animate-rise"
         >
           <Check size={15} /> {saved}
         </div>
@@ -193,7 +193,7 @@ export function QuickAdd() {
       <Modal open={open} onClose={() => setOpen(false)} labelledBy="quickadd-title">
         <div className="sticky top-0 z-10 bg-surface border-b border-line px-4 py-3 flex items-center justify-between">
           <h2 id="quickadd-title" className="font-semibold flex items-center gap-2"><Plus size={18} /> เพิ่มรายการ</h2>
-          <button aria-label="ปิด" onClick={() => setOpen(false)} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
+          <button aria-label="ปิด" onClick={() => setOpen(false)} className="btn-ghost btn-icon"><X size={18} /></button>
         </div>
 
         <div className="p-4 space-y-3.5">
@@ -208,10 +208,10 @@ export function QuickAdd() {
           {/* amount — the hero field */}
           <div>
             <label className="block">
-              <span className="text-xs text-ink-soft">จำนวนเงิน (บาท)</span>
+              <span className="field-label">จำนวนเงิน (บาท)</span>
               <input
                 autoFocus type="number" inputMode="decimal" step="0.01"
-                className="input mt-1 text-2xl font-semibold tabular-nums text-right [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="input text-h1 font-semibold tnum text-right [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)}
               />
             </label>
@@ -220,14 +220,14 @@ export function QuickAdd() {
                 <button
                   key={s} type="button"
                   onClick={() => setAmount(String(Math.round(((Number(amount) || 0) + s) * 100) / 100))}
-                  className="rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium tabular-nums hover:bg-surface-2"
+                  className="rounded-full border border-line bg-surface px-3 py-1 text-caption font-medium tnum hover:bg-surface-2"
                 >
                   +{s}
                 </button>
               ))}
               <button
                 type="button" onClick={() => setAmount('')} disabled={!amount}
-                className="rounded-full border border-dashed border-line px-3 py-1 text-xs text-ink-soft disabled:opacity-40 hover:bg-surface-2"
+                className="rounded-full border border-dashed border-line px-3 py-1 text-caption text-ink-soft disabled:opacity-40 hover:bg-surface-2"
               >
                 ล้าง
               </button>
@@ -237,7 +237,7 @@ export function QuickAdd() {
           {/* one-tap frequent merchants */}
           {direction === 'out' && tiles.length > 0 && (
             <div>
-              <span className="text-xs text-ink-soft">ร้านที่จ่ายบ่อย <span className="text-brand font-medium">· แตะครั้งเดียว</span></span>
+              <span className="text-caption text-ink-soft">ร้านที่จ่ายบ่อย <span className="text-brand font-medium">· แตะครั้งเดียว</span></span>
               <div className="mt-1.5 grid grid-cols-3 gap-1.5">
                 {tiles.map((m) => {
                   const Icon = categoryMeta(m.category).icon;
@@ -247,8 +247,8 @@ export function QuickAdd() {
                       className="flex flex-col items-center gap-0.5 rounded-xl border border-line bg-surface px-1.5 py-2 hover:bg-surface-2"
                     >
                       <Icon size={18} style={{ color: categoryMeta(m.category).color }} aria-hidden />
-                      <span className="text-[11px] font-semibold leading-tight text-center line-clamp-1 w-full">{m.merchant}</span>
-                      <span className="text-[10px] text-ink-soft tabular-nums">฿{m.typical.toLocaleString('th-TH')}</span>
+                      <span className="text-micro font-semibold text-center line-clamp-1 w-full">{m.merchant}</span>
+                      <span className="text-micro text-ink-soft tnum">฿{m.typical.toLocaleString('th-TH')}</span>
                     </button>
                   );
                 })}
@@ -259,9 +259,9 @@ export function QuickAdd() {
           {/* merchant + type-ahead over the user's own history */}
           <div>
             <label className="block">
-              <span className="text-xs text-ink-soft">ร้าน / ผู้รับ</span>
+              <span className="field-label">ร้าน / ผู้รับ</span>
               <input
-                className="input mt-1" placeholder="เช่น Grab, 7-Eleven" value={merchant}
+                className="input" placeholder="เช่น Grab, 7-Eleven" value={merchant}
                 onChange={(e) => { setMerchant(e.target.value); setAcOpen(true); }}
                 onFocus={() => setAcOpen(true)}
                 onBlur={() => setTimeout(() => setAcOpen(false), 120)}
@@ -276,8 +276,8 @@ export function QuickAdd() {
                       type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => applyMerchant(m)}
                       className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left hover:bg-surface-2"
                     >
-                      <span className="text-sm font-medium truncate">{m.merchant}</span>
-                      <span className="text-[11px] text-ink-soft shrink-0">{m.count} ครั้ง · {m.category}</span>
+                      <span className="text-body-sm font-medium truncate">{m.merchant}</span>
+                      <span className="text-caption text-ink-soft shrink-0">{m.count} ครั้ง · {m.category}</span>
                     </button>
                   </li>
                 ))}
@@ -288,9 +288,9 @@ export function QuickAdd() {
           {/* category as an icon grid */}
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-ink-soft">หมวด</span>
+              <span className="text-caption text-ink-soft">หมวด</span>
               {!catTouched && (merchant || amount) && (
-                <span className="rounded-full bg-brand/15 px-2 py-0.5 text-[10px] font-semibold text-brand">แนะนำอัตโนมัติ</span>
+                <span className="rounded-full bg-brand/15 px-2 py-0.5 text-caption font-semibold text-brand">แนะนำอัตโนมัติ</span>
               )}
             </div>
             <div className="mt-1.5 grid grid-cols-4 gap-1.5">
@@ -301,7 +301,7 @@ export function QuickAdd() {
                   className="flex flex-col items-center gap-1 rounded-xl border border-line bg-surface px-1 py-2 hover:bg-surface-2"
                 >
                   <ChevronDown size={18} className="text-ink-soft" aria-hidden />
-                  <span className="text-[10px] leading-tight text-ink-soft">ทั้งหมด {CAT_NAMES.length}</span>
+                  <span className="text-micro text-ink-soft">ทั้งหมด {CAT_NAMES.length}</span>
                 </button>
               )}
             </div>
@@ -309,7 +309,7 @@ export function QuickAdd() {
 
           {/* account — includes เงินสด for money that never appears on a statement */}
           <div>
-            <span className="text-xs text-ink-soft">บัญชี</span>
+            <span className="text-caption text-ink-soft">บัญชี</span>
             <div className="mt-1 inline-flex w-full rounded-xl bg-surface-2 p-1">
               {ACCOUNTS.map((a) => (
                 <button key={a} onClick={() => setAccount(a)} className={`seg flex-1 ${account === a ? 'seg-on' : 'seg-off'}`}>
@@ -321,12 +321,12 @@ export function QuickAdd() {
 
           {/* date + time */}
           <div>
-            <span className="text-xs text-ink-soft">วัน-เวลา</span>
+            <span className="text-caption text-ink-soft">วัน-เวลา</span>
             <div className="mt-1.5 flex flex-wrap gap-1.5">
               {dates.map((d) => (
                 <button
                   key={d.label} type="button" onClick={() => setDate(d.date)}
-                  className={`rounded-full border px-3 py-1 text-xs ${
+                  className={`rounded-full border px-3 py-1 text-caption ${
                     date === d.date ? 'border-brand bg-brand/10 font-semibold text-brand' : 'border-line bg-surface hover:bg-surface-2'
                   }`}
                 >
@@ -342,7 +342,7 @@ export function QuickAdd() {
 
           {/* warn, never block: a second ฿69 run on the same day is ordinary */}
           {dup && (
-            <div className="flex items-start gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-[11.5px] leading-relaxed text-amber-700 dark:text-amber-300">
+            <div className="flex items-start gap-2 rounded-xl border border-warning/40 bg-warning/10 px-3 py-2 text-caption text-warning">
               <AlertTriangle size={15} className="mt-0.5 shrink-0" aria-hidden />
               <span>
                 มีรายการ {dup.merchant} {formatTHB(dup.amount)} วันที่ {formatDate(dup.date)}
@@ -352,8 +352,8 @@ export function QuickAdd() {
           )}
 
           <label className="block">
-            <span className="text-xs text-ink-soft">หมายเหตุ (ไม่บังคับ)</span>
-            <input className="input mt-1" placeholder="เช่น ซื้อให้ที่บ้าน" value={desc} onChange={(e) => setDesc(e.target.value)} />
+            <span className="field-label">หมายเหตุ (ไม่บังคับ)</span>
+            <input className="input" placeholder="เช่น ซื้อให้ที่บ้าน" value={desc} onChange={(e) => setDesc(e.target.value)} />
           </label>
 
           {/* receipt scan — a shortcut, not the main path */}
@@ -363,22 +363,22 @@ export function QuickAdd() {
             <input ref={galleryRef} type="file" accept="image/*" hidden
               onChange={(e) => { onPhoto(e.target.files?.[0]); e.target.value = ''; }} />
             {scan.busy ? (
-              <button disabled className="w-full btn-ghost !py-2 border border-dashed border-line text-xs">
+              <button disabled className="w-full btn-ghost btn-sm border border-dashed border-line">
                 <Loader2 size={15} className="animate-spin" /> {scan.msg} {scan.pct ? `${scan.pct}%` : ''}
               </button>
             ) : (
               <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => photoRef.current?.click()} className="btn-ghost !py-2 !text-xs border border-dashed border-line">
+                <button onClick={() => photoRef.current?.click()} className="btn-ghost btn-sm border border-dashed border-line">
                   <Camera size={15} /> ถ่ายใบเสร็จ
                 </button>
-                <button onClick={() => galleryRef.current?.click()} className="btn-ghost !py-2 !text-xs border border-dashed border-line">
+                <button onClick={() => galleryRef.current?.click()} className="btn-ghost btn-sm border border-dashed border-line">
                   <ImageIcon size={15} /> เลือกรูป
                 </button>
               </div>
             )}
-            {!scan.busy && scan.msg && <p className="mt-1 text-xs text-ink-soft">{scan.msg}</p>}
+            {!scan.busy && scan.msg && <p className="mt-1 text-caption text-ink-soft">{scan.msg}</p>}
             {!scan.busy && scanText && (
-              <details className="mt-1 text-xs">
+              <details className="mt-1 text-caption">
                 <summary className="cursor-pointer text-ink-soft">ดูข้อความที่อ่านได้</summary>
                 <pre className="mt-1 max-h-32 overflow-auto rounded-lg bg-surface-2 p-2 whitespace-pre-wrap break-words">{scanText}</pre>
               </details>
@@ -396,7 +396,7 @@ export function QuickAdd() {
               <Check size={16} /> บันทึก
             </button>
           </div>
-          <p className="mt-2 text-center text-[11px] text-ink-soft">บันทึกในเครื่อง · สแกนรูปอ่านในเครื่อง ไม่อัปโหลดรูปออกไป</p>
+          <p className="mt-2 text-center text-caption text-ink-soft">บันทึกในเครื่อง · สแกนรูปอ่านในเครื่อง ไม่อัปโหลดรูปออกไป</p>
         </div>
       </Modal>
     </>

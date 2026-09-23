@@ -6,7 +6,7 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { formatTHB, formatMonth } from '@/lib/format';
-import { chartCategoryColor } from '@/lib/categories';
+import { chartCategoryColor, GROUP_COLOR } from '@/lib/categories';
 
 /** Follows the <html>.dark class so charts can use dark-mode color steps. */
 function useIsDark(): boolean {
@@ -45,7 +45,7 @@ function swatchColor(c: unknown): string {
 function MoneyTooltip({ active, payload, label, labelFmt }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="card !rounded-xl p-3 text-sm shadow-lg">
+    <div className="card !rounded-xl p-3 text-body-sm shadow-lg">
       {label != null && <div className="font-semibold mb-1">{labelFmt ? labelFmt(label) : label}</div>}
       {payload.map((p: any, i: number) => (
         <div key={i} className="flex items-center gap-2">
@@ -166,13 +166,13 @@ export function CategoryDonut({
         </ResponsiveContainer>
         {(centerValue || centerLabel) && (
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            {centerLabel && <span className="text-xs text-ink-soft">{centerLabel}</span>}
-            {centerValue && <span className="text-lg font-bold tnum">{centerValue}</span>}
+            {centerLabel && <span className="text-caption text-ink-soft">{centerLabel}</span>}
+            {centerValue && <span className="text-h2 font-bold tnum">{centerValue}</span>}
           </div>
         )}
       </div>
       {/* legend: identity + share without needing hover (mobile has none) */}
-      <ul className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+      <ul className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 text-caption">
         {slices.map((s) => (
           <li key={s.category}>
             <button
@@ -181,7 +181,7 @@ export function CategoryDonut({
               className={`flex w-full items-center gap-1.5 min-w-0 text-left ${onSelect && !s.isOther ? 'hover:opacity-75' : 'cursor-default'}`}
             >
               <span
-                className="h-2.5 w-2.5 rounded-[3px] shrink-0"
+                className="h-2.5 w-2.5 rounded-xs shrink-0"
                 style={
                   s.isOther
                     ? { background: 'repeating-linear-gradient(45deg, rgb(var(--surface-2)) 0 2px, rgb(var(--ink-soft)) 2px 4px)' }
@@ -241,12 +241,12 @@ export function GroupSplitBar({
   // a refund-heavy month can net a group NEGATIVE; widths must come from the
   // positive parts only or the segments sum past 100% and clip
   const parts = [
-    { key: 'จำเป็น', value: essential, color: '#16a34a' },
-    { key: 'ลดได้', value: discretionary, color: dark ? '#d95926' : '#f97316' },
-    { key: 'โอน/ถอน', value: transfer, color: '#2a78d6' },
+    { key: 'จำเป็น', value: essential, color: GROUP_COLOR.essential },
+    { key: 'ลดได้', value: discretionary, color: dark ? '#d95926' : GROUP_COLOR.discretionary },
+    { key: 'โอน/ถอน', value: transfer, color: GROUP_COLOR.transfer },
   ].filter((p) => p.value > 0);
   const total = parts.reduce((s, p) => s + p.value, 0);
-  if (total <= 0) return <p className="text-sm text-ink-soft py-3">ไม่มีข้อมูลในช่วงนี้</p>;
+  if (total <= 0) return <p className="text-body-sm text-ink-soft py-3">ไม่มีข้อมูลในช่วงนี้</p>;
   return (
     <div className="space-y-2.5">
       <div className="flex h-3 gap-1">
@@ -255,10 +255,10 @@ export function GroupSplitBar({
             style={{ width: `${(p.value / total) * 100}%`, background: p.color }} />
         ))}
       </div>
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-caption">
         {parts.map((p) => (
           <span key={p.key} className="inline-flex items-center gap-1.5 min-w-0">
-            <i className="h-2.5 w-2.5 rounded-[3px] shrink-0" style={{ background: p.color }} />
+            <i className="h-2.5 w-2.5 rounded-xs shrink-0" style={{ background: p.color }} />
             <span className="text-ink-soft">{p.key}</span>
             <b className="tnum">{formatTHB(p.value)}</b>
             <span className="text-ink-soft tnum">({Math.round((p.value / total) * 100)}%)</span>

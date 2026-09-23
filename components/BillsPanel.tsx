@@ -18,13 +18,13 @@ function BillRow({ s, onRemove }: { s: Statement; onRemove: (id: string) => void
             บิล {s.statementDate ? formatMonth(s.statementDate.slice(0, 7)) : 'ไม่ระบุรอบ'}
             <span className="text-ink-soft font-normal"> · {s.account.startsWith('UOB') ? 'UOB' : 'KBank'}</span>
           </div>
-          <div className="text-xs text-ink-soft">
+          <div className="text-caption text-ink-soft">
             {s.count} รายการ · {s.dateFrom ? `${formatDate(s.dateFrom)}–${formatDate(s.dateTo)}` : ''}
           </div>
         </div>
         <div className="text-right shrink-0">
-          <div className="font-bold tnum text-rose-500">{s.totalBalance != null ? formatTHB(s.totalBalance) : formatTHB(s.purchases)}</div>
-          <div className={`text-[11px] inline-flex items-center gap-0.5 ${s.reconciled ? 'text-emerald-500' : 'text-amber-500'}`}>
+          <div className="font-bold tnum text-error">{s.totalBalance != null ? formatTHB(s.totalBalance) : formatTHB(s.purchases)}</div>
+          <div className={`text-caption inline-flex items-center gap-0.5 ${s.reconciled ? 'text-success' : 'text-warning'}`}>
             {s.reconciled ? <><Check size={11} /> ตรงสลิป</> : <><AlertTriangle size={11} /> ต่าง {s.totalBalance != null ? formatTHB(Math.abs(s.parsedNet - (s.totalBalance ?? 0))) : ''}</>}
           </div>
         </div>
@@ -34,7 +34,7 @@ function BillRow({ s, onRemove }: { s: Statement; onRemove: (id: string) => void
         <div className="px-4 pb-3 space-y-1.5">
           {s.byCategory.map((c) => (
             <div key={c.category}>
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-body-sm">
                 <span className="flex items-center gap-2 min-w-0"><span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: categoryColor(c.category) }} /><span className="truncate">{c.category}</span></span>
                 <span className="tnum font-medium shrink-0">{formatTHB(c.total)}</span>
               </div>
@@ -43,10 +43,10 @@ function BillRow({ s, onRemove }: { s: Statement; onRemove: (id: string) => void
               </div>
             </div>
           ))}
-          {s.refunds > 0 && <p className="text-xs text-emerald-600 pt-1">เงินคืนในบิล {formatTHB(s.refunds)}</p>}
-          <div className="flex items-center justify-between pt-1.5 text-xs text-ink-soft">
+          {s.refunds > 0 && <p className="text-caption text-success pt-1">เงินคืนในบิล {formatTHB(s.refunds)}</p>}
+          <div className="flex items-center justify-between pt-1.5 text-caption text-ink-soft">
             <span>ขั้นต่ำ {s.minPayment != null ? formatTHB(s.minPayment) : 'ไม่ระบุ'}</span>
-            <button onClick={() => onRemove(s.id)} className="inline-flex items-center gap-1 text-rose-500 hover:underline"><Trash2 size={12} /> ลบสรุป</button>
+            <button onClick={() => onRemove(s.id)} className="inline-flex items-center gap-1 text-error hover:underline"><Trash2 size={12} /> ลบสรุป</button>
           </div>
         </div>
       )}
@@ -61,7 +61,7 @@ export function BillsPanel() {
 
   return (
     <div className="card overflow-hidden">
-      <button onClick={() => setShow((v) => !v)} className="w-full flex items-center gap-2 px-4 py-3 text-sm font-medium hover:bg-surface-2">
+      <button onClick={() => setShow((v) => !v)} className="w-full flex items-center gap-2 px-4 py-3 text-body font-medium hover:bg-surface-2">
         <FileText size={16} /> บิลที่นำเข้า ({statements.length})
         <ChevronDown size={16} className={`ml-auto text-ink-soft transition-transform ${show ? 'rotate-180' : ''}`} />
       </button>

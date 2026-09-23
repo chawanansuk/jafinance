@@ -27,7 +27,7 @@ function ThemeToggle() {
     try { localStorage.setItem(KEYS.theme, next ? 'dark' : 'light'); } catch {}
   };
   return (
-    <button onClick={toggle} aria-label="สลับธีม" className="btn-ghost !px-2.5 !py-2">
+    <button onClick={toggle} aria-label="สลับธีม" className="btn-ghost btn-icon">
       <Sun size={18} className="hidden dark:block" />
       <Moon size={18} className="dark:hidden" />
     </button>
@@ -95,7 +95,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => window.dispatchEvent(new Event(QUICKADD_EVENT))}
-                className="hidden lg:inline-flex btn-primary !py-2 !px-4"
+                className="hidden lg:inline-flex btn-primary"
               >
                 <Plus size={16} aria-hidden /> เพิ่มรายการ
               </button>
