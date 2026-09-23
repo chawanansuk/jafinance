@@ -48,13 +48,13 @@ export function CalendarHeatmap({ data }: { data: { date: string; total: number 
     return { weeks, cap, monthLabels };
   }, [data]);
 
-  if (weeks.length === 0) return <p className="text-sm text-ink-soft">ไม่มีข้อมูล</p>;
+  if (weeks.length === 0) return <p className="text-body-sm text-ink-soft">ไม่มีข้อมูล</p>;
 
   return (
     <div className="overflow-x-auto no-scrollbar">
       <div className="inline-flex flex-col gap-1 min-w-full">
         {/* month labels */}
-        <div className="flex gap-1 pl-7 text-[10px] text-ink-soft h-3">
+        <div className="flex gap-1 pl-7 text-micro text-ink-soft h-3.5">
           {weeks.map((_, ci) => {
             const lbl = monthLabels.find((m) => m.col === ci);
             return <div key={ci} className="w-3.5 shrink-0">{lbl?.label ?? ''}</div>;
@@ -62,8 +62,8 @@ export function CalendarHeatmap({ data }: { data: { date: string; total: number 
         </div>
         <div className="flex gap-1">
           {/* weekday labels */}
-          <div className="flex flex-col gap-1 pr-1 text-[9px] text-ink-soft w-6">
-            {DOW.map((d, i) => <div key={i} className="h-3.5 leading-[14px]">{i % 2 ? d : ''}</div>)}
+          <div className="flex flex-col gap-1 pr-1 text-micro text-ink-soft w-6">
+            {DOW.map((d, i) => <div key={i} className="h-3.5">{i % 2 ? d : ''}</div>)}
           </div>
           {weeks.map((week, ci) => (
             <div key={ci} className="flex flex-col gap-1">
@@ -78,7 +78,7 @@ export function CalendarHeatmap({ data }: { data: { date: string; total: number 
                     aria-label={none ? `${formatDate(cell.date)} ไม่มีข้อมูล` : `${formatDate(cell.date)} ${formatTHB(cell.total)}`}
                     title={none ? `${formatDate(cell.date)} — ไม่มีข้อมูล` : `${formatDate(cell.date)} · ${formatTHB(cell.total)}`}
                     onClick={() => setPicked(pickedNow ? null : cell)}
-                    className="h-3.5 w-3.5 rounded-[3px] shrink-0"
+                    className="h-3.5 w-3.5 rounded-xs shrink-0"
                     style={{
                       background: none
                         ? 'rgb(var(--surface-2))'
@@ -91,7 +91,7 @@ export function CalendarHeatmap({ data }: { data: { date: string; total: number 
             </div>
           ))}
         </div>
-        <div className="pl-7 pt-1 text-xs h-5">
+        <div className="pl-7 pt-1 text-caption h-5">
           {picked && (
             <span>
               <b>{formatDate(picked.date)}</b>{' '}
@@ -100,10 +100,10 @@ export function CalendarHeatmap({ data }: { data: { date: string; total: number 
           )}
           {!picked && <span className="text-ink-soft">แตะช่องเพื่อดูยอดของวันนั้น</span>}
         </div>
-        <div className="flex items-center gap-1.5 text-[10px] text-ink-soft pl-7 pt-1">
+        <div className="flex items-center gap-1.5 text-micro text-ink-soft pl-7 pt-1">
           น้อย
           {[0.12, 0.4, 0.7, 1].map((v, i) => (
-            <span key={i} className="h-3 w-3 rounded-[3px]" style={{ background: `color-mix(in srgb, rgb(var(--brand)) ${v * 100}%, rgb(var(--surface-2)))` }} />
+            <span key={i} className="h-3 w-3 rounded-xs" style={{ background: `color-mix(in srgb, rgb(var(--brand)) ${v * 100}%, rgb(var(--surface-2)))` }} />
           ))}
           มาก
         </div>

@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Search, Upload, Download, ArrowUpDown, Wand2, Check, ClipboardPaste, FileText, ChevronDown } from 'lucide-react';
+import { Search, Upload, Download, ArrowUpDown, Wand2, Check, ClipboardPaste, FileText } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
-import { SectionTitle, Money, Skeleton, Notice } from '@/components/ui';
+import { SectionTitle, Money, Skeleton, Notice, CategorySelect } from '@/components/ui';
 import { AccountToggle, Segmented, type AccountFilter } from '@/components/Controls';
 import { SmartImport } from '@/components/SmartImport';
 import { PdfImport } from '@/components/PdfImport';
@@ -16,30 +16,6 @@ type SortKey = 'date' | 'amount';
 type Dir = 'in' | 'out' | 'all';
 
 const CAT_NAMES = CATEGORIES.map((c) => c.name);
-
-/** V2: still a native <select> — same keyboard, same screen-reader behaviour —
- *  but painted as a category chip so a 120-row table stops reading as 120 form
- *  controls. The dot carries the category colour used everywhere else. */
-function CategorySelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const color = categoryMeta(value).color;
-  return (
-    <span className="relative inline-flex items-center gap-1.5 rounded-full pl-2.5 pr-1.5 py-1 max-w-full"
-      style={{ background: `color-mix(in srgb, ${color} 12%, transparent)` }}>
-      <span aria-hidden className="h-[7px] w-[7px] rounded-full shrink-0" style={{ background: color }} />
-      <span className="text-caption truncate">{value}</span>
-      <ChevronDown size={12} className="text-ink-soft shrink-0" aria-hidden />
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        aria-label="เปลี่ยนหมวด"
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-      >
-        {!CAT_NAMES.includes(value) && <option value={value}>{value}</option>}
-        {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
-      </select>
-    </span>
-  );
-}
 
 export default function TransactionsPage() {
   const { txns, setCategory, bulkSetCategory, toggleRealIncome, setImported, hydrated } = useData();
@@ -106,9 +82,9 @@ export default function TransactionsPage() {
   if (!hydrated) return <div className="space-y-3">{Array.from({ length: 10 }).map((_, i) => <Skeleton key={i} className="h-12" />)}</div>;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-bold">รายการธุรกรรม</h1>
+        <h1 className="page-title">รายการธุรกรรม</h1>
         {/* V2: import and export were five identical ghost buttons in one
             unwrapped row — it overflowed 390px and gave no hierarchy. Now they
             wrap, and the two jobs are visually separated. */}
@@ -119,12 +95,12 @@ export default function TransactionsPage() {
               e.target.value = ''; // allow re-picking the same file
               if (f) onFile(f);
             }} />
-          <button onClick={() => setPdfOpen(true)} className="btn-secondary !py-2 !px-3"><FileText size={15} aria-hidden /> สเตทเมนต์</button>
-          <button onClick={() => setSmartOpen(true)} className="btn-secondary !py-2 !px-3"><ClipboardPaste size={15} aria-hidden /> วางข้อความ</button>
-          <button onClick={() => fileRef.current?.click()} className="btn-secondary !py-2 !px-3"><Upload size={15} aria-hidden /> ไฟล์</button>
+          <button onClick={() => setPdfOpen(true)} className="btn-secondary btn-sm"><FileText size={15} aria-hidden /> สเตทเมนต์</button>
+          <button onClick={() => setSmartOpen(true)} className="btn-secondary btn-sm"><ClipboardPaste size={15} aria-hidden /> วางข้อความ</button>
+          <button onClick={() => fileRef.current?.click()} className="btn-secondary btn-sm"><Upload size={15} aria-hidden /> ไฟล์</button>
           <span aria-hidden className="hidden sm:block h-5 w-px bg-line" />
-          <button onClick={() => downloadFile('transactions.csv', toCSV(filtered), 'text/csv')} className="btn-ghost !py-2 !px-3"><Download size={15} aria-hidden /> CSV</button>
-          <button onClick={() => downloadFile('jafinance-transactions.json', JSON.stringify(txns, null, 2), 'application/json')} className="btn-ghost !py-2 !px-3"><Download size={15} aria-hidden /> JSON</button>
+          <button onClick={() => downloadFile('transactions.csv', toCSV(filtered), 'text/csv')} className="btn-ghost btn-sm"><Download size={15} aria-hidden /> CSV</button>
+          <button onClick={() => downloadFile('jafinance-transactions.json', JSON.stringify(txns, null, 2), 'application/json')} className="btn-ghost btn-sm"><Download size={15} aria-hidden /> JSON</button>
         </div>
       </div>
 
@@ -136,34 +112,34 @@ export default function TransactionsPage() {
       <div className="card card-pad space-y-3">
         <div className="relative">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft" />
-          <input className="input !pl-9" placeholder="ค้นหาในรายละเอียด/ร้าน…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <input aria-label="ค้นหารายการ" className="input !pl-9" placeholder="ค้นหาในรายละเอียด/ร้าน…" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
         <div className="flex flex-wrap gap-2 items-center">
           <AccountToggle value={account} onChange={setAccount} />
           <Segmented<Dir> value={dir} onChange={setDir}
             options={[{ v: 'all', label: 'ทั้งหมด' }, { v: 'out', label: 'จ่าย' }, { v: 'in', label: 'รับ' }]} />
-          <select className="input !w-auto !py-1.5 text-sm" value={cat} onChange={(e) => setCat(e.target.value)}>
+          <select aria-label="กรองตามหมวด" className="input !w-auto !py-1.5" value={cat} onChange={(e) => setCat(e.target.value)}>
             <option value="all">ทุกหมวด</option>
             {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
-          <input type="date" className="input !w-auto !py-1.5 text-sm" value={from} onChange={(e) => setFrom(e.target.value)} />
-          <span className="text-ink-soft text-sm">–</span>
-          <input type="date" className="input !w-auto !py-1.5 text-sm" value={to} onChange={(e) => setTo(e.target.value)} />
+          <input type="date" aria-label="ตั้งแต่วันที่" className="input !w-auto !py-1.5" value={from} onChange={(e) => setFrom(e.target.value)} />
+          <span className="text-ink-soft text-body-sm">–</span>
+          <input type="date" aria-label="ถึงวันที่" className="input !w-auto !py-1.5" value={to} onChange={(e) => setTo(e.target.value)} />
         </div>
       </div>
 
       {/* bulk recategorize */}
       <details className="card card-pad">
-        <summary className="cursor-pointer text-sm font-medium flex items-center gap-2"><Wand2 size={15} /> แก้หมวดแบบกลุ่ม (bulk)</summary>
+        <summary className="cursor-pointer text-body font-medium flex items-center gap-2"><Wand2 size={15} /> แก้หมวดแบบกลุ่ม (bulk)</summary>
         <div className="mt-3 flex flex-wrap gap-2 items-center">
-          <span className="text-sm text-ink-soft">ทุกรายการที่มีคำว่า</span>
-          <input className="input !w-40 !py-1.5 text-sm" placeholder="เช่น GRAB" value={bulkQ} onChange={(e) => setBulkQ(e.target.value)} />
-          <span className="text-sm text-ink-soft">→</span>
-          <select className="input !w-auto !py-1.5 text-sm" value={bulkCat} onChange={(e) => setBulkCat(e.target.value)}>
+          <span className="text-body-sm text-ink-soft">ทุกรายการที่มีคำว่า</span>
+          <input aria-label="คำที่มีในรายการ" className="input !w-40 !py-1.5" placeholder="เช่น GRAB" value={bulkQ} onChange={(e) => setBulkQ(e.target.value)} />
+          <span className="text-body-sm text-ink-soft">→</span>
+          <select aria-label="เปลี่ยนเป็นหมวด" className="input !w-auto !py-1.5" value={bulkCat} onChange={(e) => setBulkCat(e.target.value)}>
             {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
-          <button onClick={runBulk} className="btn-primary !py-1.5 !px-3 text-sm"><Check size={14} /> ใช้</button>
-          {bulkMsg && <span className="text-xs text-ink-soft">{bulkMsg}</span>}
+          <button onClick={runBulk} className="btn-primary btn-sm"><Check size={14} /> ใช้</button>
+          {bulkMsg && <span className="text-caption text-ink-soft">{bulkMsg}</span>}
         </div>
       </details>
 
@@ -199,21 +175,21 @@ export default function TransactionsPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
                     <span className="font-medium truncate">{t.merchant || '—'}</span>
-                    <span className={`ml-auto shrink-0 font-semibold tnum ${t.direction === 'in' ? 'text-emerald-500' : ''}`}>
+                    <span className={`ml-auto shrink-0 font-semibold tnum ${t.direction === 'in' ? 'text-success' : ''}`}>
                       {t.direction === 'in' ? '+' : ''}<Money value={t.amount} />
                     </span>
                   </div>
                   {t.desc && t.desc !== t.merchant && (
-                    <div className="text-xs text-ink-soft truncate">{t.desc}</div>
+                    <div className="text-caption text-ink-soft truncate">{t.desc}</div>
                   )}
                   <div className="mt-1.5 flex items-center gap-2">
-                    <span className="text-xs text-ink-soft whitespace-nowrap truncate">
+                    <span className="text-caption text-ink-soft whitespace-nowrap truncate">
                       {formatDate(t.date)}{t.time ? ` ${t.time}` : ''} · {t.account.startsWith('KBank') ? 'KBank' : 'UOB'}
                     </span>
                     <span className="ml-auto min-w-0 shrink"><CategorySelect value={t.category} onChange={(v) => setCategory(t.id, v)} /></span>
                   </div>
                   {t.direction === 'in' && t.group !== 'refund' && (
-                    <label className="mt-1 inline-flex items-center gap-1.5 text-xs text-ink-soft cursor-pointer">
+                    <label className="mt-1 inline-flex items-center gap-1.5 text-caption text-ink-soft cursor-pointer">
                       <input type="checkbox" checked={!!t.isRealIncome} onChange={() => toggleRealIncome(t.id)} />
                       เป็นรายได้จริง
                     </label>
@@ -223,7 +199,7 @@ export default function TransactionsPage() {
             </li>
           );
         })}
-        {filtered.length === 0 && <li className="px-4 py-10 text-center text-sm text-ink-soft">ไม่พบรายการที่ตรงเงื่อนไข</li>}
+        {filtered.length === 0 && <li className="px-4 py-10 text-center text-body-sm text-ink-soft">ไม่พบรายการที่ตรงเงื่อนไข</li>}
       </ul>
 
       {/* desktop table — V2: the header sticks, rows are one line tall, and the
@@ -234,12 +210,12 @@ export default function TransactionsPage() {
         <table className="w-full border-separate border-spacing-0">
           <thead className="sticky top-15 z-10 [&_th]:bg-surface-2 [&_th:first-child]:rounded-tl-lg [&_th:last-child]:rounded-tr-lg">
             <tr className="text-ink-soft [&_th]:border-b [&_th]:border-line">
-              <th scope="col" className="text-left px-4 py-3 cursor-pointer w-[112px]" onClick={() => toggleSort('date')}>
+              <th scope="col" className="text-left px-4 py-3 cursor-pointer w-28" onClick={() => toggleSort('date')}>
                 <span className="inline-flex items-center gap-1 text-label">วันที่ <ArrowUpDown size={12} aria-hidden /></span>
               </th>
               <th scope="col" className="text-left px-4 py-3 text-label">ร้าน / รายละเอียด</th>
-              <th scope="col" className="text-left px-4 py-3 text-label w-[220px]">หมวด</th>
-              <th scope="col" className="text-right px-4 py-3 cursor-pointer w-[130px]" onClick={() => toggleSort('amount')}>
+              <th scope="col" className="text-left px-4 py-3 text-label w-56">หมวด</th>
+              <th scope="col" className="text-right px-4 py-3 cursor-pointer w-32" onClick={() => toggleSort('amount')}>
                 <span className="inline-flex items-center gap-1 text-label">จำนวน <ArrowUpDown size={12} aria-hidden /></span>
               </th>
             </tr>
@@ -283,7 +259,7 @@ export default function TransactionsPage() {
               แสดง {Math.min(limit, filtered.length).toLocaleString('th-TH')} จาก {filtered.length.toLocaleString('th-TH')} รายการ
             </span>
             {filtered.length > limit && (
-              <button onClick={() => setLimit((l) => l + 200)} className="btn-secondary !py-2 !px-3">
+              <button onClick={() => setLimit((l) => l + 200)} className="btn-secondary btn-sm">
                 โหลดเพิ่ม 200 รายการ
               </button>
             )}

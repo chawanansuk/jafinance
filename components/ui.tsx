@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { TrendingUp, TrendingDown, AlertTriangle, Info, CheckCircle2, type LucideIcon } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, Info, CheckCircle2, ChevronDown, type LucideIcon } from 'lucide-react';
 import { formatTHB, formatDelta } from '@/lib/format';
-import { GROUP_LABEL, GROUP_COLOR, categoryMeta } from '@/lib/categories';
+import { GROUP_LABEL, GROUP_COLOR, CATEGORIES, categoryMeta } from '@/lib/categories';
 import { Sparkline } from './Sparkline';
 import type { Group } from '@/lib/types';
 
@@ -61,13 +61,13 @@ export function StatCard({
 export function ProgressBar({ value, max, tone }: { value: number; max: number; tone?: 'safe' | 'warn' | 'over' }) {
   const pct = max > 0 ? Math.min(100, (value / max) * 100) : 0;
   const over = max > 0 && value > max;
-  const grad =
-    tone === 'over' || over ? 'linear-gradient(90deg, #f43f5e, #fb7185)'
-    : tone === 'warn' ? 'linear-gradient(90deg, #f59e0b, #fbbf24)'
-    : 'linear-gradient(90deg, #10b981, #34d399)';
+  // V2: flat semantic fills. These were the last three gradients left after
+  // the V2 pass removed the rest, and hard-coded hex, so dark mode never
+  // got its own steps.
+  const fill = tone === 'over' || over ? 'bg-error' : tone === 'warn' ? 'bg-warning' : 'bg-success';
   return (
     <div className="h-2 w-full rounded-full bg-surface-2 overflow-hidden">
-      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, backgroundImage: grad }} />
+      <div className={`h-full rounded-full transition-[width] duration-500 ${fill}`} style={{ width: `${pct}%` }} />
     </div>
   );
 }
@@ -93,6 +93,41 @@ export function CategoryChip({ name, size = 16 }: { name: string; size?: number 
         <Icon size={size} />
       </span>
       <span className="truncate">{name}</span>
+    </span>
+  );
+}
+
+const CAT_NAMES = CATEGORIES.map((c) => c.name);
+
+/**
+ * A category picker that reads as a chip, not a form control. Still a native
+ * <select> — same keyboard, same screen-reader behaviour, the OS picker on a
+ * phone — laid invisibly over the chip. One component for the transactions
+ * table and both import previews, which had carried copies of a plain 12px
+ * select with the same options.
+ *
+ * The invisible select is text-body-lg (16px) on purpose: its size is never
+ * seen, but iOS Safari reads it and zooms the page on focus below 16px.
+ */
+export function CategorySelect({ value, onChange, label = 'เปลี่ยนหมวด' }: {
+  value: string; onChange: (v: string) => void; label?: string;
+}) {
+  const color = categoryMeta(value).color;
+  return (
+    <span className="relative inline-flex items-center gap-1.5 rounded-full pl-2.5 pr-1.5 py-1 max-w-full"
+      style={{ background: `color-mix(in srgb, ${color} 12%, transparent)` }}>
+      <span aria-hidden className="h-2 w-2 rounded-full shrink-0" style={{ background: color }} />
+      <span className="text-caption truncate">{value}</span>
+      <ChevronDown size={12} className="text-ink-soft shrink-0" aria-hidden />
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label={label}
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer text-body-lg"
+      >
+        {!CAT_NAMES.includes(value) && <option value={value}>{value}</option>}
+        {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
+      </select>
     </span>
   );
 }
@@ -193,14 +228,14 @@ export function CountUp({
 export function Money({ value, className = '' }: { value: number; className?: string }) {
   const neg = value < 0;
   return (
-    <span className={`tnum ${neg ? 'text-emerald-500' : ''} ${className}`}>
+    <span className={`tnum ${neg ? 'text-success' : ''} ${className}`}>
       {neg ? '−' : ''}{formatTHB(Math.abs(value))}
     </span>
   );
 }
 
 export function EmptyState({ children }: { children: ReactNode }) {
-  return <div className="card card-pad text-center text-sm text-ink-soft py-10">{children}</div>;
+  return <div className="card card-pad text-center text-body-sm text-ink-soft py-10">{children}</div>;
 }
 
 export function Skeleton({ className = '' }: { className?: string }) {

@@ -44,6 +44,7 @@ const config: Config = {
       // Radius scale — direction A opens every corner up a step so surfaces
       // read soft rather than administrative.
       borderRadius: {
+        xs: '0.1875rem', // 3 — small marks only: legend swatches, heatmap cells, checkbox
         sm: '0.5rem',    // 8
         DEFAULT: '0.75rem',
         md: '0.75rem',   // 12
@@ -54,6 +55,11 @@ const config: Config = {
       },
       fontSize: {
         // V2 type ramp. Line heights are generous for Thai diacritics.
+        // micro is for layout-constrained labels only (heatmap axis beside 14px
+        // cells, QuickAdd's four-across tiles) — it replaced 9, 10, 11 and
+        // 11.5px values that had each been picked by hand. Anything with room
+        // uses caption.
+        micro: ['0.6875rem', { lineHeight: '0.875rem' }],   // 11/14
         caption: ['0.75rem', { lineHeight: '1.0625rem' }],  // 12/17
         label: ['0.8125rem', { lineHeight: '1.125rem' }],   // 13/18
         'body-sm': ['0.8125rem', { lineHeight: '1.3125rem' }], // 13/21

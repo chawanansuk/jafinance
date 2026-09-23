@@ -82,13 +82,13 @@ export default function InsightsPage() {
     return { list: list.slice(0, 6), total };
   }, [txns]);
 
-  if (!hydrated) return <div className="grid sm:grid-cols-2 gap-4">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-48" />)}</div>;
+  if (!hydrated) return <div className="grid sm:grid-cols-2 gap-5">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-48" />)}</div>;
 
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-bold">อินไซต์อัตโนมัติ</h1>
+      <h1 className="page-title">อินไซต์อัตโนมัติ</h1>
 
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-2 gap-5">
         <InsightCard accent="#f43f5e" icon={TrendingUp} title={prev ? `หมวดที่โตเร็วสุด (เทียบ ${formatMonth(prev)})` : 'หมวดที่โตเร็วสุด'}>
           {growth.length ? (
             <ul className="space-y-2.5">
@@ -96,15 +96,15 @@ export default function InsightsPage() {
                 <li key={g.category} className="flex items-center gap-3">
                   <CategoryChip name={g.category} />
                   <span className="ml-auto text-right">
-                    <span className={`font-semibold ${g.pct >= 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+                    <span className={`font-semibold ${g.pct >= 0 ? 'text-error' : 'text-success'}`}>
                       {g.pct >= 0 ? '+' : ''}{Math.round(g.pct * 100)}%
                     </span>
-                    <div className="text-xs text-ink-soft tnum">{formatTHB(g.from)} → {formatTHB(g.to)}</div>
+                    <div className="text-caption text-ink-soft tnum">{formatTHB(g.from)} → {formatTHB(g.to)}</div>
                   </span>
                 </li>
               ))}
             </ul>
-          ) : <p className="text-sm text-ink-soft">ต้องมีอย่างน้อย 2 เดือนเพื่อเทียบ</p>}
+          ) : <p className="text-body-sm text-ink-soft">ต้องมีอย่างน้อย 2 เดือนเพื่อเทียบ</p>}
         </InsightCard>
 
         <InsightCard accent="#0ea5e9" icon={Store} title="ร้านที่จ่ายบ่อย/เยอะสุด">
@@ -115,7 +115,7 @@ export default function InsightsPage() {
                 <span className="truncate">{m.merchant}</span>
                 <span className="ml-auto text-right shrink-0">
                   <div className="font-semibold tnum"><Money value={m.total} /></div>
-                  <div className="text-xs text-ink-soft">{m.count} ครั้ง</div>
+                  <div className="text-caption text-ink-soft">{m.count} ครั้ง</div>
                 </span>
               </li>
             ))}
@@ -126,27 +126,27 @@ export default function InsightsPage() {
           {recurring.length ? (
             <ul className="space-y-2.5">
               {recurring.map((r) => (
-                <li key={r.merchant + r.category} className="flex items-center gap-3 text-sm">
+                <li key={r.merchant + r.category} className="flex items-center gap-3 text-body">
                   <span className="truncate min-w-0">
                     <b>{r.merchant}</b>
                     <span className="text-ink-soft"> · {r.cadence}</span>
-                    <span className="block text-xs text-ink-soft truncate">{r.category}</span>
+                    <span className="block text-caption text-ink-soft truncate">{r.category}</span>
                   </span>
                   <span className="ml-auto text-right shrink-0">
                     <div className="font-semibold tnum"><Money value={r.total} /></div>
-                    <div className="text-xs text-ink-soft">{r.count}× · เฉลี่ย {formatTHB(r.avgAmount)}</div>
+                    <div className="text-caption text-ink-soft">{r.count}× · เฉลี่ย {formatTHB(r.avgAmount)}</div>
                   </span>
                 </li>
               ))}
             </ul>
-          ) : <p className="text-sm text-ink-soft">ยังตรวจไม่พบรายการที่เกิดซ้ำสม่ำเสมอ</p>}
+          ) : <p className="text-body-sm text-ink-soft">ยังตรวจไม่พบรายการที่เกิดซ้ำสม่ำเสมอ</p>}
         </InsightCard>
 
         <InsightCard accent="#f59e0b" icon={AlertCircle} title="วันที่ใช้จ่ายผิดปกติ (outliers)">
           {outliers.length ? (
             <ul className="space-y-2.5">
               {outliers.map((o) => (
-                <li key={o.date} className="flex items-center gap-3 text-sm">
+                <li key={o.date} className="flex items-center gap-3 text-body">
                   <Calendar size={15} className="text-ink-soft" />
                   <span>{formatDate(o.date, true)}</span>
                   <span className="text-ink-soft truncate">· {o.topMerchant}</span>
@@ -154,17 +154,17 @@ export default function InsightsPage() {
                 </li>
               ))}
             </ul>
-          ) : <p className="text-sm text-ink-soft">ไม่มีวันที่ผิดปกติชัดเจน</p>}
+          ) : <p className="text-body-sm text-ink-soft">ไม่มีวันที่ผิดปกติชัดเจน</p>}
         </InsightCard>
       </div>
 
       <InsightCard accent="#10b981" icon={Repeat} title="ค่าใช้จ่ายคงที่ vs แปรผัน (ต่อเดือน)">
-        <p className="text-sm text-ink-soft mb-3">ประเมินจากเดือนข้อมูลครบ — “คงที่” = รายการที่เกิดซ้ำสม่ำเสมอ</p>
+        <p className="text-body-sm text-ink-soft mb-3">ประเมินจากเดือนข้อมูลครบ — “คงที่” = รายการที่เกิดซ้ำสม่ำเสมอ</p>
         <div className="flex h-3 rounded-full overflow-hidden bg-surface-2 mb-2">
           <div className="bg-indigo-500" style={{ width: `${fvTotal > 0 ? (fv.fixed / fvTotal) * 100 : 0}%` }} />
           <div className="bg-sky-400" style={{ width: `${fvTotal > 0 ? (fv.variable / fvTotal) * 100 : 0}%` }} />
         </div>
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-body-sm">
           <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full bg-indigo-500 inline-block" /> คงที่ <b className="tnum">{formatTHB(fv.fixed)}</b>/เดือน</span>
           <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full bg-sky-400 inline-block" /> แปรผัน <b className="tnum">{formatTHB(fv.variable)}</b>/เดือน</span>
         </div>
@@ -178,40 +178,40 @@ export default function InsightsPage() {
         {discCats.length ? (
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
-              <select className="input !w-auto !py-1.5 text-sm" value={activeWiCat} onChange={(e) => setWiCat(e.target.value)}>
+              <select aria-label="หมวดที่จะลด" className="input !w-auto !py-1.5" value={activeWiCat} onChange={(e) => setWiCat(e.target.value)}>
                 {discCats.map(([c]) => <option key={c} value={c}>{c}</option>)}
               </select>
-              <span className="text-sm text-ink-soft">ลดลง</span>
-              <span className="font-bold tnum text-base" style={{ color: categoryColor(activeWiCat) }}>{wiPct}%</span>
+              <span className="text-body-sm text-ink-soft">ลดลง</span>
+              <span className="font-bold tnum text-h3" style={{ color: categoryColor(activeWiCat) }}>{wiPct}%</span>
             </div>
-            <input type="range" min={0} max={100} step={5} value={wiPct} onChange={(e) => setWiPct(Number(e.target.value))}
+            <input type="range" aria-label="ลดลงกี่เปอร์เซ็นต์" min={0} max={100} step={5} value={wiPct} onChange={(e) => setWiPct(Number(e.target.value))}
               className="w-full accent-indigo-500" />
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-xl bg-surface-2 px-3 py-2">
-                <div className="text-xs text-ink-soft">เก็บเพิ่มได้/เดือน</div>
-                <div className="text-lg font-bold tnum text-emerald-500">{formatTHB(wiSaveMonth)}</div>
+                <div className="text-caption text-ink-soft">เก็บเพิ่มได้/เดือน</div>
+                <div className="text-h2 font-bold tnum text-success">{formatTHB(wiSaveMonth)}</div>
               </div>
               <div className="rounded-xl bg-surface-2 px-3 py-2">
-                <div className="text-xs text-ink-soft">ต่อปี (×12)</div>
-                <div className="text-lg font-bold tnum text-emerald-500">{formatTHB(wiSaveMonth * 12)}</div>
+                <div className="text-caption text-ink-soft">ต่อปี (×12)</div>
+                <div className="text-h2 font-bold tnum text-success">{formatTHB(wiSaveMonth * 12)}</div>
               </div>
             </div>
-            <p className="text-xs text-ink-soft">อิงค่าเฉลี่ยจริง {formatTHB(wiAvg)}/เดือน (เฉพาะเดือนข้อมูลครบ)</p>
+            <p className="text-caption text-ink-soft">อิงค่าเฉลี่ยจริง {formatTHB(wiAvg)}/เดือน (เฉพาะเดือนข้อมูลครบ)</p>
           </div>
-        ) : <p className="text-sm text-ink-soft">ยังไม่มีข้อมูลหมวดที่ลดได้พอ</p>}
+        ) : <p className="text-body-sm text-ink-soft">ยังไม่มีข้อมูลหมวดที่ลดได้พอ</p>}
       </InsightCard>
 
       <InsightCard accent="#ec4899" icon={Plane} title="รายจ่ายก้อนใหญ่/ไม่ประจำ">
-        <p className="text-sm text-ink-soft mb-3">
+        <p className="text-body-sm text-ink-soft mb-3">
           ที่พัก/ท่องเที่ยว + โรงพยาบาล รวม <b className="text-ink tnum">{formatTHB(bigItems.total)}</b> —
           แยกออกจากค่าใช้จ่ายประจำเพื่อให้วางแผน burn-rate ปกติได้แม่นขึ้น
         </p>
         <ul className="divide-y divide-line/60">
           {bigItems.list.map((t) => (
-            <li key={t.id} className="flex items-center justify-between py-2 text-sm gap-3">
+            <li key={t.id} className="flex items-center justify-between py-2 text-body gap-3">
               <div className="min-w-0">
                 <div className="truncate font-medium">{t.merchant || t.desc}</div>
-                <div className="text-xs text-ink-soft">{formatDate(t.date, true)} · {t.category}</div>
+                <div className="text-caption text-ink-soft">{formatDate(t.date, true)} · {t.category}</div>
               </div>
               <span className="font-semibold tnum shrink-0"><Money value={t.amount} /></span>
             </li>

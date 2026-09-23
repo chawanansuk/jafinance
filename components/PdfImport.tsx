@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { X, FileText, Check, AlertTriangle, Lock, Loader2, Image as ImageIcon, Sparkles, ArrowLeft } from 'lucide-react';
 import { useData } from './DataProvider';
-import { CATEGORIES, categoryColor } from '@/lib/categories';
+import { categoryColor } from '@/lib/categories';
 import { formatTHB, formatDate } from '@/lib/format';
 import { dedupe } from '@/lib/io';
 import { extractPdfLines, PdfPasswordError } from '@/lib/pdf/extract';
@@ -12,10 +12,9 @@ import { parseStatement, type StatementResult } from '@/lib/pdf/statement';
 import { ocrImage } from '@/lib/ocr/extract';
 import { extractStatementWithAI, aiErrorMessage, AI_MODELS, DEFAULT_AI_MODEL, resolveAiModel } from '@/lib/ai/statement';
 import { useLocalStorage, KEYS } from '@/lib/storage';
-import { Modal } from './ui';
+import { Modal, CategorySelect } from './ui';
 import type { Statement } from '@/lib/types';
 
-const CAT_NAMES = CATEGORIES.map((c) => c.name);
 
 export function PdfImport({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { txns, setImported, addStatement } = useData();
@@ -134,7 +133,7 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
     <Modal open={open} onClose={close} labelledBy="pdfimport-title" maxW="max-w-2xl">
         <div className="sticky top-0 bg-surface border-b border-line px-4 py-3 flex items-center justify-between z-10">
           <h2 id="pdfimport-title" className="font-semibold flex items-center gap-2"><FileText size={18} /> นำเข้าสเตทเมนต์ (UOB / KBank)</h2>
-          <button aria-label="ปิด" onClick={close} className="btn-ghost !px-2 !py-1.5"><X size={18} /></button>
+          <button aria-label="ปิด" onClick={close} className="btn-ghost btn-icon"><X size={18} /></button>
         </div>
 
         <div className="p-4 space-y-4">
@@ -150,35 +149,35 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
               </div>
             ) : cloud ? (
               <div className="space-y-3">
-                <button onClick={() => { setCloud(false); setError(''); }} className="btn-ghost !px-2 !py-1 text-xs"><ArrowLeft size={14} /> กลับ</button>
+                <button onClick={() => { setCloud(false); setError(''); }} className="btn-ghost btn-sm"><ArrowLeft size={14} /> กลับ</button>
                 <div className="rounded-xl bg-brand/5 border border-brand/20 p-3 space-y-2.5">
-                  <p className="text-sm font-medium flex items-center gap-1.5"><Sparkles size={15} className="text-brand" /> อ่านด้วย Cloud AI (แม่นกับรูปมาก)</p>
+                  <p className="text-body font-medium flex items-center gap-1.5"><Sparkles size={15} className="text-brand" /> อ่านด้วย Cloud AI (แม่นกับรูปมาก)</p>
                   <label className="block">
-                    <span className="text-xs text-ink-soft">Claude API key</span>
-                    <input type="password" className="input mt-1 !py-1.5 font-mono text-xs" placeholder="sk-ant-…"
+                    <span className="field-label">Claude API key</span>
+                    <input type="password" className="input !py-1.5 font-mono" placeholder="sk-ant-…"
                       value={aiKey} onChange={(e) => setAiKey(e.target.value)} autoComplete="off" />
                   </label>
                   <label className="block">
-                    <span className="text-xs text-ink-soft">โมเดล</span>
-                    <select className="input mt-1 !py-1.5" value={resolveAiModel(aiModel)} onChange={(e) => setAiModel(e.target.value)}>
+                    <span className="field-label">โมเดล</span>
+                    <select className="input !py-1.5" value={resolveAiModel(aiModel)} onChange={(e) => setAiModel(e.target.value)}>
                       {AI_MODELS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
                     </select>
                   </label>
                   <button onClick={() => aiRef.current?.click()} disabled={!aiKey.trim()}
                     className="btn-primary w-full disabled:opacity-50"><ImageIcon size={16} /> เลือกรูปแล้วอ่านด้วย AI (เลือกได้หลายรูปถ้ามีหลายหน้า)</button>
-                  <p className="text-[11px] text-ink-soft">คีย์เก็บในเบราว์เซอร์ · รูป+คีย์ส่งตรงถึง Claude API ไม่ผ่านเซิร์ฟเวอร์อื่น · ออกคีย์ที่ console.anthropic.com</p>
+                  <p className="text-caption text-ink-soft">คีย์เก็บในเบราว์เซอร์ · รูป+คีย์ส่งตรงถึง Claude API ไม่ผ่านเซิร์ฟเวอร์อื่น · ออกคีย์ที่ console.anthropic.com</p>
                 </div>
               </div>
             ) : (
               <div className="grid grid-cols-3 gap-2">
                 <button onClick={() => pdfRef.current?.click()} className="border-2 border-dashed border-line rounded-2xl py-8 text-center hover:border-brand transition-colors text-ink-soft">
-                  <FileText size={24} className="mx-auto mb-1.5" /><br />ไฟล์ PDF<br /><span className="text-[11px]">(แม่นสุด)</span>
+                  <FileText size={24} className="mx-auto mb-1.5" /><br />ไฟล์ PDF<br /><span className="text-caption">(แม่นสุด)</span>
                 </button>
                 <button onClick={() => imgRef.current?.click()} className="border-2 border-dashed border-line rounded-2xl py-8 text-center hover:border-brand transition-colors text-ink-soft">
-                  <ImageIcon size={24} className="mx-auto mb-1.5" /><br />รูปภาพ<br /><span className="text-[11px]">(OCR)</span>
+                  <ImageIcon size={24} className="mx-auto mb-1.5" /><br />รูปภาพ<br /><span className="text-caption">(OCR)</span>
                 </button>
                 <button onClick={() => { setError(''); setCloud(true); }} className="border-2 border-dashed border-brand/40 rounded-2xl py-8 text-center hover:border-brand transition-colors text-brand">
-                  <Sparkles size={24} className="mx-auto mb-1.5" /><br />Cloud AI<br /><span className="text-[11px]">(รูป·แม่น)</span>
+                  <Sparkles size={24} className="mx-auto mb-1.5" /><br />Cloud AI<br /><span className="text-caption">(รูป·แม่น)</span>
                 </button>
               </div>
             )
@@ -186,7 +185,7 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
 
           {needPw && (
             <div className="space-y-2">
-              <p className="text-sm flex items-center gap-1.5"><Lock size={15} /> ไฟล์ล็อกรหัสผ่าน</p>
+              <p className="text-body font-medium flex items-center gap-1.5"><Lock size={15} /> ไฟล์ล็อกรหัสผ่าน</p>
               <div className="flex gap-2">
                 <input type="password" className="input" placeholder="รหัสผ่าน PDF" value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -196,19 +195,19 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
             </div>
           )}
 
-          {error && <div className="text-sm text-rose-500 flex gap-1.5 items-start"><AlertTriangle size={14} className="mt-0.5" />{error}</div>}
+          {error && <div className="text-body-sm text-error flex gap-1.5 items-start"><AlertTriangle size={14} className="mt-0.5" />{error}</div>}
 
           {result && result.transactions.length > 0 && (
             <>
               {/* reconcile summary */}
-              <div className={`rounded-xl p-3 ${result.reconciled ? 'bg-emerald-500/10' : 'bg-amber-500/10'}`}>
-                <div className="flex items-center gap-2 text-sm font-medium mb-2">
-                  {result.reconciled ? <><Check size={16} className="text-emerald-500" /> ยอดตรงกับสเตทเมนต์ ({result.bank})</>
-                    : <><AlertTriangle size={16} className="text-amber-500" /> ยอดไม่ตรง — ตรวจรายการ/ลองใช้ PDF ({result.bank})</>}
+              <div className={`rounded-xl p-3 ${result.reconciled ? 'bg-success/10' : 'bg-warning/10'}`}>
+                <div className="flex items-center gap-2 text-body font-medium mb-2">
+                  {result.reconciled ? <><Check size={16} className="text-success" /> ยอดตรงกับสเตทเมนต์ ({result.bank})</>
+                    : <><AlertTriangle size={16} className="text-warning" /> ยอดไม่ตรง — ตรวจรายการ/ลองใช้ PDF ({result.bank})</>}
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-caption">
                   {result.summaryRows.map((r) => (
-                    <div key={r.label}><div className="text-ink-soft">{r.label}</div><div className={`font-semibold tnum ${r.warn ? 'text-amber-600' : ''}`}>{r.value}</div></div>
+                    <div key={r.label}><div className="text-ink-soft">{r.label}</div><div className={`font-semibold tnum ${r.warn ? 'text-warning' : ''}`}>{r.value}</div></div>
                   ))}
                 </div>
               </div>
@@ -216,19 +215,19 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
               {/* category breakdown */}
               <div className="rounded-xl border border-line p-3">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-semibold">สรุปแยกหมวด</span>
+                  <span className="text-body font-semibold">สรุปแยกหมวด</span>
                   {result.amountDue != null && (
                     <div className="text-right">
-                      <div className="text-xs text-ink-soft">ยอดที่ต้องชำระ</div>
-                      <div className="text-lg font-bold tnum text-rose-500">{formatTHB(result.amountDue)}</div>
-                      {result.minPayment != null && <div className="text-[11px] text-ink-soft">ขั้นต่ำ {formatTHB(result.minPayment)}</div>}
+                      <div className="text-caption text-ink-soft">ยอดที่ต้องชำระ</div>
+                      <div className="text-h2 font-bold tnum text-error">{formatTHB(result.amountDue)}</div>
+                      {result.minPayment != null && <div className="text-caption text-ink-soft">ขั้นต่ำ {formatTHB(result.minPayment)}</div>}
                     </div>
                   )}
                 </div>
                 <ul className="space-y-1.5">
                   {bill.rows.slice(0, 6).map((r) => (
                     <li key={r.category}>
-                      <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center justify-between text-body-sm">
                         <span className="flex items-center gap-2 min-w-0"><span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: categoryColor(r.category) }} /><span className="truncate">{r.category}</span></span>
                         <span className="tnum font-medium shrink-0">{formatTHB(r.total)}</span>
                       </div>
@@ -238,40 +237,39 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
                     </li>
                   ))}
                 </ul>
-                {bill.refunds > 0 && <p className="text-xs text-emerald-600 mt-2">เงินคืน/รับเข้า {formatTHB(bill.refunds)}</p>}
+                {bill.refunds > 0 && <p className="text-caption text-success mt-2">เงินคืน/รับเข้า {formatTHB(bill.refunds)}</p>}
               </div>
 
               {/* preview */}
               <div>
-                <div className="flex items-center justify-between mb-2 text-sm">
+                <div className="flex items-center justify-between mb-2 text-body-sm">
                   <span className="font-medium">{result.transactions.length} รายการ · ใหม่ {ded.added.length} · ซ้ำ {ded.duplicates}</span>
-                  <span className="text-ink-soft text-xs">หมวดจัดอัตโนมัติ แก้ได้</span>
+                  <span className="text-ink-soft text-caption">หมวดจัดอัตโนมัติ แก้ได้</span>
                 </div>
                 {ded.overlaps.length > 0 && (
-                  <div className="text-xs text-amber-600 dark:text-amber-400 flex gap-1.5 items-start mb-2"><AlertTriangle size={13} className="mt-0.5 shrink-0" /><span>{ded.overlaps.join(' · ')}</span></div>
+                  <div className="text-caption text-warning flex gap-1.5 items-start mb-2"><AlertTriangle size={13} className="mt-0.5 shrink-0" /><span>{ded.overlaps.join(' · ')}</span></div>
                 )}
                 <div className="max-h-64 overflow-y-auto rounded-xl border border-line divide-y divide-line/60">
                   {previewRaws.slice(0, 300).map((r, i) => (
-                    <div key={i} className={`px-3 py-2 text-sm ${brokenAt.has(i) ? 'bg-amber-500/10' : ''}`}>
+                    <div key={i} className={`px-3 py-2 text-body-sm ${brokenAt.has(i) ? 'bg-warning/10' : ''}`}>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-ink-soft w-12 shrink-0">{formatDate(r.date)}</span>
+                      <span className="text-caption text-ink-soft w-12 shrink-0">{formatDate(r.date)}</span>
                       <span className="truncate flex-1" title={r.desc}>{r.merchant}</span>
-                      <select className="input !w-auto !py-1 !px-2 text-xs max-w-[130px]" value={r.category}
-                        onChange={(e) => setCatOverrides((o) => ({ ...o, [i]: e.target.value }))}>
-                        {!CAT_NAMES.includes(r.category) && <option value={r.category}>{r.category}</option>}
-                        {CAT_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
-                      </select>
-                      <span className={`tnum font-semibold w-16 text-right shrink-0 ${r.direction === 'in' ? 'text-emerald-500' : ''}`}>
+                      <span className="max-w-36 min-w-0 shrink">
+                        <CategorySelect value={r.category}
+                          onChange={(v) => setCatOverrides((o) => ({ ...o, [i]: v }))} />
+                      </span>
+                      <span className={`tnum font-semibold w-16 text-right shrink-0 ${r.direction === 'in' ? 'text-success' : ''}`}>
                         {r.direction === 'in' ? '+' : ''}{formatTHB(r.amount)}
                       </span>
                     </div>
                     {fixedAt.has(i) && (
-                      <div className="text-[11px] text-sky-600 dark:text-sky-400 pl-14">
+                      <div className="text-caption text-sky-600 dark:text-sky-400 pl-14">
                         แก้ยอดจากคอลัมน์คงเหลือ: {formatTHB(fixedAt.get(i)!.from)} → {formatTHB(fixedAt.get(i)!.to)}
                       </div>
                     )}
                     {brokenAt.has(i) && (
-                      <div className="text-[11px] text-amber-600 dark:text-amber-400 pl-14">
+                      <div className="text-caption text-warning pl-14">
                         ยอดคงเหลือไม่ต่อเนื่องที่แถวนี้ — ตรวจตัวเลขก่อนเพิ่ม
                       </div>
                     )}
@@ -282,13 +280,13 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
             </>
           )}
 
-          {done && <div className="text-sm text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5"><Check size={15} /> {done}</div>}
+          {done && <div className="text-body-sm text-success flex items-center gap-1.5"><Check size={15} /> {done}</div>}
 
           <div className="flex gap-2">
             <button onClick={close} className="btn-ghost flex-1">ปิด</button>
             {result && result.transactions.length > 0 && <button onClick={commit} disabled={ded.added.length === 0} className="btn-primary flex-1"><Check size={16} /> เพิ่ม {ded.added.length} รายการ</button>}
           </div>
-          {!cloud && <p className="text-[11px] text-ink-soft text-center">PDF/OCR อ่านในเครื่อง ไม่ส่งออก · Cloud AI ส่งรูปไป Claude API</p>}
+          {!cloud && <p className="text-caption text-ink-soft text-center">PDF/OCR อ่านในเครื่อง ไม่ส่งออก · Cloud AI ส่งรูปไป Claude API</p>}
         </div>
     </Modal>
   );

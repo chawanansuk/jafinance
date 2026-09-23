@@ -6,7 +6,7 @@ export function MonthSelect({
   months, value, onChange,
 }: { months: string[]; value: string; onChange: (m: string) => void }) {
   return (
-    <select className="input !w-auto" value={value} onChange={(e) => onChange(e.target.value)}>
+    <select aria-label="เลือกเดือน" className="input !w-auto" value={value} onChange={(e) => onChange(e.target.value)}>
       {months.map((m) => (
         <option key={m} value={m}>{formatMonth(m, true)}</option>
       ))}
