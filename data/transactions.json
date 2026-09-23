@@ -2801,7 +2801,7 @@
   "amount": 3000.0,
   "category": "รายรับ (เงินเข้า)",
   "group": "income",
-  "merchant": "รับโอน SCB ชวมันท์",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
   "desc": "รับโอน SCB ชวมันท์"
  },
  {
@@ -2812,7 +2812,7 @@
   "amount": 4000.0,
   "category": "รายรับ (เงินเข้า)",
   "group": "income",
-  "merchant": "รับโอน SCB ชวมันท์",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
   "desc": "รับโอน SCB ชวมันท์"
  },
  {
@@ -3593,7 +3593,7 @@
   "amount": 2000.0,
   "category": "รายรับ (เงินเข้า)",
   "group": "income",
-  "merchant": "รับโอน SCB ชวมันท์",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
   "desc": "รับโอน SCB ชวมันท์"
  },
  {
@@ -4022,7 +4022,7 @@
   "amount": 3000.0,
   "category": "รายรับ (เงินเข้า)",
   "group": "income",
-  "merchant": "รับโอน SCB ชวมันท์",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
   "desc": "รับโอน SCB ชวมันท์"
  },
  {
@@ -4605,7 +4605,7 @@
   "amount": 3000.0,
   "category": "รายรับ (เงินเข้า)",
   "group": "income",
-  "merchant": "รับโอน SCB ชวมันท์",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
   "desc": "รับโอน SCB ชวมันท์"
  },
  {
@@ -5683,7 +5683,7 @@
   "amount": 3000.0,
   "category": "รายรับ (เงินเข้า)",
   "group": "income",
-  "merchant": "รับโอน SCB ชวมันท์",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
   "desc": "รับโอน SCB ชวมันท์"
  },
  {
@@ -6365,7 +6365,7 @@
   "amount": 3892.25,
   "category": "รายรับ (เงินเข้า)",
   "group": "income",
-  "merchant": "รับโอน SCB ชวมันท์",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
   "desc": "รับโอน SCB ชวมันท์"
  },
  {
@@ -6627,9 +6627,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 14.0,
-  "category": "เดินทาง/ขนส่ง",
-  "group": "essential",
-  "merchant": "ซันเวนดิ้ง เทคโนโลยี",
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ซันเวนดิ้ง",
   "desc": "ซันเวนดิ้ง เทคโนโลยี"
  },
  {
@@ -6772,7 +6772,7 @@
   "amount": 3000.0,
   "category": "รายรับ (เงินเข้า)",
   "group": "income",
-  "merchant": "รับโอน SCB ชวมันท์",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
   "desc": "รับโอน SCB ชวมันท์"
  },
  {
@@ -7630,7 +7630,7 @@
   "amount": 500.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "KTB ปรารถนา",
+  "merchant": "ปรารถนา",
   "desc": "โอน KTB ปรารถนา"
  },
  {
@@ -7663,7 +7663,7 @@
   "amount": 1500.0,
   "category": "รายรับ (เงินเข้า)",
   "group": "income",
-  "merchant": "รับโอน SCB ชวมันท์",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
   "desc": "รับโอน SCB ชวมันท์"
  },
  {
@@ -14595,5 +14595,313 @@
   "group": "transfer",
   "merchant": "สุรสิทธิ์ งามร",
   "desc": "โอนไป X0718 นาย สุรสิทธิ์ งามร"
+ },
+ {
+  "date": "2026-09-15",
+  "time": "06:59",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 34.0,
+  "category": "ค่าบริการรายวัน (AUD)",
+  "group": "discretionary",
+  "merchant": "ค่าบริการรายวัน AUD",
+  "desc": "เพื่อชำระ Ref X1606 AUD"
+ },
+ {
+  "date": "2026-09-15",
+  "time": "14:34",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 3000.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
+  "desc": "รับโอน SCB X5730 นาย ชวมันท์ สุรพรรษ"
+ },
+ {
+  "date": "2026-09-15",
+  "time": "17:36",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 45.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "ไทย เกสต์ ฮับ แอท มหานคร",
+  "desc": "เพื่อชำระ Ref X6275 ไทย เกสต์ ฮับ แอท มหานคร"
+ },
+ {
+  "date": "2026-09-16",
+  "time": "08:25",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 95.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ร้านอุดมสิน (วงค์เดือน)",
+  "desc": "เพื่อชำระ Ref X7918 ร้านอุดมสิน (วงค์เดือน องไชย)"
+ },
+ {
+  "date": "2026-09-16",
+  "time": "08:30",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 80.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ร้านคุณลู",
+  "desc": "เพื่อชำระ Ref X1325 ร้านค้าอุดมสิน มหานคร (คุณลู)"
+ },
+ {
+  "date": "2026-09-16",
+  "time": "08:37",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 20.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "วาสนา ศรีบุญ",
+  "desc": "โอนไป X0051 นาง วาสนา ศรีบุญ"
+ },
+ {
+  "date": "2026-09-16",
+  "time": "08:38",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "มะลิจินณ วงค์ชะ",
+  "desc": "โอนไป พร้อมเพย์ X5382 นาง มะลิจินณ วงค์ชะ"
+ },
+ {
+  "date": "2026-09-16",
+  "time": "08:52",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 40.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "ท่านมิ้ว",
+  "desc": "เพื่อชำระ Ref X6945 ท่านมิ้ว"
+ },
+ {
+  "date": "2026-09-16",
+  "time": "15:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 88.28,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "วีพี ซินดิเทค",
+  "desc": "เพื่อชำระ Ref XORN1 บริษัท วีพี ซินดิเทค จำกัด"
+ },
+ {
+  "date": "2026-09-16",
+  "time": "15:08",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 80.25,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "วีพี ซินดิเทค",
+  "desc": "เพื่อชำระ Ref XORN1 บริษัท วีพี ซินดิเทค จำกัด"
+ },
+ {
+  "date": "2026-09-17",
+  "time": "09:20",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 110.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ชุติมณี ฉายพี่",
+  "desc": "โอนไป X3519 น.ส. ชุติมณี ฉายพี่"
+ },
+ {
+  "date": "2026-09-17",
+  "time": "09:37",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 400.0,
+  "category": "ถอนเงินสด",
+  "group": "transfer",
+  "merchant": "ถอนเงิน ATM",
+  "desc": "ATM RCM อาคารพาณิชย์คุณสุนีย์ รหัสอ้างอิง ATMR1156"
+ },
+ {
+  "date": "2026-09-18",
+  "time": "06:58",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 24.0,
+  "category": "ค่าบริการรายวัน (AUD)",
+  "group": "discretionary",
+  "merchant": "ค่าบริการรายวัน AUD",
+  "desc": "เพื่อชำระ Ref X1606 AUD"
+ },
+ {
+  "date": "2026-09-18",
+  "time": "07:00",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 12.0,
+  "category": "ค่าบริการรายวัน (AUD)",
+  "group": "discretionary",
+  "merchant": "ค่าบริการรายวัน AUD",
+  "desc": "เพื่อชำระ Ref X1606 AUD"
+ },
+ {
+  "date": "2026-09-18",
+  "time": "07:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 30.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "เสาวรส โพธิ์ท",
+  "desc": "โอนไป พร้อมเพย์ X4293 น.ส. เสาวรส โพธิ์ท"
+ },
+ {
+  "date": "2026-09-18",
+  "time": "08:09",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 20.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ครัวคุณหลวง",
+  "desc": "เพื่อชำระ Ref X4378 ครัวคุณหลวง"
+ },
+ {
+  "date": "2026-09-18",
+  "time": "08:25",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปรารถนา",
+  "desc": "โอนไป KTB X6889 ปรารถนา บุญสอด"
+ },
+ {
+  "date": "2026-09-18",
+  "time": "14:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "MR. YEP WEI ZHI",
+  "desc": "โอนไป พร้อมเพย์ X2953 MR. YEP WEI ZHI"
+ },
+ {
+  "date": "2026-09-18",
+  "time": "15:58",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 16.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ซันเวนดิ้ง",
+  "desc": "เพื่อชำระ Ref X344S บริษัท ซันเวนดิ้ง เทคโนโลยี จำกัด (มหาชน)"
+ },
+ {
+  "date": "2026-09-19",
+  "time": "11:21",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 79.0,
+  "category": "โรงพยาบาล/สุขภาพ",
+  "group": "essential",
+  "merchant": "Boots แอลพาร์ค",
+  "desc": "เพื่อชำระ Ref X2001 4222 บู๊ทส์ แอลพาร์ค"
+ },
+ {
+  "date": "2026-09-19",
+  "time": "11:24",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 179.76,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "AIM DHRAM",
+  "desc": "เพื่อชำระ Ref X1683 AIM DHRAM CO.,LTD."
+ },
+ {
+  "date": "2026-09-19",
+  "time": "12:56",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 220.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "MR. PHONE NAING",
+  "desc": "โอนไป X6897 MR. PHONE NAING"
+ },
+ {
+  "date": "2026-09-19",
+  "time": "13:02",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 30.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "โจวิท โกลบอล",
+  "desc": "เพื่อชำระ Ref X0001 โจวิท โกลบอล"
+ },
+ {
+  "date": "2026-09-20",
+  "time": "12:54",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 52.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "เซฟดริก ศิริมงวิลเลจ",
+  "desc": "เพื่อชำระ Ref X1001 เซฟดริก ศิริมงวิลเลจ สาขาพุทธมณฑล"
+ },
+ {
+  "date": "2026-09-20",
+  "time": "17:59",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 180.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "โคซี่ เดอะ โกลด์ สยาม",
+  "desc": "เพื่อชำระ Ref X0001 โคซี่ เดอะ โกลด์ สยาม"
+ },
+ {
+  "date": "2026-09-21",
+  "time": "14:48",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 400.0,
+  "category": "ถอนเงินสด",
+  "group": "transfer",
+  "merchant": "ถอนเงิน ATM",
+  "desc": "ATM 7-11 สาทร 10 (7227) บางรัก กทม. รหัสอ้างอิง ATMC4529"
+ },
+ {
+  "date": "2026-09-22",
+  "time": "06:59",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 12.0,
+  "category": "ค่าบริการรายวัน (AUD)",
+  "group": "discretionary",
+  "merchant": "ค่าบริการรายวัน AUD",
+  "desc": "เพื่อชำระ Ref X1606 AUD"
+ },
+ {
+  "date": "2026-09-22",
+  "time": "08:14",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 125.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "หอมอร (เจริญราษฎร์)",
+  "desc": "เพื่อชำระ Ref X1467 หอมอร QR- สาขาเจริญราษฎร์"
  }
 ]
