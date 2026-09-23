@@ -135,10 +135,10 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
                     {colOptions.map((i) => <option key={i} value={i}>คอลัมน์ {i + 1}</option>)}</select></label>
                 <label className="block"><span className="text-xs text-ink-soft">คอลัมน์ ร้าน</span>
                   <select className="input mt-1 !py-1.5" value={mapping.merchant ?? -1} onChange={(e) => setManual((m) => ({ ...m, merchant: Number(e.target.value) < 0 ? null : Number(e.target.value) }))}>
-                    <option value={-1}>—</option>{colOptions.map((i) => <option key={i} value={i}>คอลัมน์ {i + 1}</option>)}</select></label>
+                    <option value={-1}>ไม่ใช้คอลัมน์นี้</option>{colOptions.map((i) => <option key={i} value={i}>คอลัมน์ {i + 1}</option>)}</select></label>
                 <label className="block"><span className="text-xs text-ink-soft">คอลัมน์ รายละเอียด</span>
                   <select className="input mt-1 !py-1.5" value={mapping.desc ?? -1} onChange={(e) => setManual((m) => ({ ...m, desc: Number(e.target.value) < 0 ? null : Number(e.target.value) }))}>
-                    <option value={-1}>—</option>{colOptions.map((i) => <option key={i} value={i}>คอลัมน์ {i + 1}</option>)}</select></label>
+                    <option value={-1}>ไม่ใช้คอลัมน์นี้</option>{colOptions.map((i) => <option key={i} value={i}>คอลัมน์ {i + 1}</option>)}</select></label>
                 <label className="block"><span className="text-xs text-ink-soft">บัญชี</span>
                   <select className="input mt-1 !py-1.5" value={account} onChange={(e) => setAccount(e.target.value)}>
                     {ACCOUNTS.map((a) => <option key={a} value={a}>{a.startsWith('KBank') ? 'KBank' : 'UOB'}</option>)}</select></label>

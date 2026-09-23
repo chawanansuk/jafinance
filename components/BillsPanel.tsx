@@ -15,7 +15,7 @@ function BillRow({ s, onRemove }: { s: Statement; onRemove: (id: string) => void
         <span className="grid place-items-center h-9 w-9 rounded-xl text-white shrink-0" style={{ background: '#0d9488' }}><FileText size={17} /></span>
         <div className="min-w-0 flex-1">
           <div className="font-medium truncate">
-            บิล {s.statementDate ? formatMonth(s.statementDate.slice(0, 7)) : '—'}
+            บิล {s.statementDate ? formatMonth(s.statementDate.slice(0, 7)) : 'ไม่ระบุรอบ'}
             <span className="text-ink-soft font-normal"> · {s.account.startsWith('UOB') ? 'UOB' : 'KBank'}</span>
           </div>
           <div className="text-xs text-ink-soft">
@@ -45,7 +45,7 @@ function BillRow({ s, onRemove }: { s: Statement; onRemove: (id: string) => void
           ))}
           {s.refunds > 0 && <p className="text-xs text-emerald-600 pt-1">เงินคืนในบิล {formatTHB(s.refunds)}</p>}
           <div className="flex items-center justify-between pt-1.5 text-xs text-ink-soft">
-            <span>ขั้นต่ำ {s.minPayment != null ? formatTHB(s.minPayment) : '—'}</span>
+            <span>ขั้นต่ำ {s.minPayment != null ? formatTHB(s.minPayment) : 'ไม่ระบุ'}</span>
             <button onClick={() => onRemove(s.id)} className="inline-flex items-center gap-1 text-rose-500 hover:underline"><Trash2 size={12} /> ลบสรุป</button>
           </div>
         </div>

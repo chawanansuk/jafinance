@@ -86,7 +86,7 @@ export default function InsightsPage() {
       <h1 className="text-xl font-bold">อินไซต์อัตโนมัติ</h1>
 
       <div className="grid lg:grid-cols-2 gap-4">
-        <InsightCard accent="#f43f5e" icon={TrendingUp} title={`หมวดที่โตเร็วสุด (เทียบ ${prev ? formatMonth(prev) : '—'})`}>
+        <InsightCard accent="#f43f5e" icon={TrendingUp} title={prev ? `หมวดที่โตเร็วสุด (เทียบ ${formatMonth(prev)})` : 'หมวดที่โตเร็วสุด'}>
           {growth.length ? (
             <ul className="space-y-2.5">
               {growth.map((g) => (

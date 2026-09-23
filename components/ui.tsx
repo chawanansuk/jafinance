@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { TrendingUp, TrendingDown, AlertTriangle, type LucideIcon } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, Info, CheckCircle2, type LucideIcon } from 'lucide-react';
 import { formatTHB, formatDelta } from '@/lib/format';
 import { GROUP_LABEL, GROUP_COLOR, categoryMeta } from '@/lib/categories';
 import { Sparkline } from './Sparkline';
@@ -116,16 +116,33 @@ export function IncompleteBadge({ label = 'ข้อมูลไม่ครบ'
   );
 }
 
-export function Notice({ children, tone = 'info' }: { children: ReactNode; tone?: 'info' | 'warn' }) {
+export function Notice({ children, tone = 'info' }: { children: ReactNode; tone?: 'info' | 'warn' | 'success' }) {
+  // V2: the icon follows the tone. An informational note used to carry a
+  // warning triangle, which reads as "something is wrong" when nothing is.
+  const Icon = tone === 'warn' ? AlertTriangle : tone === 'success' ? CheckCircle2 : Info;
+  const skin =
+    tone === 'warn' ? 'bg-warning/10 text-warning'
+    : tone === 'success' ? 'bg-success/10 text-success'
+    : 'bg-brand/10 text-success';
   return (
-    <div className={`rounded-xl px-3.5 py-2.5 text-sm flex gap-2.5 items-start ${
-      tone === 'warn'
-        ? 'bg-amber-500/10 text-amber-700 dark:text-amber-300'
-        : 'bg-brand/10 text-brand'
-    }`}>
-      <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+    <div className={`rounded-md px-4 py-3 text-body-sm flex gap-2.5 items-start ${skin}`}>
+      <Icon size={16} className="mt-0.5 shrink-0" aria-hidden />
       <div className="min-w-0">{children}</div>
     </div>
+  );
+}
+
+/**
+ * A value the app cannot compute yet. V2 replaces the bare "—" that used to
+ * fill these slots: a dash cannot tell you whether the number is zero, still
+ * loading, or waiting on something you have to type. This says which.
+ */
+export function Pending({ children }: { children: ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-body font-normal text-ink-soft">
+      <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-ink-soft/40" />
+      {children}
+    </span>
   );
 }
 
