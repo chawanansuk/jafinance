@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Noto_Sans_Thai } from 'next/font/google';
+import { Noto_Sans_Thai, Anuphan } from 'next/font/google';
 import './globals.css';
 import { DataProvider } from '@/components/DataProvider';
 import { AppShell } from '@/components/AppShell';
@@ -10,6 +10,18 @@ const notoThai = Noto_Sans_Thai({
   subsets: ['thai', 'latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-noto-thai',
+  display: 'swap',
+});
+
+// Figures only (see .tnum in globals.css). Noto's Arabic numerals are flat;
+// Anuphan's are rounder and more confident, which is most of what the app
+// actually shows. The `latin` subset is deliberate: Google ships ฿ (U+0E3F)
+// inside it — verified by measuring the glyph — so amounts stay in one face,
+// while the subset carries no Thai letters, leaving Thai text on Noto.
+const anuphan = Anuphan({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-num',
   display: 'swap',
 });
 
@@ -34,7 +46,7 @@ const noFlash = `(function(){try{var t=localStorage.getItem('jafinance:v1:theme'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="th" className={notoThai.variable} suppressHydrationWarning>
+    <html lang="th" className={`${notoThai.variable} ${anuphan.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlash }} />
       </head>

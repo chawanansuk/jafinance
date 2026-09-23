@@ -22,6 +22,9 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-noto-thai)', 'system-ui', 'sans-serif'],
+        // Figures. Falls through to Noto for anything Anuphan's latin subset
+        // does not cover — i.e. Thai letters sitting inside a numeric string.
+        num: ['var(--font-num)', 'var(--font-noto-thai)', 'system-ui', 'sans-serif'],
       },
       colors: {
         // semantic tokens wired to CSS variables (see globals.css) for dark mode

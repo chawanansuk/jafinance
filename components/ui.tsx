@@ -47,7 +47,7 @@ export function StatCard({
               {d.text}
             </span>
           )}
-          {sub && <span className="truncate">{sub}</span>}
+          {sub && <span className="truncate tnum">{sub}</span>}
         </div>
         {spark && spark.length > 1 && (
           <Sparkline data={spark} width={64} height={24} stroke={accent}
