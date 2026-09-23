@@ -6,34 +6,36 @@
    "jafinance — Audit & V2 Redesign" › 02 — FOUNDATIONS. */
 :root {
   --surface: 255 255 255;
-  --surface-2: 244 249 247;
-  --ink: 15 28 24;
-  --ink-soft: 93 111 104;   /* darkened from 100 116 110 — contrast 4.9 -> 5.3:1 */
-  --line: 224 235 230;
-  --line-strong: 205 223 216;
+  --surface-2: 247 248 243;
+  --ink: 26 35 29;          /* softened from near-black; warm rather than cold */
+  --ink-soft: 100 108 96;   /* warm olive-grey, 5.45:1 on white */
+  --line: 232 235 226;
+  --line-strong: 215 220 206;
   --brand: 16 185 129;
   --brand-2: 6 182 212;
-  --bg: 241 246 244;
+  --bg: 246 247 241;        /* warm cream-sage ground */
   --accent: 16 185 129;
   --success: 5 150 105;
   --warning: 180 83 9;
   --error: 220 38 38;
+  --shadow-rgb: 44 48 36;   /* shadows tinted warm, not blue-black */
 }
 
 .dark {
-  --surface: 24 33 31;
-  --surface-2: 31 43 40;
-  --ink: 233 241 238;
-  --ink-soft: 152 170 163;
-  --line: 45 60 55;
-  --line-strong: 59 79 72;
+  --surface: 29 33 28;
+  --surface-2: 37 42 35;
+  --ink: 236 240 231;
+  --ink-soft: 159 168 152;
+  --line: 52 58 48;
+  --line-strong: 68 76 63;
   --brand: 52 211 153;
   --brand-2: 45 212 191;
-  --bg: 13 21 18;
+  --bg: 20 23 19;           /* warm dark, not blue-black */
   --accent: 52 211 153;
   --success: 52 211 153;
   --warning: 251 191 36;
   --error: 248 113 113;
+  --shadow-rgb: 0 0 0;
 }
 
 html {
@@ -59,7 +61,7 @@ body {
 :focus-visible {
   outline: 2px solid rgb(var(--brand) / 0.65);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: 10px;
 }
 
 /* subtle scrollbar on fine pointers */
@@ -76,10 +78,11 @@ body {
      gradient variants, the gradient hero, and bare sections) with no rule
      for which to use where. */
   .card {
-    @apply rounded-lg bg-surface border border-line shadow-soft;
+    @apply rounded-xl bg-surface shadow-soft;
   }
-  .card-hover { @apply transition-colors duration-200 hover:border-line-strong; }
-  .card-pad { @apply p-5 sm:p-6; }
+  .dark .card { @apply border border-line; }
+  .card-hover { @apply transition-shadow duration-200 hover:shadow-lg; }
+  .card-pad { @apply p-6 sm:p-7; }
 
   /* Card heading. The decorative teal bar that used to precede every title is
      gone — hierarchy comes from the type ramp instead. */
@@ -88,7 +91,7 @@ body {
   .pill { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption font-medium; }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-label font-medium
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-label font-medium
            transition-colors active:scale-[0.98] disabled:opacity-45 disabled:pointer-events-none;
   }
   /* flat brand fill — the gradient + glow read as decoration, not as "primary" */
@@ -97,12 +100,12 @@ body {
   .btn-ghost { @apply btn bg-surface-2 text-ink hover:bg-line/60; }
 
   /* py-2 keeps segmented controls ~36px tall so they stay comfortable on touch */
-  .seg { @apply text-label font-medium px-3.5 py-2 rounded-sm transition-colors; }
+  .seg { @apply text-label font-medium px-4 py-2 rounded-full transition-colors; }
   .seg-on { @apply bg-surface text-ink shadow-sm; }
   .seg-off { @apply text-ink-soft hover:text-ink; }
 
   .input {
-    @apply rounded-md border border-line-strong bg-surface px-3.5 py-2.5 text-body text-ink
+    @apply rounded-lg border border-line-strong bg-surface px-4 py-2.5 text-body text-ink
            outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/25 w-full;
   }
   .field-label { @apply block text-label font-medium text-ink-soft mb-1.5; }
@@ -112,9 +115,10 @@ body {
 .recharts-text { fill: rgb(var(--ink-soft)); }
 .recharts-cartesian-grid line { stroke: rgb(var(--line)); }
 .recharts-default-tooltip {
-  border-radius: 0.75rem !important;
+  border-radius: 1.125rem !important;
   border: 1px solid rgb(var(--line)) !important;
   background: rgb(var(--surface)) !important;
+  box-shadow: 0 4px 10px rgb(var(--shadow-rgb) / 0.05), 0 22px 50px -22px rgb(var(--shadow-rgb) / 0.18);
 }
 .recharts-sector:focus, .recharts-bar-rectangle:focus, .recharts-surface:focus { outline: none; }
 

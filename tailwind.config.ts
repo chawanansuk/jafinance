@@ -38,15 +38,16 @@ const config: Config = {
         warning: 'rgb(var(--warning) / <alpha-value>)',
         error: 'rgb(var(--error) / <alpha-value>)',
       },
-      // V2 radius scale — 5 values replacing the 7 that were in use
+      // Radius scale — direction A opens every corner up a step so surfaces
+      // read soft rather than administrative.
       borderRadius: {
-        sm: '0.375rem',  // 6
-        DEFAULT: '0.625rem',
-        md: '0.625rem',  // 10
-        lg: '0.875rem',  // 14
-        xl: '0.875rem',  // 14 — kept as an alias so existing rounded-xl lands on lg
-        '2xl': '1.25rem', // 20
-        '3xl': '1.25rem', // 20 — collapsed into xl
+        sm: '0.5rem',    // 8
+        DEFAULT: '0.75rem',
+        md: '0.75rem',   // 12
+        lg: '1.125rem',  // 18
+        xl: '1.5rem',    // 24
+        '2xl': '1.5rem', // 24
+        '3xl': '1.5rem', // 24
       },
       fontSize: {
         // V2 type ramp. Line heights are generous for Thai diacritics.
@@ -57,14 +58,15 @@ const config: Config = {
         'body-lg': ['1rem', { lineHeight: '1.6875rem' }],   // 16/27
         h3: ['1rem', { lineHeight: '1.5rem' }],             // 16/24
         h2: ['1.1875rem', { lineHeight: '1.75rem' }],       // 19/28
-        h1: ['1.5rem', { lineHeight: '2.125rem' }],         // 24/34
-        display: ['2rem', { lineHeight: '2.625rem' }],      // 32/42
+        h1: ['1.625rem', { lineHeight: '2.25rem', letterSpacing: '-0.01em' }],  // 26/36
+        display: ['2.25rem', { lineHeight: '2.875rem', letterSpacing: '-0.02em' }], // 36/46
       },
       boxShadow: {
-        // V2: 3 levels replacing 6 hand-written stacks
-        sm: '0 1px 2px rgb(15 23 42 / 0.05)',
-        soft: '0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.08)',
-        lg: '0 2px 6px rgb(15 23 42 / 0.06), 0 18px 40px -20px rgb(15 23 42 / 0.18)',
+        // Larger, softer, warm-tinted — these carry the card separation now
+        // that the light-mode border is gone.
+        sm: '0 1px 3px rgb(var(--shadow-rgb) / 0.05)',
+        soft: '0 2px 4px rgb(var(--shadow-rgb) / 0.03), 0 10px 28px -10px rgb(var(--shadow-rgb) / 0.10)',
+        lg: '0 4px 10px rgb(var(--shadow-rgb) / 0.05), 0 22px 50px -22px rgb(var(--shadow-rgb) / 0.18)',
       },
     },
   },

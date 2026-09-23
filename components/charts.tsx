@@ -69,7 +69,7 @@ export function MonthlyBarChart({
         <XAxis dataKey="month" tickFormatter={(m) => formatMonth(m)} tickLine={false} axisLine={false} fontSize={12} />
         <YAxis tickFormatter={kFmt} tickLine={false} axisLine={false} fontSize={11} width={36} />
         <Tooltip content={<MoneyTooltip labelFmt={(m: string) => formatMonth(m, true)} />} cursor={{ fill: 'rgb(var(--surface-2))', radius: 8 }} />
-        <Bar dataKey="total" name="รายจ่าย" radius={[7, 7, 0, 0]} onClick={(d: any) => onSelect?.(d.month)} cursor={onSelect ? 'pointer' : 'default'}>
+        <Bar dataKey="total" name="รายจ่าย" radius={[12, 12, 5, 5]} onClick={(d: any) => onSelect?.(d.month)} cursor={onSelect ? 'pointer' : 'default'}>
           {data.map((d) => (
             <Cell
               key={d.month}
@@ -229,9 +229,10 @@ export function GroupSplitBar({
   if (total <= 0) return <p className="text-sm text-ink-soft py-3">ไม่มีข้อมูลในช่วงนี้</p>;
   return (
     <div className="space-y-2.5">
-      <div className="flex h-3.5 rounded-full overflow-hidden bg-surface-2 gap-[2px]">
+      <div className="flex h-3 gap-1">
         {parts.map((p) => (
-          <div key={p.key} style={{ width: `${(p.value / total) * 100}%`, background: p.color }} />
+          <div key={p.key} className="rounded-full"
+            style={{ width: `${(p.value / total) * 100}%`, background: p.color }} />
         ))}
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
