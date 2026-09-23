@@ -53,7 +53,18 @@ export function PdfImport({ open, onClose }: { open: boolean; onClose: () => voi
         setPendingFile(file);
         // a retry that supplied a password and still landed here = wrong password
         if (pw != null) setError('รหัสผ่านไม่ถูกต้อง — ลองใหม่อีกครั้ง');
-      } else { setError('อ่านไฟล์ไม่สำเร็จ: ' + (e as Error).message); }
+      } else {
+        // tesseract rejects with a bare string or event, not an Error — the old
+        // `(e as Error).message` showed users "อ่านไฟล์ไม่สำเร็จ: undefined".
+        // A network failure here means the OCR engine itself couldn't be
+        // fetched (it downloads on first use), so say that in Thai rather
+        // than surfacing the browser's importScripts error.
+        const detail = e instanceof Error ? e.message : typeof e === 'string' ? e : '';
+        const offline = !detail || /NetworkError|Failed to fetch|importScripts|net::/i.test(detail);
+        setError(file.type.startsWith('image/') && offline
+          ? 'อ่านรูปไม่สำเร็จ — ตัวอ่านรูปต้องดาวน์โหลดตอนใช้ครั้งแรก ตรวจการเชื่อมต่ออินเทอร์เน็ตแล้วลองใหม่'
+          : detail ? 'อ่านไฟล์ไม่สำเร็จ: ' + detail : 'อ่านไฟล์ไม่สำเร็จ — ลองใหม่อีกครั้ง');
+      }
     } finally {
       setBusy('');
     }

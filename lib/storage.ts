@@ -55,6 +55,11 @@ export function useLocalStorage<T>(key: string, initial: T) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    // The one sanctioned setState-in-effect: localStorage is an external
+    // store that can only be read after mount (reading it during render would
+    // make the first client render differ from the static HTML). This is the
+    // "synchronise from an external system" case the rule itself carves out.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setValue(read<T>(key, initial));
     setHydrated(true);
     const onStorage = (e: StorageEvent) => {

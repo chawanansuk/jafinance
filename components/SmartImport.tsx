@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { X, ClipboardPaste, Check, AlertTriangle } from 'lucide-react';
 import { useData } from './DataProvider';
 import { Modal, CategorySelect } from './ui';
@@ -13,6 +13,7 @@ import {
 import { dedupKey } from '@/lib/data';
 
 const ACCOUNTS = ['KBank ออมทรัพย์', 'UOB บัตรเครดิต'];
+const NO_EDITS: Record<number, string> = {};
 
 /** Guess which column holds the date / amount by scanning the grid. */
 function guessColumns(grid: string[][]): { date: number; amount: number; merchant: number | null; desc: number | null } {
@@ -42,7 +43,6 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
   const [account, setAccount] = useState(ACCOUNTS[0]);
   const [directionMode, setDirectionMode] = useState<'sign' | 'out' | 'in'>('out');
   const [manual, setManual] = useState<Partial<Pick<PasteMapping, 'date' | 'amount' | 'merchant' | 'desc'>>>({});
-  const [catOverrides, setCatOverrides] = useState<Record<number, string>>({});
   const [done, setDone] = useState<string | null>(null);
 
   const grid = useMemo(() => splitPasted(text, delim), [text, delim]);
@@ -61,9 +61,18 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
     [manual, guess, account, directionMode],
   );
 
-  useEffect(() => {
-    setCatOverrides({});
-  }, [text, delim, account, directionMode, manual]);
+  // Category edits belong to one parse of one input, so they are stored with
+  // the input they were made against. Any change to the input gives a new key
+  // and the old edits simply stop applying — an effect used to clear them,
+  // which rendered twice.
+  const inputKey = useMemo(
+    () => JSON.stringify([text, delim, account, directionMode, manual]),
+    [text, delim, account, directionMode, manual],
+  );
+  const [edits, setEdits] = useState<{ key: string; map: Record<number, string> }>({ key: '', map: {} });
+  const catOverrides = edits.key === inputKey ? edits.map : NO_EDITS;
+  const setCatOverride = (i: number, category: string) =>
+    setEdits((prev) => ({ key: inputKey, map: { ...(prev.key === inputKey ? prev.map : {}), [i]: category } }));
 
   const raws = useMemo(
     () => rowsFromMapping(grid, mapping, (m, d, amt) => autoCategorize(m, d, rules, amt)),
@@ -93,7 +102,7 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
     if (result.added.length === 0) { setDone('ไม่มีรายการใหม่ให้เพิ่ม'); return; }
     setImported((p) => [...p, ...result.added]);
     setDone(`เพิ่ม ${result.added.length} รายการ · ข้ามซ้ำ ${result.duplicates}`);
-    setText(''); setCatOverrides({});
+    setText(''); setEdits({ key: '', map: {} });
   };
 
   if (!open) return null;
@@ -168,7 +177,7 @@ export function SmartImport({ open, onClose }: { open: boolean; onClose: () => v
                       ) : (
                         <span className="max-w-36 min-w-0 shrink">
                           <CategorySelect value={r.category}
-                            onChange={(v) => setCatOverrides((o) => ({ ...o, [i]: v }))} />
+                            onChange={(v) => setCatOverride(i, v)} />
                         </span>
                       )}
                       <span className={`tnum font-semibold w-16 text-right shrink-0 ${r.direction === 'in' ? 'text-success' : ''}`}>
