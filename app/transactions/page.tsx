@@ -179,7 +179,7 @@ export default function TransactionsPage() {
           </button>
         </div>
         <div className="flex items-baseline justify-between gap-3 text-body-sm text-ink-soft">
-          <span className="shrink-0">{filtered.length.toLocaleString('th-TH')} รายการ</span>
+          <span className="shrink-0 tnum">{filtered.length.toLocaleString('th-TH')} รายการ</span>
           <span className="text-right">รวมรายจ่าย <b className="tnum text-ink text-h3"><Money value={totalShown} /></b></span>
         </div>
       </div>

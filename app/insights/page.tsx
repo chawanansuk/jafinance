@@ -16,11 +16,14 @@ const BIG_CATEGORIES = ['ที่พัก/ท่องเที่ยว', '�
 
 function InsightCard({ icon: Icon, title, children, accent = '#635bff' }: any) {
   return (
-    <div className="card card-pad card-hover relative overflow-hidden"
-      style={{ background: `linear-gradient(165deg, color-mix(in srgb, ${accent} 8%, rgb(var(--surface))), rgb(var(--surface)) 65%)` }}>
+    // V2: one card treatment, same as StatCard — the tinted gradient ground is
+    // gone and `accent` now only tints the icon, where it still tells the eight
+    // cards apart without giving each one its own surface colour.
+    <div className="card card-pad card-hover relative">
       <div className="flex items-center gap-2.5 mb-3">
-        <span className="grid place-items-center h-9 w-9 rounded-xl text-white shadow-sm shrink-0" style={{ background: accent }}><Icon size={18} /></span>
-        <h2 className="font-semibold">{title}</h2>
+        <span className="grid place-items-center h-9 w-9 rounded-sm shrink-0"
+          style={{ background: `color-mix(in srgb, ${accent} 14%, transparent)`, color: accent }}><Icon size={18} /></span>
+        <h2 className="card-title">{title}</h2>
       </div>
       {children}
     </div>

@@ -53,7 +53,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.tnum { font-variant-numeric: tabular-nums; }
+/* The app's one marker for a figure. It already sat on every amount, count,
+   percentage and date in the app, so the numeral face rides along with it
+   rather than needing a second class scattered beside it. */
+.tnum { font-variant-numeric: tabular-nums; font-family: theme('fontFamily.num'); }
 
 ::selection { background: rgb(var(--brand) / 0.25); }
 
@@ -112,7 +115,9 @@ body {
 }
 
 /* Recharts theming */
-.recharts-text { fill: rgb(var(--ink-soft)); }
+/* Axis ticks are figures too — same face, and Thai month labels fall through
+   to Noto via the font-num stack. */
+.recharts-text { fill: rgb(var(--ink-soft)); font-family: theme('fontFamily.num'); }
 .recharts-cartesian-grid line { stroke: rgb(var(--line)); }
 .recharts-default-tooltip {
   border-radius: 1.125rem !important;

@@ -170,13 +170,13 @@ export default function Dashboard() {
                 <CountUp value={total} format={formatTHB} />
               </span>
               {delta != null && Math.round(Math.abs(delta) * 100) >= 1 && (
-                <span className={`pill ${delta > 0 ? 'bg-error/12 text-error' : 'bg-success/12 text-success'}`}>
+                <span className={`pill tnum ${delta > 0 ? 'bg-error/12 text-error' : 'bg-success/12 text-success'}`}>
                   {delta > 0 ? <TrendingUp size={13} aria-hidden /> : <TrendingDown size={13} aria-hidden />}
                   {delta > 0 ? '+' : ''}{Math.round(delta * 100)}% เทียบ {prevM ? formatMonth(prevM) : 'ก่อนหน้า'}
                 </span>
               )}
             </div>
-            <p className="mt-2 text-body-sm text-ink-soft">
+            <p className="mt-2 text-body-sm text-ink-soft tnum">
               {count} รายการ · เฉลี่ย {formatTHB(avgPerDay)}/วัน · ข้อมูล {daysWithData} วัน
             </p>
           </div>
