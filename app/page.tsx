@@ -191,15 +191,6 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        <StatCard label="เฉลี่ยต่อวัน" value={<CountUp value={avgPerDay} format={formatTHB} />} icon={CalendarDays}
-          accent="rgb(var(--brand-2))" sub={`จาก ${daysWithData} วันที่มีข้อมูล`} />
-        <StatCard label="จำนวนรายการ" value={<CountUp value={count} />} icon={Receipt}
-          accent="rgb(var(--brand))" sub={daysWithData ? `~${Math.round(count / daysWithData)} รายการ/วัน` : undefined} />
-        <StatCard label="หมวดที่ใช้" value={<CountUp value={catAggs.length} />} icon={Tags}
-          accent="#8b5cf6" sub="ในช่วงที่เลือก" />
-      </div>
-
       {incomplete && (
         <Notice tone="warn">
           ช่วงนี้ข้อมูลไม่ครบทุกวัน (โดยเฉพาะฝั่ง KBank ที่มีเป็นช่วงๆ) ยอดจริงอาจสูงกว่านี้ —
@@ -207,7 +198,9 @@ export default function Dashboard() {
         </Notice>
       )}
 
-      <section className="card card-pad">
+      {/* The twelve months need the full measure — squeezed into two thirds the
+          bars lose the shape that makes the chart worth looking at. */}
+      <section className="card card-pad animate-rise" style={{ animationDelay: '60ms' }}>
         <SectionTitle action={<span className="text-caption text-ink-soft">คลิกแท่งเพื่อเลือกเดือน · แท่งลายเส้น = เดือนข้อมูลไม่ครบ</span>}>
           รายจ่ายรายเดือน
         </SectionTitle>
@@ -221,7 +214,14 @@ export default function Dashboard() {
       {/* V2: the donut and the ranked list were two cards showing the same
           numbers side by side. One card, one heading, a view toggle — both
           views kept. */}
-      <section className="card card-pad">
+      {/* The page used to be nothing but full-width cards stacked down the
+          screen. The six-row category list and the three stat cards run to
+          about the same height, so they share a row from lg up rather than
+          each taking a turn at full width. */}
+      <div className="grid gap-4 lg:grid-cols-3 animate-rise" style={{ animationDelay: '120ms' }}>
+      {/* order: on one column the stat cards stay high, where they were before
+          this row existed, rather than sinking below the long category list. */}
+      <section className="card card-pad order-2 lg:order-1 lg:col-span-2">
         <SectionTitle
           action={
             <Segmented<CatView> value={catView} onChange={setCatView}
@@ -261,6 +261,16 @@ export default function Dashboard() {
           ดูทั้งหมด {catAggs.length} หมวด →
         </Link>
       </section>
+
+        <div className="order-1 lg:order-2 grid grid-cols-2 gap-4 lg:grid-cols-1 lg:content-start">
+          <StatCard label="เฉลี่ยต่อวัน" value={<CountUp value={avgPerDay} format={formatTHB} />} icon={CalendarDays}
+            accent="rgb(var(--brand-2))" sub={`จาก ${daysWithData} วันที่มีข้อมูล`} />
+          <StatCard label="จำนวนรายการ" value={<CountUp value={count} />} icon={Receipt}
+            accent="rgb(var(--brand))" sub={daysWithData ? `~${Math.round(count / daysWithData)} รายการ/วัน` : undefined} />
+          <StatCard label="หมวดที่ใช้" value={<CountUp value={catAggs.length} />} icon={Tags}
+            accent="#8b5cf6" sub="ในช่วงที่เลือก" />
+        </div>
+      </div>
 
       <p className="text-caption text-ink-soft text-center px-4">
         ข้อมูลทั้งหมดเก็บในเครื่องของคุณเท่านั้น (localStorage) ไม่มีการส่งออกไปเซิร์ฟเวอร์ภายนอก

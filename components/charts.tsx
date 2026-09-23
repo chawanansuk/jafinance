@@ -22,6 +22,20 @@ function useIsDark(): boolean {
   return dark;
 }
 
+/** Recharts animates by default and never consults the OS setting, so the
+ *  draw-in has to be switched off here rather than in CSS. */
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReduced(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  return reduced;
+}
+
 /** SVG paint-server refs (url(#grad)) mean nothing as CSS background. */
 function swatchColor(c: unknown): string {
   const v = typeof c === 'string' ? c : '';
@@ -55,6 +69,7 @@ export function MonthlyBarChart({
 }) {
   const uid = useId().replace(/:/g, '');
   const hatchId = `barHatch-${uid}`;
+  const reduced = usePrefersReducedMotion();
   return (
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={data} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
@@ -69,7 +84,8 @@ export function MonthlyBarChart({
         <XAxis dataKey="month" tickFormatter={(m) => formatMonth(m)} tickLine={false} axisLine={false} fontSize={12} />
         <YAxis tickFormatter={kFmt} tickLine={false} axisLine={false} fontSize={11} width={36} />
         <Tooltip content={<MoneyTooltip labelFmt={(m: string) => formatMonth(m, true)} />} cursor={{ fill: 'rgb(var(--surface-2))', radius: 8 }} />
-        <Bar dataKey="total" name="รายจ่าย" radius={[12, 12, 5, 5]} onClick={(d: any) => onSelect?.(d.month)} cursor={onSelect ? 'pointer' : 'default'}>
+        <Bar dataKey="total" name="รายจ่าย" radius={[12, 12, 5, 5]} onClick={(d: any) => onSelect?.(d.month)} cursor={onSelect ? 'pointer' : 'default'}
+          isAnimationActive={!reduced} animationDuration={700} animationEasing="ease-out">
           {data.map((d) => (
             <Cell
               key={d.month}
@@ -105,6 +121,7 @@ export function CategoryDonut({
   const dark = useIsDark();
   const uid = useId().replace(/:/g, '');
   const hatchId = `donutHatch-${uid}`;
+  const reduced = usePrefersReducedMotion();
 
   const positive = data.filter((d) => d.total > 0);
   const grand = positive.reduce((s, d) => s + d.total, 0);
@@ -140,6 +157,7 @@ export function CategoryDonut({
               strokeWidth={3}
               onClick={(d: any) => !d.isOther && onSelect?.(d.category)}
               cursor={onSelect ? 'pointer' : 'default'}
+              isAnimationActive={!reduced} animationDuration={600} animationEasing="ease-out"
             >
               {slices.map((s) => <Cell key={s.category} fill={fillOf(s)} />)}
             </Pie>
@@ -185,6 +203,7 @@ export function CategoryDonut({
 export function TrendLineChart({ data }: { data: { month: string; total: number }[] }) {
   const uid = useId().replace(/:/g, '');
   const gradId = `trendGrad-${uid}`;
+  const reduced = usePrefersReducedMotion();
   return (
     <ResponsiveContainer width="100%" height={200}>
       <AreaChart data={data} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
@@ -198,7 +217,8 @@ export function TrendLineChart({ data }: { data: { month: string; total: number 
         <YAxis tickFormatter={kFmt} tickLine={false} axisLine={false} fontSize={11} width={36} />
         <Tooltip content={<MoneyTooltip labelFmt={(m: string) => formatMonth(m, true)} />} />
         <Area type="monotone" dataKey="total" name="รายจ่าย" stroke="rgb(var(--brand))" strokeWidth={2.5}
-          fill={`url(#${gradId})`} dot={{ r: 3, fill: 'rgb(var(--brand))' }} activeDot={{ r: 5 }} />
+          fill={`url(#${gradId})`} dot={{ r: 3, fill: 'rgb(var(--brand))' }} activeDot={{ r: 5 }}
+          isAnimationActive={!reduced} animationDuration={700} animationEasing="ease-out" />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -231,7 +251,7 @@ export function GroupSplitBar({
     <div className="space-y-2.5">
       <div className="flex h-3 gap-1">
         {parts.map((p) => (
-          <div key={p.key} className="rounded-full"
+          <div key={p.key} className="rounded-full transition-[width] duration-500 ease-out"
             style={{ width: `${(p.value / total) * 100}%`, background: p.color }} />
         ))}
       </div>
