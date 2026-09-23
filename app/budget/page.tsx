@@ -185,6 +185,10 @@ export default function BudgetPage() {
           sub={summary.totalBudget && overCount === 0 ? 'ทุกหมวดยังอยู่ในงบ' : undefined} />
       </div>
 
+      {/* These two were consecutive full-width cards, but the split is short
+          and the savings goal is tall — pairing them narrow + wide stops the
+          page reading as one long column. */}
+      <div className="grid gap-4 lg:grid-cols-3">
       {/* essential vs discretionary */}
       <div className="card card-pad space-y-3">
         <SectionTitle>จำเป็น vs ลดได้</SectionTitle>
@@ -204,7 +208,7 @@ export default function BudgetPage() {
       </div>
 
       {/* cross-month savings goal */}
-      <div className="card card-pad space-y-3">
+      <div className="card card-pad space-y-3 lg:col-span-2">
         <SectionTitle action={<PiggyBank size={16} className="text-ink-soft" />}>เป้าหมายเงินเก็บสะสม (ข้ามเดือน)</SectionTitle>
         <div className="flex flex-wrap items-end gap-6">
           <label className="block">
@@ -238,6 +242,7 @@ export default function BudgetPage() {
         {savings.points.length === 0 && (
           <p className="text-xs text-ink-soft">ยังไม่มีเดือนที่กรอกรายได้ — กรอกรายได้ด้านบนก่อน</p>
         )}
+      </div>
       </div>
 
       {/* per-category budgets */}

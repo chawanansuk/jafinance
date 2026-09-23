@@ -246,7 +246,7 @@ export default function TransactionsPage() {
           </thead>
           <tbody>
             {filtered.slice(0, limit).map((t) => (
-              <tr key={t.id} className="[&_td]:border-b [&_td]:border-line hover:[&_td]:bg-surface-2/60">
+              <tr key={t.id} className="[&_td]:border-b [&_td]:border-line [&_td]:transition-colors [&_td]:duration-150 hover:[&_td]:bg-surface-2/60">
                 <td className="px-4 py-2.5 whitespace-nowrap align-middle">
                   <div className="text-body-sm">{formatDate(t.date)}</div>
                   <div className="text-caption text-ink-soft">{t.time || (t.account.startsWith('KBank') ? 'KBank' : 'UOB')}</div>
