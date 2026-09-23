@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Wand2, PiggyBank, Target, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Wand2, PiggyBank, Target, TrendingUp, AlertTriangle, Info } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
-import { StatCard, SectionTitle, ProgressBar, CategoryChip, Money, CountUp, Notice, Skeleton, IncompleteBadge } from '@/components/ui';
+import { StatCard, SectionTitle, ProgressBar, CategoryChip, Money, CountUp, Notice, Pending, Skeleton, IncompleteBadge } from '@/components/ui';
 import { MonthSelect } from '@/components/Controls';
 import {
   categoryBudgetRows, suggestBudgets, monthSummary, getIncome, getCeiling, cumulativeSavings,
@@ -20,6 +20,7 @@ export default function BudgetPage() {
   const rows = useMemo(() => categoryBudgetRows(txns, budget, selected), [txns, budget, selected]);
   const summary = useMemo(() => monthSummary(txns, budget, selected), [txns, budget, selected]);
   const projection = useMemo(() => projectMonth(txns, selected), [txns, selected]);
+  const overCount = useMemo(() => rows.filter((r) => r.tone === 'over' && r.budget).length, [rows]);
   const incomplete = useMemo(
     () => aggregateByMonth(txns).find((m) => m.month === selected)?.incomplete ?? false,
     [txns, selected],
@@ -108,20 +109,22 @@ export default function BudgetPage() {
               onChange={(e) => setIncome(Number(e.target.value) || 0)}
             />
           </label>
-          <p className="text-xs text-ink-soft flex gap-1.5 items-start">
-            <AlertTriangle size={13} className="mt-0.5 shrink-0" />
+          <p className="text-caption text-ink-soft flex gap-1.5 items-start">
+            <Info size={13} className="mt-0.5 shrink-0" aria-hidden />
             ไฟล์ไม่มีเงินเดือนจริง (เงินเข้าเป็นการโอนเติมบัญชี) จึงต้องกรอกเอง
           </p>
           <div className="grid grid-cols-2 gap-3 pt-1">
             <div>
-              <div className="text-xs text-ink-soft">เงินเหลือเก็บ</div>
-              <div className={`text-lg font-bold tnum ${summary.savings >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                {income ? formatTHB(summary.savings) : '—'}
+              <div className="text-label text-ink-soft">เงินเหลือเก็บ</div>
+              <div className={`text-h2 font-bold tnum ${income ? (summary.savings >= 0 ? 'text-success' : 'text-error') : ''}`}>
+                {income ? formatTHB(summary.savings) : <Pending>กรอกรายได้ก่อน</Pending>}
               </div>
             </div>
             <div>
-              <div className="text-xs text-ink-soft">อัตราการออม</div>
-              <div className="text-lg font-bold tnum">{income ? formatPct(summary.savingsRate) : '—'}</div>
+              <div className="text-label text-ink-soft">อัตราการออม</div>
+              <div className="text-h2 font-bold tnum">
+                {income ? formatPct(summary.savingsRate) : <Pending>กรอกรายได้ก่อน</Pending>}
+              </div>
             </div>
           </div>
         </div>
@@ -143,13 +146,13 @@ export default function BudgetPage() {
               <div className="text-lg font-bold tnum">{formatTHB(summary.totalActual)}</div>
             </div>
             <div>
-              <div className="text-xs text-ink-soft">{ceiling ? 'เหลือใช้ได้' : 'คาดการณ์สิ้นเดือน'}</div>
-              <div className="text-lg font-bold tnum">
+              <div className="text-label text-ink-soft">{ceiling ? 'เหลือใช้ได้' : 'คาดการณ์สิ้นเดือน'}</div>
+              <div className="text-h2 font-bold tnum">
                 {ceiling
                   ? formatTHB(Math.max(0, ceiling - summary.totalActual))
                   : projection.reliable
                     ? formatTHB(projection.projected!)
-                    : '—'}
+                    : <Pending>ข้อมูลเดือนนี้ยังไม่พอพยากรณ์</Pending>}
               </div>
             </div>
           </div>
@@ -167,16 +170,19 @@ export default function BudgetPage() {
 
       {/* summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 animate-rise" style={{ animationDelay: '60ms' }}>
-        <StatCard label="งบรวมทั้งเดือน" icon={Target} accent="#8b5cf6"
-          value={summary.totalBudget ? <CountUp value={summary.totalBudget} format={formatTHB} /> : 'ยังไม่ตั้ง'}
-          sub={summary.totalBudget ? undefined : 'ใช้ "เติมงบที่ว่าง" ด้านล่าง'} />
-        <StatCard label="ใช้ไปแล้ว" value={<CountUp value={summary.totalActual} format={formatTHB} />} icon={TrendingUp} accent="#0ea5e9" />
-        <StatCard label="คงเหลือ" icon={PiggyBank} accent="#10b981"
-          value={summary.totalBudget ? <CountUp value={summary.remaining} format={formatTHB} /> : '—'}
-          tone={summary.totalBudget && summary.remaining < 0 ? 'bad' : 'good'}
-          sub={summary.totalBudget ? undefined : 'ตั้งงบก่อนจึงจะคำนวณได้'} />
-        <StatCard label="หมวดที่เกินงบ" icon={AlertTriangle} accent="#f43f5e"
-          value={summary.totalBudget ? String(rows.filter((r) => r.tone === 'over' && r.budget).length) : '—'} />
+        <StatCard label="งบรวมทั้งเดือน" icon={Target} accent="rgb(var(--brand-2))"
+          value={summary.totalBudget ? <CountUp value={summary.totalBudget} format={formatTHB} /> : <Pending>ยังไม่ได้ตั้งงบ</Pending>}
+          sub={summary.totalBudget ? undefined : 'กด "เติมงบที่ว่าง" ด้านล่าง'} />
+        <StatCard label="ใช้ไปแล้ว" value={<CountUp value={summary.totalActual} format={formatTHB} />}
+          icon={TrendingUp} accent="rgb(var(--brand))" />
+        <StatCard label="คงเหลือ" icon={PiggyBank} accent="rgb(var(--brand))"
+          value={summary.totalBudget ? <CountUp value={summary.remaining} format={formatTHB} /> : <Pending>ตั้งงบก่อน</Pending>}
+          tone={summary.totalBudget ? (summary.remaining < 0 ? 'bad' : 'good') : 'default'} />
+        <StatCard label="หมวดที่เกินงบ" icon={AlertTriangle}
+          accent={overCount > 0 ? 'rgb(var(--error))' : 'rgb(var(--ink-soft))'}
+          value={summary.totalBudget ? String(overCount) : <Pending>ตั้งงบก่อน</Pending>}
+          tone={overCount > 0 ? 'bad' : 'default'}
+          sub={summary.totalBudget && overCount === 0 ? 'ทุกหมวดยังอยู่ในงบ' : undefined} />
       </div>
 
       {/* essential vs discretionary */}
@@ -200,16 +206,16 @@ export default function BudgetPage() {
       {/* cross-month savings goal */}
       <div className="card card-pad space-y-3">
         <SectionTitle action={<PiggyBank size={16} className="text-ink-soft" />}>เป้าหมายเงินเก็บสะสม (ข้ามเดือน)</SectionTitle>
-        <div className="flex flex-wrap items-end gap-4">
-          <label className="block text-sm">
-            <span className="text-ink-soft">ตั้งเป้าเก็บรวม</span>
-            <input type="number" inputMode="numeric" className="input mt-1 !w-40"
+        <div className="flex flex-wrap items-end gap-6">
+          <label className="block">
+            <span className="field-label">ตั้งเป้าเก็บรวม</span>
+            <input type="number" inputMode="numeric" className="input !w-44"
               placeholder="เช่น 100000"
               value={budget.savingsGoal || ''}
               onChange={(e) => setSavingsGoal(Number(e.target.value) || 0)} />
           </label>
           <div>
-            <div className="text-xs text-ink-soft">เก็บได้แล้ว (เดือนที่กรอกรายได้)</div>
+            <div className="text-label text-ink-soft">เก็บได้แล้ว (เดือนที่กรอกรายได้)</div>
             <div className={`text-xl font-bold tnum ${savings.totalSaved >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
               {formatTHB(savings.totalSaved)}
             </div>
