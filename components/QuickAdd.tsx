@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, X, Check, Camera, Loader2, Image as ImageIcon, AlertTriangle, ChevronDown } from 'lucide-react';
 import { useData } from './DataProvider';
 import { Modal } from './ui';
@@ -25,13 +25,6 @@ export function QuickAdd() {
   const { txns, setImported, rules, hydrated } = useData();
   const [open, setOpen] = useState(false);
 
-  // header button (desktop) opens the same sheet via a window event
-  useEffect(() => {
-    const on = () => setOpen(true);
-    window.addEventListener(QUICKADD_EVENT, on);
-    return () => window.removeEventListener(QUICKADD_EVENT, on);
-  }, []);
-
   const [date, setDate] = useState(() => toISODate(new Date()));
   const [time, setTime] = useState(() => toHHMM(new Date()));
   const [account, setAccount] = useState<string>(ACCOUNTS[0]);
@@ -39,8 +32,10 @@ export function QuickAdd() {
   const [amount, setAmount] = useState('');
   const [merchant, setMerchant] = useState('');
   const [desc, setDesc] = useState('');
-  const [category, setCategory] = useState('ค่าใช้จ่ายอื่น');
-  const [catTouched, setCatTouched] = useState(false);
+  // Only an explicit pick is state. Until there is one, the category is
+  // derived from what has been typed — it used to be copied into state by an
+  // effect, which rendered twice and briefly showed the stale suggestion.
+  const [picked, setPicked] = useState<string | null>(null);
   const [allCats, setAllCats] = useState(false);
   const [acOpen, setAcOpen] = useState(false);
   const [saved, setSaved] = useState('');
@@ -49,13 +44,20 @@ export function QuickAdd() {
   const [scan, setScan] = useState<{ busy: boolean; pct: number; msg: string }>({ busy: false, pct: 0, msg: '' });
   const [scanText, setScanText] = useState('');
 
-  // re-stamp "now" each time the sheet opens, not on every render
-  useEffect(() => {
-    if (!open) return;
+  // Opening the sheet stamps "now" as part of the action, rather than an
+  // effect reacting to `open` afterwards.
+  const openSheet = useCallback(() => {
     const now = new Date();
     setDate(toISODate(now));
     setTime(toHHMM(now));
-  }, [open]);
+    setOpen(true);
+  }, []);
+
+  // header button (desktop) opens the same sheet via a window event
+  useEffect(() => {
+    window.addEventListener(QUICKADD_EVENT, openSheet);
+    return () => window.removeEventListener(QUICKADD_EVENT, openSheet);
+  }, [openSheet]);
 
   const onPhoto = async (file?: File) => {
     if (!file) return;
@@ -68,7 +70,7 @@ export function QuickAdd() {
       if (g.amount) setAmount(String(g.amount));
       if (g.merchant) setMerchant(g.merchant);
       if (g.date) setDate(g.date);
-      if (g.category) { setCategory(g.category); setCatTouched(true); }
+      if (g.category) setPicked(g.category);
       setScan({ busy: false, pct: 100, msg: g.amount ? 'อ่านสำเร็จ — ตรวจสอบแล้วบันทึก' : 'อ่านไม่เจอยอด ลองตรวจข้อความ/กรอกเอง' });
     } catch {
       setScan({ busy: false, pct: 0, msg: 'อ่านรูปไม่สำเร็จ — ลองใหม่หรือกรอกเอง' });
@@ -76,10 +78,12 @@ export function QuickAdd() {
   };
 
   // auto-suggest category from merchant/desc/amount until the user picks one
-  useEffect(() => {
-    if (catTouched) return;
-    setCategory(autoCategorize(merchant, desc, rules, Number(amount) || undefined));
-  }, [merchant, desc, amount, rules, catTouched]);
+  const suggested = useMemo(
+    () => autoCategorize(merchant, desc, rules, Number(amount) || undefined),
+    [merchant, desc, amount, rules],
+  );
+  const category = picked ?? suggested;
+  const catTouched = picked !== null;
 
   // ── suggestions from the user's own history ──────────────────────────────
   const tiles = useMemo(() => frequentMerchants(txns, 6), [txns]);
@@ -111,8 +115,7 @@ export function QuickAdd() {
 
   const applyMerchant = (m: { merchant: string; category: string; typical: number }) => {
     setMerchant(m.merchant);
-    setCategory(m.category);
-    setCatTouched(true);
+    setPicked(m.category);
     if (!Number(amount)) setAmount(String(m.typical));
     setAcOpen(false);
   };
@@ -120,7 +123,7 @@ export function QuickAdd() {
   /** Clear what changes per receipt; keep date/account/direction for the next one. */
   const clearEntry = () => {
     setAmount(''); setMerchant(''); setDesc('');
-    setCategory('ค่าใช้จ่ายอื่น'); setCatTouched(false); setAllCats(false); setAcOpen(false);
+    setPicked(null); setAllCats(false); setAcOpen(false);
     setScan({ busy: false, pct: 0, msg: '' }); setScanText('');
   };
 
@@ -155,7 +158,7 @@ export function QuickAdd() {
       <button
         key={c}
         type="button"
-        onClick={() => { setCategory(c); setCatTouched(true); }}
+        onClick={() => setPicked(c)}
         aria-pressed={on}
         className={`flex flex-col items-center gap-1 rounded-xl border px-1 py-2 text-center transition-colors ${
           on ? 'border-brand bg-brand/10' : 'border-line bg-surface hover:bg-surface-2'
@@ -174,7 +177,7 @@ export function QuickAdd() {
       {/* FAB — flat brand fill like every other primary action; it was the
           last decorative gradient left after the V2 pass */}
       <button
-        onClick={() => setOpen(true)}
+        onClick={openSheet}
         aria-label="เพิ่มรายการ"
         className="lg:hidden fixed right-4 bottom-20 sm:bottom-6 z-40 h-14 w-14 rounded-2xl bg-brand text-white shadow-lg grid place-items-center active:scale-95 transition-transform"
       >

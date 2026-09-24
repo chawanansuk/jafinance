@@ -6,6 +6,7 @@ import { formatTHB, formatDelta } from '@/lib/format';
 import { GROUP_LABEL, GROUP_COLOR, CATEGORIES, categoryMeta } from '@/lib/categories';
 import { Sparkline } from './Sparkline';
 import type { Group } from '@/lib/types';
+import { usePrefersReducedMotion } from '@/lib/useMediaQuery';
 
 export function StatCard({
   label, value, sub, delta, icon: Icon, tone = 'default', accent = 'rgb(var(--brand))', spark,
@@ -197,15 +198,16 @@ export function CountUp({
   const [display, setDisplay] = useState(value);
   const displayRef = useRef(value);
   const targetRef = useRef(value);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
+    // Under reduced motion the value renders straight through (below), so
+    // there is nothing to animate. The refs are left alone on purpose: if the
+    // setting is switched off later, the next change eases from the last
+    // number that was actually animated.
+    if (reduced) return;
     if (targetRef.current === value) return;
     targetRef.current = value;
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      displayRef.current = value;
-      setDisplay(value);
-      return;
-    }
     const from = displayRef.current; // continue from wherever the digits are
     const t0 = performance.now();
     const dur = 650;
@@ -220,9 +222,9 @@ export function CountUp({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [value]);
+  }, [value, reduced]);
 
-  return <span className={`tnum ${className}`}>{format(display)}</span>;
+  return <span className={`tnum ${className}`}>{format(reduced ? value : display)}</span>;
 }
 
 export function Money({ value, className = '' }: { value: number; className?: string }) {
@@ -304,7 +306,6 @@ export function Modal({
       document.body.style.overflow = prevOverflow;
       prev?.focus?.();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   if (!open) return null;

@@ -7,6 +7,9 @@ import {
 } from 'recharts';
 import { formatTHB, formatMonth } from '@/lib/format';
 import { chartCategoryColor, GROUP_COLOR } from '@/lib/categories';
+// Recharts animates by default and never consults the OS setting, so the
+// draw-in is switched off per chart from this hook rather than in CSS.
+import { usePrefersReducedMotion } from '@/lib/useMediaQuery';
 
 /** Follows the <html>.dark class so charts can use dark-mode color steps. */
 function useIsDark(): boolean {
@@ -20,20 +23,6 @@ function useIsDark(): boolean {
     return () => mo.disconnect();
   }, []);
   return dark;
-}
-
-/** Recharts animates by default and never consults the OS setting, so the
- *  draw-in has to be switched off here rather than in CSS. */
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReduced(mq.matches);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, []);
-  return reduced;
 }
 
 /** SVG paint-server refs (url(#grad)) mean nothing as CSS background. */
