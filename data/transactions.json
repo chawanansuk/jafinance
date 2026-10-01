@@ -3769,7 +3769,7 @@
   "amount": 90.0,
   "category": "อาหาร/ร้านอาหาร",
   "group": "discretionary",
-  "merchant": "ร้านค่าออมสิน มหานง",
+  "merchant": "เจ๊นุช ก๋วยเตี๋ยวปลา",
   "desc": "ร้านค่าออมสิน มหานง"
  },
  {
@@ -3780,7 +3780,7 @@
   "amount": 40.0,
   "category": "อาหาร/ร้านอาหาร",
   "group": "discretionary",
-  "merchant": "ร้านค่าออมสิน มหานง",
+  "merchant": "เจ๊นุช ก๋วยเตี๋ยวปลา",
   "desc": "ร้านค่าออมสิน มหานง"
  },
  {
@@ -4933,9 +4933,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 50.0,
-  "category": "อาหาร/ร้านอาหาร",
+  "category": "คาเฟ่/ขนม",
   "group": "discretionary",
-  "merchant": "ร้านเวนดิ้งขายญูเดิม",
+  "merchant": "ร้านเวนดิ้งบายบุญเติม",
   "desc": "ร้านเวนดิ้งขายญูเดิม"
  },
  {
@@ -14903,5 +14903,346 @@
   "group": "transfer",
   "merchant": "หอมอร (เจริญราษฎร์)",
   "desc": "เพื่อชำระ Ref X1467 หอมอร QR- สาขาเจริญราษฎร์"
+ },
+ {
+  "date": "2026-09-23",
+  "time": "09:06",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 3000.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
+  "desc": "รับโอน SCB X5730 นาย ชวมันท์ สุรพรรษ"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "09:41",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 3002.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน กองทุนเปิดเค ตราสารหนี้ระยะสั้น",
+  "desc": "จาก X9986 กองทุนเปิดเค ตราสารหนี้ระยะสั้น Direct Credit"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "11:31",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 130.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ยู เอฟ โอ โดนัท",
+  "desc": "เพื่อชำระ Ref X2692 ยู เอฟ โอ โดนัท"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "11:35",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 3000.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปรารถนา",
+  "desc": "โอนไป พร้อมเพย์ X9465 น.ส. ปรารถนา บุญสอ"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "13:22",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 100.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "เชิงเจริญ",
+  "desc": "เพื่อชำระ Ref X4489 SCB มณี SHOP (เชิงเจริญ)"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "13:26",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 25.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ร้านเวนดิ้งบายบุญเติม",
+  "desc": "เพื่อชำระ Ref X8534 ร้านเวนดิ้งบายบุญเติม"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "13:49",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 45.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ร้านครัวเจ",
+  "desc": "เพื่อชำระ Ref X0302 SCB มณี SHOP (ร้านครัวเจเซ็นต์หลุยส์)"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "13:54",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 99.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "เดอะ แฮปปี้เนสท์",
+  "desc": "เพื่อชำระ Ref X4151 SCB มณี SHOP (เดอะ แฮปปี้เนสท์)"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "13:57",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 225.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "เชิงเจริญ",
+  "desc": "เพื่อชำระ Ref X4489 SCB มณี SHOP (เชิงเจริญ)"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "14:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "สากล แจ่มโนนต",
+  "desc": "โอนไป พร้อมเพย์ X6320 นาย สากล แจ่มโนนต"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "14:04",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 65.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "สมมิตร์ จัน",
+  "desc": "โอนไป พร้อมเพย์ X7354 นางสาว สมมิตร์ จัน"
+ },
+ {
+  "date": "2026-09-24",
+  "time": "18:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 95.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-09-25",
+  "time": "07:18",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "เติมเงิน/วอลเล็ต",
+  "group": "transfer",
+  "merchant": "TrueMoney",
+  "desc": "เพื่อชำระ Ref X9465 บจก. ทรู มันนี่ เพื่อเก็บรักษาเงินรับล่วงหน้าของธุรกิจ E-MON"
+ },
+ {
+  "date": "2026-09-25",
+  "time": "09:40",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 2020.18,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน กองทุนเปิดเค เซ็ท 50",
+  "desc": "จาก X1407 กองทุนเปิดเค เซ็ท 50 Direct Credit"
+ },
+ {
+  "date": "2026-09-25",
+  "time": "10:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 500.0,
+  "category": "ถอนเงินสด",
+  "group": "transfer",
+  "merchant": "ถอนเงิน ATM",
+  "desc": "ATM สาขาจักรวรรดิ เครื่อง 1 (812) รหัสอ้างอิง ATMA9439"
+ },
+ {
+  "date": "2026-09-25",
+  "time": "10:07",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 360.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน ปรารถนา",
+  "desc": "รับโอน BAY X4249 PRADTHANA B"
+ },
+ {
+  "date": "2026-09-25",
+  "time": "13:47",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 32.0,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "MRT",
+  "desc": "เพื่อชำระ Ref X8001 เอ็มอาร์ที-วัดมังกร"
+ },
+ {
+  "date": "2026-09-25",
+  "time": "20:01",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 330.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ละมัย ราช",
+  "desc": "โอนไป X5408 น.ส. ละมัย ราช"
+ },
+ {
+  "date": "2026-09-26",
+  "time": "10:47",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 70.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "OTTERI WASH AND DRY",
+  "desc": "เพื่อชำระ Ref X4159 Ksher_OTTERI WASH AND DRY"
+ },
+ {
+  "date": "2026-09-26",
+  "time": "10:57",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 179.76,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "คิน",
+  "desc": "เพื่อชำระ Ref 1 คิน"
+ },
+ {
+  "date": "2026-09-26",
+  "time": "11:24",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 2000.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปรารถนา",
+  "desc": "โอนไป พร้อมเพย์ X9465 น.ส. ปรารถนา บุญสอ"
+ },
+ {
+  "date": "2026-09-26",
+  "time": "11:29",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "OTTERI WASH AND DRY",
+  "desc": "เพื่อชำระ Ref X3115 Ksher_OTTERI WASH AND DRY"
+ },
+ {
+  "date": "2026-09-27",
+  "time": "12:24",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 22.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ซันเวนดิ้ง",
+  "desc": "เพื่อชำระ Ref X007S บริษัท ซันเวนดิ้ง เทคโนโลยี จำกัด (มหาชน)"
+ },
+ {
+  "date": "2026-09-29",
+  "time": "08:38",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "เจ๊นุช ก๋วยเตี๋ยวปลา",
+  "desc": "เพื่อชำระ Ref X0988 ร้านค้าออมสิน มหาเฮง (เจ๊นุช ก๋วยเตี๋ยวปลา)"
+ },
+ {
+  "date": "2026-09-29",
+  "time": "08:59",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 85.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "เทร็นด้อตโต้ โฮม ออฟ คอฟฟี่",
+  "desc": "เพื่อชำระ Ref X5466 เทร็นด้อตโต้ โฮม ออฟ คอฟฟี่"
+ },
+ {
+  "date": "2026-09-29",
+  "time": "16:30",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 15.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ซันเวนดิ้ง",
+  "desc": "เพื่อชำระ Ref X222S บริษัท ซันเวนดิ้ง เทคโนโลยี จำกัด (มหาชน)"
+ },
+ {
+  "date": "2026-09-30",
+  "time": "09:11",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 60.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "เทร็นด้อตโต้ โฮม ออฟ คอฟฟี่",
+  "desc": "เพื่อชำระ Ref X5466 เทร็นด้อตโต้ โฮม ออฟ คอฟฟี่"
+ },
+ {
+  "date": "2026-09-30",
+  "time": "09:26",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 75.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ร้านถุงเงิน ข้าวมันไก่รสเด็ด เจ๊ปุ๋ย",
+  "desc": "เพื่อชำระ Ref X6109 ร้านถุงเงิน (ข้าวมันไก่รสเด็ด(เจ๊ปุ๋ย)จุฬาซ.18)"
+ },
+ {
+  "date": "2026-09-30",
+  "time": "14:10",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 350.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "NAN KHAN NYUN",
+  "desc": "โอนไป X4670 MISS NAN KHAN NYUN"
+ },
+ {
+  "date": "2026-09-30",
+  "time": "16:13",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 180.0,
+  "category": "น้ำมัน/ปั๊ม",
+  "group": "essential",
+  "merchant": "PTT Station",
+  "desc": "เพื่อชำระ Ref X7001 พีทีที สเตชั่น-สาขาสามย่าน"
+ },
+ {
+  "date": "2026-09-30",
+  "time": "17:34",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 462.56,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "สุกี้ตี๋น้อย",
+  "desc": "เพื่อชำระ Ref X2001 สุกี้ตี๋น้อย-แอมพาร์ค จุฬา"
  }
 ]

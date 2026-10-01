@@ -43,8 +43,8 @@ const base = baseTransactions();
 const txns = materialize(base);
 
 console.log('\n── data / materialize ──');
-ok('1355 base rows', base.length === 1355);
-ok('all ids unique', new Set(base.map((t) => t.id)).size === 1355);
+ok('1386 base rows', base.length === 1386);
+ok('all ids unique', new Set(base.map((t) => t.id)).size === 1386);
 {
   const id = base.find((t) => t.merchant === 'Grab')!.id;
   const m = materialize(base, [], { categoryById: { [id]: 'คาเฟ่/ขนม' }, realIncomeById: {} }, {});
@@ -81,14 +81,14 @@ ok('all ids unique', new Set(base.map((t) => t.id)).size === 1355);
 }
 
 console.log('\n── analytics ──');
-eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 322057.62, 0.5);
+eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 330552.94, 0.5);
 {
   // after the Grab-ride rule, cheap Grab rows < ฿120 move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
-  eq('essential (+ Grab rides)', g.essential, 104384.11);
-  eq('discretionary net (- Grab rides)', g.discretionary, 147441.03);
-  eq('transfer (excl card settlement)', g.transfer, 70232.48);
-  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 322057.62, 1);
+  eq('essential (+ Grab rides)', g.essential, 104596.11);
+  eq('discretionary net (- Grab rides)', g.discretionary, 148735.59);
+  eq('transfer (excl card settlement)', g.transfer, 77221.24);
+  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 330552.94, 1);
 }
 {
   const travel = toSpendingEvents(txns).filter((e) => e.category === 'ที่พัก/ท่องเที่ยว').reduce((s, e) => s + e.signed, 0);
@@ -119,7 +119,7 @@ ok('projection May reliable', projectMonth(txns, '2026-05').reliable === true);
   const tagged = txns.map((t) => (t.merchant === 'ปรารถนา' && t.group === 'transfer' ? { ...t, transferKind: 'moving' as const } : t));
   const before = grandTotal(toSpendingEvents(tagged));
   const after = grandTotal(toSpendingEvents(tagged, { excludeMovingTransfers: true }));
-  eq('excludeMoving removes ปรารถนา', before - after, 7863.25, 0.5);
+  eq('excludeMoving removes ปรารถนา', before - after, 12863.25, 0.5);
 }
 {
   const before = grandTotal(toSpendingEvents(txns));
@@ -136,7 +136,7 @@ ok('outliers found', detectOutliers(txns).length > 0);
   const ds = dailySpending(txns);
   ok('dailySpending sorted & non-empty', ds.length > 30 && ds[0].date <= ds[ds.length - 1].date);
   const sum = ds.reduce((s, d) => s + d.total, 0);
-  eq('dailySpending sums to net total', sum, 322057.62, 1);
+  eq('dailySpending sums to net total', sum, 330552.94, 1);
   const avg = avgMonthlyByCategory(txns);
   ok('avgMonthlyByCategory has Grab', (avg['Grab/เดลิเวอรี่/แท็กซี่'] ?? 0) > 0);
 }
@@ -170,7 +170,7 @@ console.log('\n── import / export (io) ──');
   const jsonText = JSON.stringify(base.map(({ id, ...r }) => r));
   const res = parseImport(jsonText, txns);
   ok('re-import all -> 0 added', res.added.length === 0);
-  ok('re-import all -> all duplicates', res.duplicates === 1355);
+  ok('re-import all -> all duplicates', res.duplicates === 1386);
   ok('overlap warned on re-import', res.overlaps.length > 0);
 }
 {
@@ -317,7 +317,7 @@ ok('settlement is transfer group', categoryGroup('ชำระบัตรเค
   const settle = { date: '2026-07-05', time: '', account: 'KBank ออมทรัพย์', direction: 'out' as const,
     amount: 40000, category: 'ชำระบัตรเครดิต', group: 'transfer' as const, merchant: 'UOB', desc: 'ชำระบัตร', id: 'settle1' };
   const m = materialize(base, [settle as any]);
-  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 322057.62, 1);
+  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 330552.94, 1);
   ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
 }
 
@@ -487,7 +487,19 @@ console.log('\n── autocat: a venue is not a category ──');
 }
 
 console.log('\n── autocat: channel noise must not drive category ──');
-ok('MAKE by KBank not swallowed', autoCategorize('GOLDEN DONUTS', 'MAKE by KBank GOLDEN DONUTS (THAILAND) CO.,LTD.', {}, 96) === 'ค่าใช้จ่ายอื่น');
+// A shop with no category signal must fall to the neutral fallback, and one
+// with a real signal must get its real category — the channel text "MAKE by
+// KBank" must never turn either into a person transfer.
+ok('MAKE by KBank not swallowed (no signal → fallback)', autoCategorize('PANYA TRADING', 'MAKE by KBank PANYA TRADING CO.,LTD.', {}, 96) === 'ค่าใช้จ่ายอื่น');
+ok('MAKE by KBank not swallowed (shop keeps its own category)', autoCategorize('GOLDEN DONUTS', 'MAKE by KBank GOLDEN DONUTS (THAILAND) CO.,LTD.', {}, 96) === 'คาเฟ่/ขนม');
+
+console.log('\n── autocat: Thai names seen on KBank statements ──');
+ok('คอฟฟี่ → café', autoCategorize('เทร็นด้อตโต้ โฮม ออฟ คอฟฟี่', 'เพื่อชำระ Ref X5466 เทร็นด้อตโต้ โฮม ออฟ คอฟฟี่', {}, 85) === 'คาเฟ่/ขนม');
+ok('โดนัท → café', autoCategorize('ยู เอฟ โอ โดนัท', 'เพื่อชำระ Ref X2692 ยู เอฟ โอ โดนัท', {}, 130) === 'คาเฟ่/ขนม');
+ok('vending machine → café', autoCategorize('ซันเวนดิ้ง', 'เพื่อชำระ Ref X007S บริษัท ซันเวนดิ้ง เทคโนโลยี จำกัด (มหาชน)', {}, 22) === 'คาเฟ่/ขนม');
+ok('Boonterm vending ≠ top-up kiosk', autoCategorize('ร้านเวนดิ้งบายบุญเติม', 'เพื่อชำระ Ref X8534 ร้านเวนดิ้งบายบุญเติม', {}, 25) === 'คาเฟ่/ขนม');
+ok('สุกี้ (Thai) → restaurant', autoCategorize('สุกี้ตี๋น้อย', 'เพื่อชำระ Ref X2001 สุกี้ตี๋น้อย-แอมพาร์ค จุฬา', {}, 462.56) === 'อาหาร/ร้านอาหาร');
+ok('เอ็มอาร์ที → transport', autoCategorize('', 'เพื่อชำระ Ref X8001 เอ็มอาร์ที-วัดมังกร', {}, 32) === 'เดินทาง/ขนส่ง');
 ok('SCB มณี SHOP not swallowed', autoCategorize('อาหารกล่อง BY วาสนา', 'SCB มณี SHOP อาหารกล่อง BY วาสนา', {}, 105) !== 'โอนเงิน/บุคคล');
 // merchant must carry NO keyword of its own, so the only thing that could
 // match without stripping is the 'kbank' bank keyword -> โอนเงิน/บุคคล
@@ -690,7 +702,8 @@ console.log('\n── repair of channel-noise mislabels (localStorage migration)
     { category: 'คาเฟ่/ขนม', group: 'discretionary', merchant: 'X', desc: 'MAKE by KBank X', amount: 10 },
   ];
   const { rows: out, changed } = repairChannelNoiseCategories(rows as any);
-  ok('repair: mislabeled shop fixed', out[0].category === 'ค่าใช้จ่ายอื่น' && out[0].group === 'transfer');
+  // a donut shop mislabeled as a person transfer lands in its real category
+  ok('repair: mislabeled shop fixed', out[0].category === 'คาเฟ่/ขนม' && out[0].group === 'discretionary');
   ok('repair: real transfer untouched', out[1].category === 'โอนเงิน/บุคคล');
   ok('repair: non-transfer rows untouched', out[2] === rows[2]);
   ok('repair: reports 1 change', changed === 1);
