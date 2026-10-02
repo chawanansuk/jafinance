@@ -348,7 +348,7 @@
   "amount": 578.0,
   "category": "ค่าใช้จ่ายอื่น",
   "group": "transfer",
-  "merchant": "HCB00152-IMCN BANGKOK",
+  "merchant": "HCB00152-IMCN",
   "desc": "HCB00152-IMCN BANGKOK"
  },
  {
@@ -876,7 +876,7 @@
   "amount": 529.0,
   "category": "ค่าใช้จ่ายอื่น",
   "group": "transfer",
-  "merchant": "HCB00152-IMCN BANGKOK",
+  "merchant": "HCB00152-IMCN",
   "desc": "HCB00152-IMCN BANGKOK"
  },
  {
@@ -1052,7 +1052,7 @@
   "amount": 871.0,
   "category": "ค่าใช้จ่ายอื่น",
   "group": "transfer",
-  "merchant": "HCB00152-IMCN BANGKOK",
+  "merchant": "HCB00152-IMCN",
   "desc": "HCB00152-IMCN BANGKOK"
  },
  {
@@ -1226,8 +1226,8 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 900.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "น้ำมัน/ปั๊ม",
+  "group": "essential",
   "merchant": "BSRC-NAIPRUNG CO.,LTD( BANGK",
   "desc": "BSRC-NAIPRUNG CO.,LTD( BANGKOK"
  },
@@ -1668,7 +1668,7 @@
   "amount": 150.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "ธัญญากรณ์ ปราณ",
+  "merchant": "ธัญญาภรณ์ ปราณ",
   "desc": "โอน ธัญญากรณ์ ปราณ"
  },
  {
@@ -2020,7 +2020,7 @@
   "amount": 200.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "ธัญญากรณ์ ปราณ",
+  "merchant": "ธัญญาภรณ์ ปราณ",
   "desc": "โอน ธัญญากรณ์ ปราณ"
  },
  {
@@ -2427,7 +2427,7 @@
   "amount": 200.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "ธัญญากรณ์ ปราณ",
+  "merchant": "ธัญญาภรณ์ ปราณ",
   "desc": "โอน ธัญญากรณ์ ปราณ"
  },
  {
@@ -2614,7 +2614,7 @@
   "amount": 200.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "ธัญญากรณ์ ปราณ",
+  "merchant": "ธัญญาภรณ์ ปราณ",
   "desc": "โอน ธัญญากรณ์ ปราณ"
  },
  {
@@ -3679,9 +3679,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 220.0,
-  "category": "อาหาร/ร้านอาหาร",
+  "category": "คาเฟ่/ขนม",
   "group": "discretionary",
-  "merchant": "SODA NAMCHA CO.LTD",
+  "merchant": "Soda Namcha",
   "desc": "SODA NAMCHA CO.LTD"
  },
  {
@@ -5045,7 +5045,7 @@
   "amount": 50.0,
   "category": "อาหาร/ร้านอาหาร",
   "group": "discretionary",
-  "merchant": "BIKUTA SUSHI TEPPANYAKI",
+  "merchant": "Bikuta Sushi Teppanyaki",
   "desc": "BIKUTA SUSHI TEPPANYAKI"
  },
  {
@@ -5254,7 +5254,7 @@
   "amount": 336.0,
   "category": "ค่าใช้จ่ายอื่น",
   "group": "transfer",
-  "merchant": "HCB00152-IMCN BANGKOK",
+  "merchant": "HCB00152-IMCN",
   "desc": "HCB00152-IMCN BANGKOK"
  },
  {
@@ -5934,9 +5934,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 80.0,
-  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "category": "การศึกษา/เด็ก",
   "group": "essential",
-  "merchant": "FUN PAVILION",
+  "merchant": "Fun Pavilion",
   "desc": "FUN PAVILION"
  },
  {
@@ -6044,9 +6044,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 186.0,
-  "category": "อาหาร/ร้านอาหาร",
-  "group": "discretionary",
-  "merchant": "ร้านกันต์เองสิช",
+  "category": "โรงพยาบาล/สุขภาพ",
+  "group": "essential",
+  "merchant": "ร้านกันต์เองเภสัช",
   "desc": "ร้านกันต์เองสิช"
  },
  {
@@ -6055,9 +6055,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 55.0,
-  "category": "อาหาร/ร้านอาหาร",
-  "group": "discretionary",
-  "merchant": "ร้านกันต์เองสิช",
+  "category": "โรงพยาบาล/สุขภาพ",
+  "group": "essential",
+  "merchant": "ร้านกันต์เองเภสัช",
   "desc": "ร้านกันต์เองสิช"
  },
  {
@@ -6475,7 +6475,7 @@
   "amount": 652.0,
   "category": "ค่าใช้จ่ายอื่น",
   "group": "transfer",
-  "merchant": "HCB00152-IMCN BANGKOK",
+  "merchant": "HCB00152-IMCN",
   "desc": "HCB00152-IMCN BANGKOK"
  },
  {
@@ -7740,7 +7740,7 @@
   "amount": 259,
   "category": "ซับสคริปชั่น/ดิจิทัล",
   "group": "discretionary",
-  "merchant": "GOOGLE*CHATGPT MOUNTAIN VIEW",
+  "merchant": "Google ChatGPT Mountain View",
   "desc": "GOOGLE*CHATGPT MOUNTAIN VIEW"
  },
  {
@@ -7828,7 +7828,7 @@
   "amount": 4240,
   "category": "โรงพยาบาล/สุขภาพ",
   "group": "essential",
-  "merchant": "BANGKOK CHRISTIAN HOSP",
+  "merchant": "รพ.กรุงเทพคริสเตียน",
   "desc": "BANGKOK CHRISTIAN HOSP BANGKOK"
  },
  {
@@ -7905,7 +7905,7 @@
   "amount": 658,
   "category": "อาหาร/ร้านอาหาร",
   "group": "discretionary",
-  "merchant": "KENSHIN IZAKAYA",
+  "merchant": "Kenshin Izakaya",
   "desc": "KENSHIN IZAKAYA BANGKOK"
  },
  {
@@ -8455,7 +8455,7 @@
   "amount": 300.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "ชัญญาภรณ์ ปราณ",
+  "merchant": "ธัญญาภรณ์ ปราณ",
   "desc": "โอน ชัญญาภรณ์ ปราณ"
  },
  {
@@ -8818,7 +8818,7 @@
   "amount": 3817,
   "category": "โรงพยาบาล/สุขภาพ",
   "group": "essential",
-  "merchant": "BANGKOK CHRISTIAN HOS.",
+  "merchant": "รพ.กรุงเทพคริสเตียน",
   "desc": "BANGKOK CHRISTIAN HOS. BANGKOK"
  },
  {
@@ -8939,7 +8939,7 @@
   "amount": 60.0,
   "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
-  "merchant": "THE MALL GROUP",
+  "merchant": "The Mall",
   "desc": "THE MALL GROUP CO., LTD. BRANCH 00006"
  },
  {
@@ -10633,7 +10633,7 @@
   "amount": 1792,
   "category": "โรงพยาบาล/สุขภาพ",
   "group": "essential",
-  "merchant": "BANGKOK CHRISTIAN HOSP",
+  "merchant": "รพ.กรุงเทพคริสเตียน",
   "desc": "BANGKOK CHRISTIAN HOSP BANGKOK"
  },
  {
@@ -11238,7 +11238,7 @@
   "amount": 1002.06,
   "category": "โรงพยาบาล/สุขภาพ",
   "group": "essential",
-  "merchant": "ISERVICECCP",
+  "merchant": "iServiceCCP",
   "desc": "TMN ISERVICECCP BANGKOK"
  },
  {
@@ -11436,7 +11436,7 @@
   "amount": 100,
   "category": "โรงพยาบาล/สุขภาพ",
   "group": "essential",
-  "merchant": "ISERVICECCP",
+  "merchant": "iServiceCCP",
   "desc": "TMN ISERVICECCP BANGKOK"
  },
  {
@@ -11469,7 +11469,7 @@
   "amount": 160.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "อัมรินทร์ สิงห",
+  "merchant": "อัมรินทร์ สิงคำ",
   "desc": "พร้อมเพย์ อัมรินทร์ สิงห"
  },
  {
@@ -11788,7 +11788,7 @@
   "amount": 200.0,
   "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
-  "merchant": "THE MALL GROUP",
+  "merchant": "The Mall",
   "desc": "THE MALL GROUP CO., LTD."
  },
  {
@@ -11799,7 +11799,7 @@
   "amount": 35.0,
   "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
-  "merchant": "THE MALL GROUP",
+  "merchant": "The Mall",
   "desc": "THE MALL GROUP CO., LTD."
  },
  {
@@ -11876,7 +11876,7 @@
   "amount": 119.0,
   "category": "อาหาร/ร้านค้า",
   "group": "discretionary",
-  "merchant": "สินเอร ฟู้ด มาร์เก็ต",
+  "merchant": "สินธร ฟู้ด มาร์เก็ต",
   "desc": "บริษัท สินเอร ฟู้ด มาร์เก็ต จำกัด"
  },
  {
@@ -12272,7 +12272,7 @@
   "amount": 70.0,
   "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
-  "merchant": "THE MALL GROUP",
+  "merchant": "The Mall",
   "desc": "THE MALL GROUP CO., LTD. BRANCH 0004"
  },
  {
@@ -12283,7 +12283,7 @@
   "amount": 93.0,
   "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
-  "merchant": "THE MALL GROUP",
+  "merchant": "The Mall",
   "desc": "THE MALL GROUP CO., LTD. BRANCH 00004"
  },
  {
@@ -13009,7 +13009,7 @@
   "amount": 583,
   "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
-  "merchant": "SIAM PARAGON FOOD HALL",
+  "merchant": "Paragon Food Hall",
   "desc": "SIAM PARAGON FOOD HALL BANGKOK"
  },
  {
@@ -13282,9 +13282,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 32.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "เอ็มการ์ที-วัดมังกร",
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "MRT",
   "desc": "เพื่อชำระ Ref X8001 เอ็มการ์ที-วัดมังกร"
  },
  {
@@ -13801,7 +13801,7 @@
   "amount": 55.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "อลิษา ทรัพย์สอ",
+  "merchant": "อลิชา ทรัพย์สด",
   "desc": "โอนไป พร้อมเพย์ X0832 น.ส. อลิษา ทรัพย์สอ"
  },
  {
@@ -13922,7 +13922,7 @@
   "amount": 140.0,
   "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
-  "merchant": "THE MALL GROUP",
+  "merchant": "The Mall",
   "desc": "เพื่อชำระ Ref X0227 THE MALL GROUP CO., LTD. BRANCH 0004"
  },
  {
@@ -13944,7 +13944,7 @@
   "amount": 98.4,
   "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
-  "merchant": "THE MALL GROUP",
+  "merchant": "The Mall",
   "desc": "เพื่อชำระ Ref X8132 THE MALL GROUP CO., LTD. BRANCH 00004"
  },
  {
@@ -13988,7 +13988,7 @@
   "amount": 60.0,
   "category": "ห้าง/ซูเปอร์มาร์เก็ต",
   "group": "essential",
-  "merchant": "THE MALL GROUP",
+  "merchant": "The Mall",
   "desc": "เพื่อชำระ Ref X5109 THE MALL GROUP CO., LTD."
  },
  {
@@ -15108,8 +15108,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 70.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "ค่าซักผ้า",
+  "group": "essential",
   "merchant": "OTTERI WASH AND DRY",
   "desc": "เพื่อชำระ Ref X4159 Ksher_OTTERI WASH AND DRY"
  },
@@ -15119,8 +15119,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 179.76,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
   "merchant": "คิน",
   "desc": "เพื่อชำระ Ref 1 คิน"
  },
@@ -15141,8 +15141,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 50.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "ค่าซักผ้า",
+  "group": "essential",
   "merchant": "OTTERI WASH AND DRY",
   "desc": "เพื่อชำระ Ref X3115 Ksher_OTTERI WASH AND DRY"
  },

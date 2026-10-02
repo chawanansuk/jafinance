@@ -9,6 +9,9 @@ import type { RulesState } from './types';
 const KEYWORD_TABLE: { kw: string[]; category: string; venue?: true }[] = [
   // debt settlement — must come first so it isn't caught by generic bank/transfer keywords
   { kw: ['ชำระบัตร', 'ชำระค่าบัตร', 'จ่ายบัตร', 'ชำระยอดบัตร', 'บัตรเครดิต', 'credit card payment', 'cc payment', 'uob premier', 'card payment'], category: 'ชำระบัตรเครดิต' },
+  // cash withdrawals next: the ATM's location is often a shop ("ATM 7-11 สาทร"),
+  // and a venue keyword later in the table would otherwise claim the row
+  { kw: ['atm', 'ถอนเงิน', 'withdraw', 'ถอน'], category: 'ถอนเงินสด' },
   { kw: ['grab', 'lineman', 'foodpanda', 'gojek', 'bolt'], category: 'Grab/เดลิเวอรี่/แท็กซี่' },
   { kw: ['7-eleven', '7-11', '7 11', 'seven', 'เซเว่น', 'cj more', 'lawson', 'familymart'], category: 'ร้านสะดวกซื้อ' },
   { kw: ['lotus', 'โลตัส', 'donki', 'tops', 'big c', 'bigc', 'makro', 'แม็คโคร', 'villa market', 'gourmet', 'food hall', 'foodland', 'tesco', 'grocery', 'supermarket', 'ซูเปอร์'], category: 'ห้าง/ซูเปอร์มาร์เก็ต', venue: true },
@@ -21,7 +24,7 @@ const KEYWORD_TABLE: { kw: string[]; category: string; venue?: true }[] = [
   { kw: ['lazada', 'shopee', 'amazon', 'aliexpress', 'tiktok shop'], category: 'ช้อปออนไลน์' },
   { kw: ['bts', 'mrt', 'เอ็มอาร์ที', 'taxi', 'แท็กซี่', 'รถไฟฟ้า', 'รถเมล์', 'ขนส่ง', 'bem', 'arl', 'แอร์พอร์ต', 'car rent'], category: 'เดินทาง/ขนส่ง' },
   { kw: ['uniqlo', 'h&m', 'zara', 'muji', 'เสื้อผ้า', 'fashion', 'shoe', 'รองเท้า', 'sribusana', 'ศรีบุษณา'], category: 'เสื้อผ้า/แฟชั่น' },
-  { kw: ['atm', 'ถอนเงิน', 'withdraw', 'ถอน'], category: 'ถอนเงินสด' },
+  { kw: ['otteri', 'laundry', 'laundromat', 'wash and dry', 'ซักผ้า', 'ซักรีด', 'ซักอบรีด'], category: 'ค่าซักผ้า' },
   { kw: ['truemoney', 'wallet', 'วอลเล็ต', 'เติมเงิน', 'top up', 'topup'], category: 'เติมเงิน/วอลเล็ต' },
   { kw: ['aud', 'ค่าบริการรายวัน'], category: 'ค่าบริการรายวัน (AUD)' },
   { kw: ['school', 'โรงเรียน', 'การศึกษา', 'tuition', 'ค่าเทอม', 'เด็ก', 'kidzoona', 'playhouse'], category: 'การศึกษา/เด็ก' },
