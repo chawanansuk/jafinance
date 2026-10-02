@@ -23,6 +23,7 @@ import {
   ArrowDownCircle,
   Undo2,
   CreditCard,
+  WashingMachine,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -52,6 +53,7 @@ export const CATEGORIES: CategoryMeta[] = [
   { name: 'ช้อปออนไลน์', group: 'discretionary', color: '#a855f7', icon: Globe },
   { name: 'เติมเงิน/วอลเล็ต', group: 'transfer', color: '#c026d3', icon: Wallet },
   { name: 'การศึกษา/เด็ก', group: 'essential', color: '#3b82f6', icon: GraduationCap },
+  { name: 'ค่าซักผ้า', group: 'essential', color: '#64748b', icon: WashingMachine },
   { name: 'ค่าบริการรายวัน (AUD)', group: 'discretionary', color: '#eab308', icon: CalendarClock },
   { name: 'โอนเงิน/บุคคล', group: 'transfer', color: '#e87ba4', icon: Send },
   { name: 'ถอนเงินสด', group: 'transfer', color: '#c98500', icon: Banknote },
