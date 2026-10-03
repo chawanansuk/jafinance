@@ -2634,8 +2634,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 16.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
   "merchant": "Super Turtle",
   "desc": "SUPER TURTLE PUBLIC"
  },
@@ -7892,9 +7892,9 @@
   "account": "UOB บัตรเครดิต",
   "direction": "out",
   "amount": 365,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "AMZ_SD4399 G2 CONNECT",
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "Café Amazon",
   "desc": "AMZ_SD4399 G2 CONNECT BANGKOK"
  },
  {
@@ -8398,9 +8398,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 65.0,
-  "category": "เติมเงิน/วอลเล็ต",
-  "group": "transfer",
-  "merchant": "ตู้บุญเติม",
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ร้านเวนดิ้งบายบุญเติม",
   "desc": "ร้านเวนดิ้ง นายบุญเติม"
  },
  {
@@ -9256,9 +9256,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 35.0,
-  "category": "เติมเงิน/วอลเล็ต",
-  "group": "transfer",
-  "merchant": "ตู้บุญเติม",
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ร้านเวนดิ้งบายบุญเติม",
   "desc": "ร้านเวนดิ้ง นายบุญเติม"
  },
  {
@@ -9333,8 +9333,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 10.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
   "merchant": "Super Turtle",
   "desc": "SUPER TURTLE PUBLIC COMPANY LIMITED"
  },
@@ -10081,8 +10081,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 150.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "น้ำมัน/ปั๊ม",
+  "group": "essential",
   "merchant": "แมกซ์ การ์ด",
   "desc": "แมกซ์ การ์ด เพย์เมนต์ เกตเวย์"
  },
@@ -10158,9 +10158,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 30.0,
-  "category": "เติมเงิน/วอลเล็ต",
-  "group": "transfer",
-  "merchant": "ตู้บุญเติม",
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ร้านเวนดิ้งบายบุญเติม",
   "desc": "ร้านเวนดิ้ง นายบุญเติม"
  },
  {
@@ -10213,9 +10213,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 10.0,
-  "category": "เติมเงิน/วอลเล็ต",
-  "group": "transfer",
-  "merchant": "ตู้บุญเติม",
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ร้านเวนดิ้งบายบุญเติม",
   "desc": "ร้านเวนดิ้ง นายบุญเติม"
  },
  {
@@ -11280,9 +11280,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 35.0,
-  "category": "เติมเงิน/วอลเล็ต",
-  "group": "transfer",
-  "merchant": "ตู้บุญเติม",
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ร้านเวนดิ้งบายบุญเติม",
   "desc": "ร้านเวนดิ้ง นายบุญเติม"
  },
  {
@@ -11357,8 +11357,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 34.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
   "merchant": "Super Turtle",
   "desc": "SUPER TURTLE PUBLIC COMPANY LIMITED"
  },
@@ -12006,9 +12006,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 35.0,
-  "category": "เติมเงิน/วอลเล็ต",
-  "group": "transfer",
-  "merchant": "ตู้บุญเติม",
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ร้านเวนดิ้งบายบุญเติม",
   "desc": "ร้านเวนดิ้ง นายบุญเติม"
  },
  {
@@ -12050,9 +12050,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 50.0,
-  "category": "เติมเงิน/วอลเล็ต",
-  "group": "transfer",
-  "merchant": "ตู้บุญเติม",
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ร้านเวนดิ้งบายบุญเติม",
   "desc": "ร้านเวนดิ้ง นายบุญเติม"
  },
  {
@@ -12743,8 +12743,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 35.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
   "merchant": "Super Turtle",
   "desc": "SUPER TURTLE PUBLIC COMPANY LIMITED"
  },
@@ -13700,8 +13700,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 180.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "น้ำมัน/ปั๊ม",
+  "group": "essential",
   "merchant": "P.P.Prime Energy",
   "desc": "เพื่อชำระ Ref X9598 P.P.PRIME ENERGY COMPANY LIMITED"
  },
@@ -14294,8 +14294,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 180.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "น้ำมัน/ปั๊ม",
+  "group": "essential",
   "merchant": "P.P.Prime Energy",
   "desc": "เพื่อชำระ Ref X9598 P.P.PRIME ENERGY COMPANY LIMITED"
  },
@@ -14327,8 +14327,8 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 93.0,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
   "merchant": "Super Turtle",
   "desc": "เพื่อชำระ Ref X3744 SUPER TURTLE PUBLIC LIMITED"
  },

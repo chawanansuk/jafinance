@@ -85,9 +85,9 @@ eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 330552.94, 0
 {
   // after the Grab-ride rule, cheap Grab rows < ฿120 move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
-  eq('essential (+ Grab rides)', g.essential, 105889.11);
-  eq('discretionary net (- Grab rides)', g.discretionary, 148674.35);
-  eq('transfer (excl card settlement)', g.transfer, 75989.48);
+  eq('essential (+ Grab rides)', g.essential, 106587.11);
+  eq('discretionary net (- Grab rides)', g.discretionary, 149299.35);
+  eq('transfer (excl card settlement)', g.transfer, 74666.48);
   eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 330552.94, 1);
 }
 {
@@ -505,6 +505,12 @@ ok('ซักรีด (Thai) → ค่าซักผ้า', autoCategorize('
 // the ATM's location is a shop name — the withdrawal must still win
 ok('ATM at 7-11 is a withdrawal, not a 7-Eleven purchase', autoCategorize('ถอนเงิน ATM', 'ATM 7-11 สาทร 10 (7227) บางรัก กทม. รหัสอ้างอิง ATMC4529', {}, 400) === 'ถอนเงินสด');
 ok('ATM at Lotus is a withdrawal, not groceries', autoCategorize('', 'ATM Lotus พระราม 3 รหัสอ้างอิง ATMB1234', {}, 1000) === 'ถอนเงินสด');
+// identities confirmed by the owner (Oct 2026)
+ok('Super Turtle (BTS kiosk) → convenience store', autoCategorize('Super Turtle', 'SUPER TURTLE PUBLIC', {}, 35) === 'ร้านสะดวกซื้อ');
+ok('AMZ_ card descriptor → Café Amazon', autoCategorize('', 'AMZ_SD4399 G2 CONNECT BANGKOK', {}, 365) === 'คาเฟ่/ขนม');
+ok('P.P.Prime Energy → fuel', autoCategorize('', 'เพื่อชำระ Ref X9598 P.P.PRIME ENERGY COMPANY LIMITED', {}, 180) === 'น้ำมัน/ปั๊ม');
+ok('Max Card gateway → fuel', autoCategorize('แมกซ์ การ์ด', 'แมกซ์ การ์ด เพย์เมนต์ เกตเวย์', {}, 150) === 'น้ำมัน/ปั๊ม');
+ok('Boonterm vending → café, not top-up', autoCategorize('ตู้บุญเติม', 'ร้านเวนดิ้ง นายบุญเติม', {}, 35) === 'คาเฟ่/ขนม');
 ok('SCB มณี SHOP not swallowed', autoCategorize('อาหารกล่อง BY วาสนา', 'SCB มณี SHOP อาหารกล่อง BY วาสนา', {}, 105) !== 'โอนเงิน/บุคคล');
 // merchant must carry NO keyword of its own, so the only thing that could
 // match without stripping is the 'kbank' bank keyword -> โอนเงิน/บุคคล
