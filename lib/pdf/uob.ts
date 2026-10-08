@@ -75,6 +75,30 @@ export function normalizeUobMerchant(descRaw: string): string {
   if (/MRT|BEM/.test(d)) return 'MRT';
   if (/BOOKING/.test(d)) return 'Booking.com';
   if (/AIRBNB/.test(d)) return 'Airbnb';
+  // Merchants whose stored name differs from the raw card text. Without these
+  // each import re-created the raw spelling beside the tidy one, splitting one
+  // shop's spend across two names (and sometimes two categories).
+  // Design Village: only the mall itself — SF- (cinema) and MAGURO-
+  // (restaurant) are separate businesses inside it.
+  if (/DESIGN VILLAGE/.test(d) && !/^(?:\d+\s*)?(SF|MAGURO)-/.test(d)) return 'Design Village';
+  if (/SRIBUSANA/.test(d)) return 'ศรีบุษณา';
+  if (/ISERVICECCP/.test(d)) return 'iServiceCCP';
+  if (/YAYOI/.test(d)) return 'Yayoi';
+  if (/\bSCT-/.test(d)) return 'SCT';
+  if (/BANGKOK CHRISTIAN/.test(d)) return 'รพ.กรุงเทพคริสเตียน';
+  if (/THE MALL/.test(d)) return 'The Mall';
+  if (/PARAGON FOOD/.test(d)) return 'Paragon Food Hall';
+  if (/KENSHIN/.test(d)) return 'Kenshin Izakaya';
+  if (/BIKUTA/.test(d)) return 'Bikuta Sushi Teppanyaki';
+  if (/CHATGPT/.test(d)) return 'Google ChatGPT Mountain View';
+  if (/SODA NAMCHA/.test(d)) return 'Soda Namcha';
+  if (/FUN PAVILION/.test(d)) return 'Fun Pavilion';
+  if (/SUPER TURTLE/.test(d)) return 'Super Turtle';
+  if (/^AMZ_/.test(d)) return 'Café Amazon';
+  if (/HARBORLAND/.test(d)) return 'HarborLand';
+  if (/LEMON FARM/.test(d)) return 'Lemon Farm';
+  if (/HOME PRODUCT|HOMEPRO/.test(d)) return 'HomePro';
+  if (/\bH&M\b/.test(d)) return 'H&M';
   // fallback: strip terminal/location noise
   return descRaw
     .replace(/^TMN\s+/i, '')

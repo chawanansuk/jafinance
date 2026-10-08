@@ -14,7 +14,7 @@ const KEYWORD_TABLE: { kw: string[]; category: string; venue?: true }[] = [
   { kw: ['atm', 'ถอนเงิน', 'withdraw', 'ถอน'], category: 'ถอนเงินสด' },
   { kw: ['grab', 'lineman', 'foodpanda', 'gojek', 'bolt'], category: 'Grab/เดลิเวอรี่/แท็กซี่' },
   { kw: ['7-eleven', '7-11', '7 11', 'seven', 'เซเว่น', 'cj more', 'lawson', 'familymart', 'super turtle', 'turtle shop'], category: 'ร้านสะดวกซื้อ' },
-  { kw: ['lotus', 'โลตัส', 'donki', 'tops', 'big c', 'bigc', 'makro', 'แม็คโคร', 'villa market', 'gourmet', 'food hall', 'foodland', 'tesco', 'grocery', 'supermarket', 'ซูเปอร์'], category: 'ห้าง/ซูเปอร์มาร์เก็ต', venue: true },
+  { kw: ['lotus', 'โลตัส', 'donki', 'tops', 'big c', 'bigc', 'makro', 'แม็คโคร', 'villa market', 'gourmet', 'food hall', 'foodland', 'tesco', 'grocery', 'supermarket', 'ซูเปอร์', 'lemon farm'], category: 'ห้าง/ซูเปอร์มาร์เก็ต', venue: true },
   { kw: ['starbucks', 'cafe', 'café', 'คาเฟ่', 'coffee', 'กาแฟ', 'amazon coffee', 'amz_', 'อเมซอน', 'black canyon', 'bakery', 'ขนม', 'dessert', 'คอฟฟี่', 'donut', 'โดนัท', 'vending', 'เวนดิ้ง'], category: 'คาเฟ่/ขนม' },
   { kw: ['sushiro', 'mk ', 'sukishi', 'suki', 'สุกี้', 'yayoi', 'fast food', 'kfc', 'mcdonald', 'burger', 'pizza', 'ร้านอาหาร', 'restaurant', 'ตามสั่ง', 'noodle', 'ก๋วยเตี๋ยว', 'izakaya', 'katsu', 'shabu', 'fuji', 'maguro', 'rosniyom', 'sushi', 'ramen', 'ราเมน', 'hachiban', 'ฮะจิบัง', 'din tai fung', 'bar b q', 'bar bq', 'บาร์บีคิว', 'tavern', 'yamachan', 'oishi', 'อร่อย', 'curry', 'แกง', 'steak', 'สเต็ก', 'buffet', 'บุฟเฟ่ต์'], category: 'อาหาร/ร้านอาหาร' },
   { kw: ['booking', 'agoda', 'airbnb', 'hotel', 'โรงแรม', 'resort', 'expedia', 'traveloka', 'trip.com'], category: 'ที่พัก/ท่องเที่ยว' },
@@ -27,7 +27,8 @@ const KEYWORD_TABLE: { kw: string[]; category: string; venue?: true }[] = [
   { kw: ['otteri', 'laundry', 'laundromat', 'wash and dry', 'ซักผ้า', 'ซักรีด', 'ซักอบรีด'], category: 'ค่าซักผ้า' },
   { kw: ['truemoney', 'wallet', 'วอลเล็ต', 'เติมเงิน', 'top up', 'topup'], category: 'เติมเงิน/วอลเล็ต' },
   { kw: ['aud', 'ค่าบริการรายวัน'], category: 'ค่าบริการรายวัน (AUD)' },
-  { kw: ['school', 'โรงเรียน', 'การศึกษา', 'tuition', 'ค่าเทอม', 'เด็ก', 'kidzoona', 'playhouse'], category: 'การศึกษา/เด็ก' },
+  { kw: ['school', 'โรงเรียน', 'การศึกษา', 'tuition', 'ค่าเทอม', 'เด็ก', 'kidzoona', 'playhouse', 'harborland', 'fun pavilion'], category: 'การศึกษา/เด็ก' },
+  { kw: ['homepro', 'home product'], category: 'ห้าง/ช้อปปิ้ง' },
   { kw: ['โอน', 'transfer', 'พร้อมเพย์', 'promptpay', 'bbl', 'ktb', 'scb', 'kbank'], category: 'โอนเงิน/บุคคล' },
 ];
 
