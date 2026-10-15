@@ -142,6 +142,8 @@ export const KBANK_RANGES: [string, string][] = [
   // 23 Aug runs straight into 30 Sep with no break between the statements
   // (each statement's opening balance equals the previous one's closing)
   ['2026-08-23', '2026-09-30'],
+  // opens at 73.38, not the 153.88 that 30 Sep closed on — 1–8 Oct is missing
+  ['2026-10-09', '2026-10-14'],
 ];
 
 // UOB card statements run continuously over this window.
