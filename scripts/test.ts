@@ -44,8 +44,8 @@ const base = baseTransactions();
 const txns = materialize(base);
 
 console.log('\n── data / materialize ──');
-ok('1543 base rows', base.length === 1543);
-ok('all ids unique', new Set(base.map((t) => t.id)).size === 1543);
+ok('1575 base rows', base.length === 1575);
+ok('all ids unique', new Set(base.map((t) => t.id)).size === 1575);
 {
   const id = base.find((t) => t.merchant === 'Grab')!.id;
   const m = materialize(base, [], { categoryById: { [id]: 'คาเฟ่/ขนม' }, realIncomeById: {} }, {});
@@ -82,14 +82,14 @@ ok('all ids unique', new Set(base.map((t) => t.id)).size === 1543);
 }
 
 console.log('\n── analytics ──');
-eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 379220.89, 0.5);
+eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 382392.89, 0.5);
 {
   // after the Grab-ride rule, cheap Grab rows < ฿120 move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
-  eq('essential (+ Grab rides)', g.essential, 120901.79);
-  eq('discretionary net (- Grab rides)', g.discretionary, 177437.87);
-  eq('transfer (excl card settlement)', g.transfer, 80881.23);
-  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 379220.89, 1);
+  eq('essential (+ Grab rides)', g.essential, 121289.79);
+  eq('discretionary net (- Grab rides)', g.discretionary, 178092.87);
+  eq('transfer (excl card settlement)', g.transfer, 83010.23);
+  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 382392.89, 1);
 }
 {
   const travel = toSpendingEvents(txns).filter((e) => e.category === 'ที่พัก/ท่องเที่ยว').reduce((s, e) => s + e.signed, 0);
@@ -138,7 +138,7 @@ ok('outliers found', detectOutliers(txns).length > 0);
   const ds = dailySpending(txns);
   ok('dailySpending sorted & non-empty', ds.length > 30 && ds[0].date <= ds[ds.length - 1].date);
   const sum = ds.reduce((s, d) => s + d.total, 0);
-  eq('dailySpending sums to net total', sum, 379220.89, 1);
+  eq('dailySpending sums to net total', sum, 382392.89, 1);
   const avg = avgMonthlyByCategory(txns);
   ok('avgMonthlyByCategory has Grab', (avg['Grab/เดลิเวอรี่/แท็กซี่'] ?? 0) > 0);
 }
@@ -172,7 +172,7 @@ console.log('\n── import / export (io) ──');
   const jsonText = JSON.stringify(base.map(({ id, ...r }) => r));
   const res = parseImport(jsonText, txns);
   ok('re-import all -> 0 added', res.added.length === 0);
-  ok('re-import all -> all duplicates', res.duplicates === 1543);
+  ok('re-import all -> all duplicates', res.duplicates === 1575);
   ok('overlap warned on re-import', res.overlaps.length > 0);
 }
 {
@@ -319,7 +319,7 @@ ok('settlement is transfer group', categoryGroup('ชำระบัตรเค
   const settle = { date: '2026-07-05', time: '', account: 'KBank ออมทรัพย์', direction: 'out' as const,
     amount: 40000, category: 'ชำระบัตรเครดิต', group: 'transfer' as const, merchant: 'UOB', desc: 'ชำระบัตร', id: 'settle1' };
   const m = materialize(base, [settle as any]);
-  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 379220.89, 1);
+  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 382392.89, 1);
   ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
 }
 
@@ -535,6 +535,12 @@ ok('Boonterm vending → café, not top-up', autoCategorize('ตู้บุญ�
 ok('Lemon Farm → supermarket', autoCategorize('Lemon Farm', 'LEMON FARM PHUTTHAMONT BANGKOK', {}, 864) === 'ห้าง/ซูเปอร์มาร์เก็ต');
 ok('HarborLand (kids playground) → การศึกษา/เด็ก', autoCategorize('HarborLand', 'HARBORLAND GROUP-MALL BANGKOK', {}, 170) === 'การศึกษา/เด็ก');
 ok('HomePro → ห้าง/ช้อปปิ้ง', autoCategorize('HomePro', 'HOME PRODUCT(BANGNA KM BANGKOK', {}, 475) === 'ห้าง/ช้อปปิ้ง');
+ok('The Mall QR → supermarket', autoCategorize('The Mall', 'เพื่อชำระ Ref X5109 THE MALL GROUP CO., LTD.', {}, 109) === 'ห้าง/ซูเปอร์มาร์เก็ต');
+ok('CP Axtra → supermarket', autoCategorize('CP Axtra', 'เพื่อชำระ Ref X2361 CP AXTRA PUBLIC COMPANY LIMITED (HEAD', {}, 14) === 'ห้าง/ซูเปอร์มาร์เก็ต');
+ok('สินธร ฟู้ด มาร์เก็ต → อาหาร/ร้านค้า', autoCategorize('สินธร ฟู้ด มาร์เก็ต', 'เพื่อชำระ Ref X3920 บริษัท สินธร ฟู้ด มาร์เก็ต จำกัด', {}, 60) === 'อาหาร/ร้านค้า');
+ok('ครัว… → restaurant', autoCategorize('ครัวคุณหลวง', 'เพื่อชำระ Ref X4378 ครัวคุณหลวง', {}, 70) === 'อาหาร/ร้านอาหาร');
+ok('carpark → transport', autoCategorize('', 'เพื่อชำระ Ref X1247 Ksher_THE OLD SIAM CARPARK', {}, 20) === 'เดินทาง/ขนส่ง');
+ok('fruit stall → food', autoCategorize('นิดย่ามะม่วง', 'เพื่อชำระ Ref X2478 นิดย่ามะม่วง', {}, 200) === 'อาหาร/ร้านอาหาร');
 ok('SCB มณี SHOP not swallowed', autoCategorize('อาหารกล่อง BY วาสนา', 'SCB มณี SHOP อาหารกล่อง BY วาสนา', {}, 105) !== 'โอนเงิน/บุคคล');
 // merchant must carry NO keyword of its own, so the only thing that could
 // match without stripping is the 'kbank' bank keyword -> โอนเงิน/บุคคล
