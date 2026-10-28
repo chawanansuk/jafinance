@@ -6902,9 +6902,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 105.93,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "AIM DHRAM",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "คิน",
   "desc": "AIM DHRAM CO"
  },
  {
@@ -9795,9 +9795,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 105.93,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "AIM DHRAM",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "คิน",
   "desc": "AIM DHRAM CO.,LTD."
  },
  {
@@ -12237,9 +12237,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 121.98,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "AIM DHRAM",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "คิน",
   "desc": "AIM DHRAM CO.,LTD."
  },
  {
@@ -14547,9 +14547,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 179.76,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "AIM DHRAM",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "คิน",
   "desc": "เพื่อชำระ Ref X1683 AIM DHRAM CO.,LTD."
  },
  {
@@ -15856,9 +15856,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 179.76,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "AIM DHRAM",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "คิน",
   "desc": "เพื่อชำระ Ref X1683 AIM DHRAM CO.,LTD."
  },
  {
@@ -16461,9 +16461,9 @@
   "account": "KBank ออมทรัพย์",
   "direction": "out",
   "amount": 179.76,
-  "category": "ค่าใช้จ่ายอื่น",
-  "group": "transfer",
-  "merchant": "AIM DHRAM",
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "คิน",
   "desc": "เพื่อชำระ Ref X1683 AIM DHRAM CO.,LTD."
  },
  {
@@ -17653,5 +17653,181 @@
   "group": "transfer",
   "merchant": "TrueMoney",
   "desc": "เพื่อชำระ Ref X9465 บจก. ทรู มันนี่ เพื่อเก็บรักษาเงินรับล่วงหน้าของธุรกิจ E-MON"
+ },
+ {
+  "date": "2026-10-24",
+  "time": "10:07",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 179.76,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "คิน",
+  "desc": "เพื่อชำระ Ref 1 คิน"
+ },
+ {
+  "date": "2026-10-24",
+  "time": "11:09",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 35.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "กฤษณา พันธุ์ศิริ",
+  "desc": "โอนไป พร้อมเพย์ X1198 กฤษณา พันธุ์ศิริ"
+ },
+ {
+  "date": "2026-10-24",
+  "time": "12:13",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 15.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "คิน",
+  "desc": "เพื่อชำระ Ref 1 คิน"
+ },
+ {
+  "date": "2026-10-24",
+  "time": "13:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 60.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "โจวิท โกลบอล",
+  "desc": "เพื่อชำระ Ref X0001 โจวิท โกลบอล"
+ },
+ {
+  "date": "2026-10-24",
+  "time": "16:20",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 500.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "อัฑฒ์เศรษฐ์ ก",
+  "desc": "โอนไป พร้อมเพย์ X1205 นาย อัฑฒ์เศรษฐ์ ก"
+ },
+ {
+  "date": "2026-10-25",
+  "time": "07:15",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 800.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปฐมพงษ์ ภู",
+  "desc": "โอนไป พร้อมเพย์ X2984 นาย ปฐมพงษ์ ภู"
+ },
+ {
+  "date": "2026-10-26",
+  "time": "14:44",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 180.0,
+  "category": "น้ำมัน/ปั๊ม",
+  "group": "essential",
+  "merchant": "UDOMPORN OIL",
+  "desc": "เพื่อชำระ Ref X5969 UDOMPORN OIL LTD., PART.(BRANCH 2)"
+ },
+ {
+  "date": "2026-10-26",
+  "time": "17:09",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 49.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "สินธร ฟู้ด มาร์เก็ต",
+  "desc": "เพื่อชำระ Ref X0607 บริษัท สินธร ฟู้ด มาร์เก็ต จำกัด"
+ },
+ {
+  "date": "2026-10-26",
+  "time": "17:12",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 108.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "สินธร ฟู้ด มาร์เก็ต",
+  "desc": "เพื่อชำระ Ref X7918 บริษัท สินธร ฟู้ด มาร์เก็ต จำกัด"
+ },
+ {
+  "date": "2026-10-26",
+  "time": "17:12",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 65.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "สินธร ฟู้ด มาร์เก็ต",
+  "desc": "เพื่อชำระ Ref X7430 บริษัท สินธร ฟู้ด มาร์เก็ต จำกัด"
+ },
+ {
+  "date": "2026-10-26",
+  "time": "17:16",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 40.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "สินธร ฟู้ด มาร์เก็ต",
+  "desc": "เพื่อชำระ Ref X9091 บริษัท สินธร ฟู้ด มาร์เก็ต จำกัด"
+ },
+ {
+  "date": "2026-10-26",
+  "time": "17:18",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 65.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "สินธร ฟู้ด มาร์เก็ต",
+  "desc": "เพื่อชำระ Ref X7543 บริษัท สินธร ฟู้ด มาร์เก็ต จำกัด"
+ },
+ {
+  "date": "2026-10-26",
+  "time": "17:20",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 65.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "สินธร ฟู้ด มาร์เก็ต",
+  "desc": "เพื่อชำระ Ref X5382 บริษัท สินธร ฟู้ด มาร์เก็ต จำกัด"
+ },
+ {
+  "date": "2026-10-26",
+  "time": "18:20",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 40.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "jimthaidesserts",
+  "desc": "เพื่อชำระ Ref X8503 jimthaidesserts"
+ },
+ {
+  "date": "2026-10-26",
+  "time": "18:27",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 115.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "ลิตเติลโฮมเบเกอรี่",
+  "desc": "เพื่อชำระ Ref XM003 ลิตเติลโฮมเบเกอรี่-วรจักร"
+ },
+ {
+  "date": "2026-10-27",
+  "time": "07:55",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 20.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "ครัวคุณหลวง",
+  "desc": "เพื่อชำระ Ref X4378 ครัวคุณหลวง"
  }
 ]

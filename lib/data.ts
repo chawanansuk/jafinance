@@ -145,6 +145,8 @@ export const KBANK_RANGES: [string, string][] = [
   // opens at 73.38, not the 153.88 that 30 Sep closed on — 1–8 Oct is missing.
   // 15 Oct opens on 14 Oct's closing (2,145.77), so the two run on unbroken.
   ['2026-10-09', '2026-10-21'],
+  // opens at 2,741.86, not the 307.86 that 21 Oct closed on — 22 Oct is missing
+  ['2026-10-23', '2026-10-27'],
 ];
 
 // UOB card statements run continuously over this window.
