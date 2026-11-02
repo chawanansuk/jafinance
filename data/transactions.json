@@ -8092,7 +8092,7 @@
   "amount": 555,
   "category": "คาเฟ่/ขนม",
   "group": "discretionary",
-  "merchant": "BLACK CANYON SAINT LOU",
+  "merchant": "Black Canyon",
   "desc": "BLACK CANYON SAINT LOU BANGKOK"
  },
  {
@@ -10127,7 +10127,7 @@
   "amount": 742,
   "category": "คาเฟ่/ขนม",
   "group": "discretionary",
-  "merchant": "BLACK CANYON THE OLD S",
+  "merchant": "Black Canyon",
   "desc": "BLACK CANYON THE OLD S BANGKOK"
  },
  {
@@ -13240,7 +13240,7 @@
   "amount": 55.0,
   "category": "คาเฟ่/ขนม",
   "group": "discretionary",
-  "merchant": "BLACK CANYON รพ.เซนต์หลุยส์",
+  "merchant": "Black Canyon",
   "desc": "เพื่อชำระ Ref X6001 แบล็ค แคนยอน รพ.เซ็นต์หลุยส์"
  },
  {
@@ -17829,5 +17829,368 @@
   "group": "discretionary",
   "merchant": "ครัวคุณหลวง",
   "desc": "เพื่อชำระ Ref X4378 ครัวคุณหลวง"
+ },
+ {
+  "date": "2026-10-28",
+  "time": "08:27",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "เหมียวดอกไม้สด",
+  "desc": "เพื่อชำระ Ref X8694 เหมียวดอกไม้สด พวงมาลัย"
+ },
+ {
+  "date": "2026-10-28",
+  "time": "09:44",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 65.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธนากร เฟื่องสุ",
+  "desc": "โอนไป พร้อมเพย์ X3254 นาย ธนากร เฟื่องสุ"
+ },
+ {
+  "date": "2026-10-28",
+  "time": "14:17",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 56.0,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "BTS",
+  "desc": "เพื่อชำระ Ref X1962 BTS TIM TVM"
+ },
+ {
+  "date": "2026-10-28",
+  "time": "15:49",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปรารถนา",
+  "desc": "โอนไป พร้อมเพย์ X9465 น.ส. ปรารถนา บุญสอ"
+ },
+ {
+  "date": "2026-10-28",
+  "time": "16:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 3000.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
+  "desc": "รับโอน SCB X5730 นาย ชวมันท์ สุรพรรษ"
+ },
+ {
+  "date": "2026-10-28",
+  "time": "16:08",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 100.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปรารถนา",
+  "desc": "โอนไป พร้อมเพย์ X9465 น.ส. ปรารถนา บุญสอ"
+ },
+ {
+  "date": "2026-10-28",
+  "time": "18:03",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "อัญชิษฐา ติส",
+  "desc": "โอนไป พร้อมเพย์ X8040 นาง อัญชิษฐา ติส"
+ },
+ {
+  "date": "2026-10-29",
+  "time": "07:58",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 80.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "พรฤดี อาชาวรญ",
+  "desc": "โอนไป X9433 น.ส. พรฤดี อาชาวรญ"
+ },
+ {
+  "date": "2026-10-29",
+  "time": "08:00",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 40.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "นันท์นภัส ร",
+  "desc": "โอนไป พร้อมเพย์ X0653 นางสาว นันท์นภัส ร"
+ },
+ {
+  "date": "2026-10-29",
+  "time": "08:09",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "เล็ก เบเกอรี่",
+  "desc": "เพื่อชำระ Ref X86WK ถุงเงิน (เล็ก เบเกอรี่)"
+ },
+ {
+  "date": "2026-10-29",
+  "time": "08:11",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 280.0,
+  "category": "อาหาร/ร้านอาหาร",
+  "group": "discretionary",
+  "merchant": "197 Thai Cuisine",
+  "desc": "เพื่อชำระ Ref X3892 197 Thai cuisine"
+ },
+ {
+  "date": "2026-10-29",
+  "time": "08:54",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 100.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปรารถนา",
+  "desc": "โอนไป KTB X0889 ปรารถนา บุญสอ"
+ },
+ {
+  "date": "2026-10-29",
+  "time": "13:57",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "NAEKI GO (ST LOUIS)",
+  "desc": "เพื่อชำระ Ref X7850 SCB มณี SHOP (NAEKI GO (ST LOUIS))"
+ },
+ {
+  "date": "2026-10-29",
+  "time": "16:15",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 20.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "มัลลวีร์ อนุธร",
+  "desc": "โอนไป พร้อมเพย์ X1711 น.ส.มัลลวีร์ อนุธ"
+ },
+ {
+  "date": "2026-10-30",
+  "time": "08:05",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 70.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-10-30",
+  "time": "12:53",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 45.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "ไปรษณีย์ไทย (ปณท)",
+  "desc": "เพื่อชำระ Ref X0847 ระบบรับชำระคิวอาร์ ปณท"
+ },
+ {
+  "date": "2026-10-30",
+  "time": "16:06",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 82.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ศศวัน วงศ์วิร",
+  "desc": "โอนไป X1375 น.ส. ศศวัน วงศ์วิร"
+ },
+ {
+  "date": "2026-10-30",
+  "time": "16:34",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 145.0,
+  "category": "คาเฟ่/ขนม",
+  "group": "discretionary",
+  "merchant": "Black Canyon",
+  "desc": "เพื่อชำระ Ref X6001 แบล็ค แคนยอน รพ.เซ็นต์หลุยส์"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "10:09",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 12.0,
+  "category": "ค่าบริการรายวัน (AUD)",
+  "group": "discretionary",
+  "merchant": "ค่าบริการรายวัน AUD",
+  "desc": "เพื่อชำระ Ref X1606 AUD"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "12:48",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 220.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "MR. PHONE NAING",
+  "desc": "โอนไป X6897 MR. PHONE NAING"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "12:53",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 30.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "โจวิท โกลบอล",
+  "desc": "เพื่อชำระ Ref X0001 โจวิท โกลบอล"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "15:22",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 500.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "อัฑฒ์เศรษฐ์ ก",
+  "desc": "โอนไป พร้อมเพย์ X1205 นาย อัฑฒ์เศรษฐ์ ก"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "16:24",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ณัฐณิชา กระทุ",
+  "desc": "โอนไป X8482 น.ส. ณัฐณิชา กระทุ"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "16:24",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 30.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ร้านถุงเงิน พรศักดิ์ อาหารอีสาน",
+  "desc": "เพื่อชำระ Ref X2741 ร้านถุงเงิน (พรศักดิ์ อาหารอีสาน)"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "16:26",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ถุงเงิน ธัญภา วรเกษมชัย",
+  "desc": "เพื่อชำระ Ref X1828 ถุงเงิน (ธัญภา วรเกษมชัย)"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "16:28",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 24.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "พีระพล แซ่เติ",
+  "desc": "โอนไป พร้อมเพย์ X3583 นาย พีระพล แซ่เติ"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "16:32",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "โสภา เมืองก",
+  "desc": "โอนไป พร้อมเพย์ X9021 นางสาว โสภา เมืองก"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "16:34",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 35.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ชุติมา คำภู",
+  "desc": "โอนไป พร้อมเพย์ X6906 นางสาว ชุติมา คำภู"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "16:38",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 40.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "อินทภรณ์ เพียร",
+  "desc": "โอนไป พร้อมเพย์ X3256 น.ส.อินทภรณ์ เพียร"
+ },
+ {
+  "date": "2026-10-31",
+  "time": "19:26",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 180.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ฟ้านิดา ลีลา",
+  "desc": "โอนไป พร้อมเพย์ X4956 นางสาว ฟ้านิดา ลีลา"
+ },
+ {
+  "date": "2026-11-01",
+  "time": "15:04",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 95.0,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "The Mall",
+  "desc": "เพื่อชำระ Ref X8058 THE MALL GROUP CO., LTD. BRANCH 00006"
+ },
+ {
+  "date": "2026-11-01",
+  "time": "17:02",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 100.0,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "The Mall",
+  "desc": "เพื่อชำระ Ref X1704 THE MALL GROUP CO., LTD. BRANCH 00006"
+ },
+ {
+  "date": "2026-11-01",
+  "time": "17:08",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 80.0,
+  "category": "ห้าง/ซูเปอร์มาร์เก็ต",
+  "group": "essential",
+  "merchant": "The Mall",
+  "desc": "เพื่อชำระ Ref X8058 THE MALL GROUP CO., LTD. BRANCH 00006"
  }
 ]
