@@ -97,6 +97,7 @@ export function normalizeUobMerchant(descRaw: string): string {
   if (/^AMZ_/.test(d)) return 'Café Amazon';
   if (/HARBORLAND/.test(d)) return 'HarborLand';
   if (/LEMON FARM/.test(d)) return 'Lemon Farm';
+  if (/BLACK CANYON/.test(d)) return 'Black Canyon';
   if (/HOME PRODUCT|HOMEPRO/.test(d)) return 'HomePro';
   if (/\bH&M\b/.test(d)) return 'H&M';
   // fallback: strip terminal/location noise
