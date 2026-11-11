@@ -2416,7 +2416,7 @@
   "amount": 1500.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "KTB ปรานอมพ์ งาม",
+  "merchant": "ปราโมทย์ งามว",
   "desc": "โอน KTB ปรานอมพ์ งาม"
  },
  {
@@ -2471,7 +2471,7 @@
   "amount": 500.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "KTB พิศณุ เทศทอง",
+  "merchant": "พิศณุ เทศทอง",
   "desc": "โอน KTB พิศณุ เทศทอง"
  },
  {
@@ -7542,7 +7542,7 @@
   "amount": 1000.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "KTB ปรานอมพ์ งาม",
+  "merchant": "ปราโมทย์ งามว",
   "desc": "โอน KTB ปรานอมพ์ งาม"
  },
  {
@@ -7608,7 +7608,7 @@
   "amount": 500.0,
   "category": "โอนเงิน/บุคคล",
   "group": "transfer",
-  "merchant": "KTB พิศณุ เทศทอง",
+  "merchant": "พิศณุ เทศทอง",
   "desc": "โอน KTB พิศณุ เทศทอง"
  },
  {
@@ -18192,5 +18192,291 @@
   "group": "essential",
   "merchant": "The Mall",
   "desc": "เพื่อชำระ Ref X8058 THE MALL GROUP CO., LTD. BRANCH 00006"
+ },
+ {
+  "date": "2026-11-02",
+  "time": "09:51",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 55.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "สุรพงศ์ แก้ววิ",
+  "desc": "โอนไป X7672 นาย สุรพงศ์ แก้ววิ"
+ },
+ {
+  "date": "2026-11-02",
+  "time": "09:53",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 100.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "เสาวลักษณ์ คุ",
+  "desc": "โอนไป X5534 น.ส. เสาวลักษณ์ คุ"
+ },
+ {
+  "date": "2026-11-02",
+  "time": "13:28",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 4500.0,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน SCB ชวมันท์ สุรพรรษ",
+  "desc": "รับโอน SCB X5730 นาย ชวมันท์ สุรพรรษ"
+ },
+ {
+  "date": "2026-11-02",
+  "time": "13:45",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 1000.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปราโมทย์ งามว",
+  "desc": "โอนไป KTB X6486 น.ส. ปราโมทย์ งามว"
+ },
+ {
+  "date": "2026-11-02",
+  "time": "13:47",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 500.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "พิศณุ เทศทอง",
+  "desc": "โอนไป KTB X8570 นาย พิศณุ เทศทอง"
+ },
+ {
+  "date": "2026-11-02",
+  "time": "15:46",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "MR. YEP WEI ZHI",
+  "desc": "โอนไป พร้อมเพย์ X2953 MR. YEP WEI ZHI"
+ },
+ {
+  "date": "2026-11-03",
+  "time": "09:10",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ธัญญาภรณ์ ปราณ",
+  "desc": "โอนไป X9576 นาง ธัญญาภรณ์ ปราณ"
+ },
+ {
+  "date": "2026-11-03",
+  "time": "10:01",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "ชินค้าขายดอกไม้",
+  "desc": "เพื่อชำระ Ref X0001 ชินค้าขายดอกไม้"
+ },
+ {
+  "date": "2026-11-03",
+  "time": "11:06",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "ค่าซักผ้า",
+  "group": "essential",
+  "merchant": "ไทกิ-ยู วอช",
+  "desc": "เพื่อชำระ Ref X1289 ไทกิ-ยู วอช (ไทยแลนด์)"
+ },
+ {
+  "date": "2026-11-03",
+  "time": "11:44",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 125.0,
+  "category": "อาหาร/ร้านค้า",
+  "group": "discretionary",
+  "merchant": "ร้านถุงเงิน กรีนแบค",
+  "desc": "เพื่อชำระ Ref X3012 ร้านถุงเงิน (กรีนแบค)"
+ },
+ {
+  "date": "2026-11-03",
+  "time": "11:45",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 70.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "วิเชียร ธีรวงษ์",
+  "desc": "โอนไป พร้อมเพย์ X3694 นายวิเชียร ธีรวงษ์"
+ },
+ {
+  "date": "2026-11-03",
+  "time": "15:59",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "น้ำมัน/ปั๊ม",
+  "group": "essential",
+  "merchant": "P.P.Prime Energy",
+  "desc": "เพื่อชำระ Ref X9598 P.P.PRIME ENERGY COMPANY LIMITED"
+ },
+ {
+  "date": "2026-11-04",
+  "time": "09:45",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 200.0,
+  "category": "เดินทาง/ขนส่ง",
+  "group": "essential",
+  "merchant": "บัตรแมงมุม (เติมเงิน)",
+  "desc": "เพื่อชำระ Ref X2242 เติมเงินเข้าบัตร แมงมุม อีเอ็มวี คอนเซสชั่น การ์ด"
+ },
+ {
+  "date": "2026-11-04",
+  "time": "14:35",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "ครอบครัวผู้บริโภคสร้างสรรค์",
+  "desc": "เพื่อชำระ Ref X1137 ครอบครัวผู้บริโภคสร้างสรรค์"
+ },
+ {
+  "date": "2026-11-04",
+  "time": "14:37",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 55.0,
+  "category": "ค่าใช้จ่ายอื่น",
+  "group": "transfer",
+  "merchant": "บ.หยกลด จก.",
+  "desc": "เพื่อชำระ Ref X7187 บ.หยกลด จก."
+ },
+ {
+  "date": "2026-11-04",
+  "time": "15:22",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 45.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "จีระนันท์ เดชะ",
+  "desc": "โอนไป BBL X3214 นาง จีระนันท์ เดชะ"
+ },
+ {
+  "date": "2026-11-04",
+  "time": "19:09",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 50.0,
+  "category": "ค่าซักผ้า",
+  "group": "essential",
+  "merchant": "ไทกิ-ยู วอช",
+  "desc": "เพื่อชำระ Ref X1289 ไทกิ-ยู วอช (ไทยแลนด์)"
+ },
+ {
+  "date": "2026-11-09",
+  "time": "10:13",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 85.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "สามารถ ประท",
+  "desc": "โอนไป พร้อมเพย์ X8482 นาย สามารถ ประท"
+ },
+ {
+  "date": "2026-11-09",
+  "time": "13:20",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 969.98,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน ธ.กสิกรไทย (K-Cash Connect)",
+  "desc": "จาก X8104 บมจ.ธนาคารกสิกรไทย DIRECT CREDIT Ref 8f851ed7dc52f59d"
+ },
+ {
+  "date": "2026-11-09",
+  "time": "14:17",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 5.0,
+  "category": "ร้านสะดวกซื้อ",
+  "group": "essential",
+  "merchant": "Lawson",
+  "desc": "เพื่อชำระ Ref X0361 LAWSON THAI QR"
+ },
+ {
+  "date": "2026-11-09",
+  "time": "14:59",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 20.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "สุวิทย์ ประสง",
+  "desc": "โอนไป พร้อมเพย์ X9192 นาย สุวิทย์ ประสง"
+ },
+ {
+  "date": "2026-11-10",
+  "time": "12:48",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 1000.0,
+  "category": "ชำระบัตรเครดิต",
+  "group": "transfer",
+  "merchant": "ชำระบัตรเครดิต UOB",
+  "desc": "โอนไป UOBT X5737 นส. ปรารถนา บุญสอ"
+ },
+ {
+  "date": "2026-11-10",
+  "time": "12:50",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 700.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ปรารถนา",
+  "desc": "โอนไป พร้อมเพย์ X9465 น.ส. ปรารถนา บุญสอ"
+ },
+ {
+  "date": "2026-11-10",
+  "time": "13:38",
+  "account": "KBank ออมทรัพย์",
+  "direction": "in",
+  "amount": 914.69,
+  "category": "รายรับ (เงินเข้า)",
+  "group": "income",
+  "merchant": "รับโอน ธ.กสิกรไทย (K-Cash Connect)",
+  "desc": "จาก X8104 บมจ.ธนาคารกสิกรไทย DIRECT CREDIT Ref 09bc246f5a9722b2"
+ },
+ {
+  "date": "2026-11-10",
+  "time": "15:37",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 135.0,
+  "category": "โอนเงิน/บุคคล",
+  "group": "transfer",
+  "merchant": "ณัฐรัฐ ลักขณามา",
+  "desc": "โอนไป พร้อมเพย์ X3307 นาย ณัฐรัฐ ลักขณามา"
+ },
+ {
+  "date": "2026-11-10",
+  "time": "15:37",
+  "account": "KBank ออมทรัพย์",
+  "direction": "out",
+  "amount": 1000.0,
+  "category": "ชำระบัตรเครดิต",
+  "group": "transfer",
+  "merchant": "ชำระบัตรเครดิต UOB",
+  "desc": "โอนไป UOBT X5737 นส. ปรารถนา บุญสอ"
  }
 ]
