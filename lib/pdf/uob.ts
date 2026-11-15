@@ -98,6 +98,14 @@ export function normalizeUobMerchant(descRaw: string): string {
   if (/HARBORLAND/.test(d)) return 'HarborLand';
   if (/LEMON FARM/.test(d)) return 'Lemon Farm';
   if (/BLACK CANYON/.test(d)) return 'Black Canyon';
+  if (/KIN DONBURI/.test(d)) return 'Kin Donburi';
+  if (/HAMA ?SUSHI/.test(d)) return 'Hama Sushi';
+  if (/DONKI/.test(d)) return 'Don Don Donki';
+  if (/^(?:TMN\s+)?SHELL\b/.test(d)) return 'Shell';
+  if (/^BSRC-/.test(d)) return 'BSRC (บางจาก)';
+  if (/OOTOYA/.test(d)) return 'Ootoya';
+  if (/CENTARA/.test(d)) return 'Centara';
+  if (/LIM LAO ?NGOW/.test(d)) return 'Lim Lao Ngow';
   if (/HOME PRODUCT|HOMEPRO/.test(d)) return 'HomePro';
   if (/\bH&M\b/.test(d)) return 'H&M';
   // fallback: strip terminal/location noise

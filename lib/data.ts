@@ -152,7 +152,7 @@ export const KBANK_RANGES: [string, string][] = [
 ];
 
 // UOB card statements run continuously over this window.
-export const UOB_RANGES: [string, string][] = [['2026-02-20', '2026-09-21']];
+export const UOB_RANGES: [string, string][] = [['2026-02-20', '2026-10-21']];
 
 /**
  * Per-account statement coverage. A month's completeness must consider BOTH
