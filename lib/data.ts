@@ -148,7 +148,10 @@ export const KBANK_RANGES: [string, string][] = [
   // opens at 2,741.86, not the 307.86 that 21 Oct closed on — 22 Oct is missing.
   // 28 Oct opens on 27 Oct's closing (405.10), and 1–10 Nov opens on 1 Nov's
   // balance before that day's last three rows, so all three run on unbroken.
-  ['2026-10-23', '2026-11-10'],
+  // 11–16 Nov opens on 10 Nov's closing (615.77). Only page 1 of that statement
+  // is in: it stops at 90.91 on 16 Nov, and page 2 holds the day's other three
+  // rows (one deposit, two withdrawals), so coverage ends on the 15th.
+  ['2026-10-23', '2026-11-15'],
 ];
 
 // UOB card statements run continuously over this window.
