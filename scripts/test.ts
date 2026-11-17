@@ -44,8 +44,8 @@ const base = baseTransactions();
 const txns = materialize(base);
 
 console.log('\n── data / materialize ──');
-ok('1784 base rows', base.length === 1784);
-ok('all ids unique', new Set(base.map((t) => t.id)).size === 1784);
+ok('1816 base rows', base.length === 1816);
+ok('all ids unique', new Set(base.map((t) => t.id)).size === 1816);
 {
   const id = base.find((t) => t.merchant === 'Grab')!.id;
   const m = materialize(base, [], { categoryById: { [id]: 'คาเฟ่/ขนม' }, realIncomeById: {} }, {});
@@ -82,14 +82,14 @@ ok('all ids unique', new Set(base.map((t) => t.id)).size === 1784);
 }
 
 console.log('\n── analytics ──');
-eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 432395.51, 0.5);
+eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 436798.51, 0.5);
 {
   // after the Grab-ride rule, cheap Grab rows < ฿120 move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
-  eq('essential (+ Grab rides)', g.essential, 135317.67);
-  eq('discretionary net (- Grab rides)', g.discretionary, 198931.73);
-  eq('transfer (excl card settlement)', g.transfer, 98146.11);
-  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 432395.51, 1);
+  eq('essential (+ Grab rides)', g.essential, 135935.67);
+  eq('discretionary net (- Grab rides)', g.discretionary, 200326.73);
+  eq('transfer (excl card settlement)', g.transfer, 100536.11);
+  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 436798.51, 1);
 }
 {
   const travel = toSpendingEvents(txns).filter((e) => e.category === 'ที่พัก/ท่องเที่ยว').reduce((s, e) => s + e.signed, 0);
@@ -121,7 +121,7 @@ ok('projection May reliable', projectMonth(txns, '2026-05').reliable === true);
   const tagged = txns.map((t) => (t.merchant === 'ปรารถนา' && t.group === 'transfer' ? { ...t, transferKind: 'moving' as const } : t));
   const before = grandTotal(toSpendingEvents(tagged));
   const after = grandTotal(toSpendingEvents(tagged, { excludeMovingTransfers: true }));
-  eq('excludeMoving removes ปรารถนา', before - after, 17063.25, 0.5);
+  eq('excludeMoving removes ปรารถนา', before - after, 18063.25, 0.5);
 }
 {
   const before = grandTotal(toSpendingEvents(txns));
@@ -138,7 +138,7 @@ ok('outliers found', detectOutliers(txns).length > 0);
   const ds = dailySpending(txns);
   ok('dailySpending sorted & non-empty', ds.length > 30 && ds[0].date <= ds[ds.length - 1].date);
   const sum = ds.reduce((s, d) => s + d.total, 0);
-  eq('dailySpending sums to net total', sum, 432395.51, 1);
+  eq('dailySpending sums to net total', sum, 436798.51, 1);
   const avg = avgMonthlyByCategory(txns);
   ok('avgMonthlyByCategory has Grab', (avg['Grab/เดลิเวอรี่/แท็กซี่'] ?? 0) > 0);
 }
@@ -172,7 +172,7 @@ console.log('\n── import / export (io) ──');
   const jsonText = JSON.stringify(base.map(({ id, ...r }) => r));
   const res = parseImport(jsonText, txns);
   ok('re-import all -> 0 added', res.added.length === 0);
-  ok('re-import all -> all duplicates', res.duplicates === 1784);
+  ok('re-import all -> all duplicates', res.duplicates === 1816);
   ok('overlap warned on re-import', res.overlaps.length > 0);
 }
 {
@@ -319,7 +319,7 @@ ok('settlement is transfer group', categoryGroup('ชำระบัตรเค
   const settle = { date: '2026-07-05', time: '', account: 'KBank ออมทรัพย์', direction: 'out' as const,
     amount: 40000, category: 'ชำระบัตรเครดิต', group: 'transfer' as const, merchant: 'UOB', desc: 'ชำระบัตร', id: 'settle1' };
   const m = materialize(base, [settle as any]);
-  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 432395.51, 1);
+  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 436798.51, 1);
   ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
 }
 
@@ -556,6 +556,8 @@ ok('UDOMPORN OIL → fuel', autoCategorize('UDOMPORN OIL', 'เพื่อช�
 // AIM DHRAM is the restaurant whose QR later reads "คิน" (same Saturday, same 179.76)
 ok('AIM DHRAM → restaurant', autoCategorize('', 'เพื่อชำระ Ref X1683 AIM DHRAM CO.,LTD.', {}, 179.76) === 'อาหาร/ร้านอาหาร');
 ok('"… Thai cuisine" → restaurant', autoCategorize('', 'เพื่อชำระ Ref X3892 197 Thai cuisine', {}, 280) === 'อาหาร/ร้านอาหาร');
+ok('Wongnai Merchant QR → restaurant', autoCategorize('', 'เพื่อชำระ Ref X1180 Wongnai Merchant (QR by ttb)', {}, 258) === 'อาหาร/ร้านอาหาร');
+ok('COCONUT 100 Percent → café', autoCategorize('', 'เพื่อชำระ Ref X1414 COCONUT 100 Percent', {}, 78) === 'คาเฟ่/ขนม');
 ok('แบล็ค แคนยอน (Thai) → café', autoCategorize('', 'เพื่อชำระ Ref X6001 แบล็ค แคนยอน รพ.เซ็นต์หลุยส์', {}, 145) === 'คาเฟ่/ขนม');
 // ครัว (kitchen) is a word start, never the tail of ครอบครัว (family)
 ok('ครอบครัว… is not a kitchen', autoCategorize('ครอบครัวผู้บริโภคสร้างสรรค์', 'เพื่อชำระ Ref X1137 ครอบครัวผู้บริโภคสร้างสรรค์', {}, 50) !== 'อาหาร/ร้านอาหาร');
