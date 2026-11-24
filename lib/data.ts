@@ -152,6 +152,9 @@ export const KBANK_RANGES: [string, string][] = [
   // is in: it stops at 90.91 on 16 Nov, and page 2 holds the day's other three
   // rows (one deposit, two withdrawals), so coverage ends on the 15th.
   ['2026-10-23', '2026-11-15'],
+  // opens at 15.85, the 11–16 Nov statement's closing, so the chain is unbroken
+  // across the gap — only the three page-2 rows of 16 Nov are missing.
+  ['2026-11-17', '2026-11-22'],
 ];
 
 // UOB card statements run continuously over this window.
