@@ -44,8 +44,8 @@ const base = baseTransactions();
 const txns = materialize(base);
 
 console.log('\n── data / materialize ──');
-ok('1816 base rows', base.length === 1816);
-ok('all ids unique', new Set(base.map((t) => t.id)).size === 1816);
+ok('1848 base rows', base.length === 1848);
+ok('all ids unique', new Set(base.map((t) => t.id)).size === 1848);
 {
   const id = base.find((t) => t.merchant === 'Grab')!.id;
   const m = materialize(base, [], { categoryById: { [id]: 'คาเฟ่/ขนม' }, realIncomeById: {} }, {});
@@ -82,14 +82,14 @@ ok('all ids unique', new Set(base.map((t) => t.id)).size === 1816);
 }
 
 console.log('\n── analytics ──');
-eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 436798.51, 0.5);
+eq('net total (incl transfer)', grandTotal(toSpendingEvents(txns)), 440206.27, 0.5);
 {
   // after the Grab-ride rule, cheap Grab rows < ฿120 move essential<-discretionary
   const g = aggregateByGroup(toSpendingEvents(txns));
   eq('essential (+ Grab rides)', g.essential, 135935.67);
-  eq('discretionary net (- Grab rides)', g.discretionary, 200326.73);
-  eq('transfer (excl card settlement)', g.transfer, 100536.11);
-  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 436798.51, 1);
+  eq('discretionary net (- Grab rides)', g.discretionary, 201498.49);
+  eq('transfer (excl card settlement)', g.transfer, 102772.11);
+  eq('net unchanged by reclassification', g.essential + g.discretionary + g.transfer, 440206.27, 1);
 }
 {
   const travel = toSpendingEvents(txns).filter((e) => e.category === 'ที่พัก/ท่องเที่ยว').reduce((s, e) => s + e.signed, 0);
@@ -138,7 +138,7 @@ ok('outliers found', detectOutliers(txns).length > 0);
   const ds = dailySpending(txns);
   ok('dailySpending sorted & non-empty', ds.length > 30 && ds[0].date <= ds[ds.length - 1].date);
   const sum = ds.reduce((s, d) => s + d.total, 0);
-  eq('dailySpending sums to net total', sum, 436798.51, 1);
+  eq('dailySpending sums to net total', sum, 440206.27, 1);
   const avg = avgMonthlyByCategory(txns);
   ok('avgMonthlyByCategory has Grab', (avg['Grab/เดลิเวอรี่/แท็กซี่'] ?? 0) > 0);
 }
@@ -172,7 +172,7 @@ console.log('\n── import / export (io) ──');
   const jsonText = JSON.stringify(base.map(({ id, ...r }) => r));
   const res = parseImport(jsonText, txns);
   ok('re-import all -> 0 added', res.added.length === 0);
-  ok('re-import all -> all duplicates', res.duplicates === 1816);
+  ok('re-import all -> all duplicates', res.duplicates === 1848);
   ok('overlap warned on re-import', res.overlaps.length > 0);
 }
 {
@@ -319,7 +319,7 @@ ok('settlement is transfer group', categoryGroup('ชำระบัตรเค
   const settle = { date: '2026-07-05', time: '', account: 'KBank ออมทรัพย์', direction: 'out' as const,
     amount: 40000, category: 'ชำระบัตรเครดิต', group: 'transfer' as const, merchant: 'UOB', desc: 'ชำระบัตร', id: 'settle1' };
   const m = materialize(base, [settle as any]);
-  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 436798.51, 1);
+  eq('card-bill payment excluded from net (no double count)', grandTotal(toSpendingEvents(m)), 440206.27, 1);
   ok('settlement still appears in txn list', m.some((t) => t.id === 'settle1'));
 }
 
